@@ -15,7 +15,7 @@ export default async function HomePage({ params }: HomePageProps) {
     <main className="min-h-screen">
       {/* Hero Section - "Discover Your" */}
       <section className="relative min-h-screen bg-white text-black flex items-center">
-        <div className="w-full max-w-[1600px] mx-auto">
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center py-24 lg:py-0">
             {/* Hero Content - Left Side */}
             <div className="space-y-8">
@@ -70,7 +70,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Navigating Section - Light Background */}
       <section id="navigating" className="bg-white py-32 lg:py-40 text-black">
-        <div className="w-full max-w-[1600px] mx-auto">
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="mb-6 text-center">
             <p className="text-sm uppercase tracking-widest font-semibold" style={{ color: 'var(--green-primary)' }}>
               {t.navigating.tagline}
@@ -150,7 +150,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Mastering Section - Complex Layout with Overlay */}
       <section className="relative bg-gray-50 py-32 lg:py-40 text-black">
-        <div className="w-full max-w-[1600px] mx-auto">
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="mb-6 text-center">
             <p className="text-sm uppercase tracking-widest font-semibold" style={{ color: 'var(--green-primary)' }}>
               {t.mastering.tagline}
@@ -209,7 +209,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Achieve Financial Section - White with Laptop Mockup */}
       <section className="relative bg-white py-32 lg:py-40 text-black">
-        <div className="w-full max-w-[1600px] mx-auto">
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
             <div className="space-y-6">
@@ -243,7 +243,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Grow Your Wealth Section - Black Card + 3 Image Cards */}
       <section className="bg-white py-32 lg:py-40">
-        <div className="w-full max-w-[1400px] mx-auto">
+        <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="mb-6 text-center">
             <p className="text-sm uppercase tracking-widest font-semibold" style={{ color: 'var(--green-primary)' }}>
               {t.growWealth.tagline}
@@ -296,7 +296,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Blog Section */}
       <section className="bg-gray-50 py-32 lg:py-40 text-black">
-        <div className="w-full max-w-[1400px] mx-auto">
+        <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <h2 className="mb-12 lg:mb-16 text-center text-4xl lg:text-5xl font-black">
             {t.blog.title}
           </h2>
@@ -337,7 +337,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* About Section */}
       <section id="about" className="bg-white py-32 lg:py-40 text-black">
-        <div className="w-full max-w-4xl mx-auto">
+        <div className="w-full max-w-4xl mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="text-center">
             <h2 className="mb-8 text-4xl lg:text-5xl font-black">
               {t.about.title}

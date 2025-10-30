@@ -1,20 +1,21 @@
 @import "tailwindcss";
 
-/* StackMoneyUp Professional Theme */
+/* StackMoneyUp Professional Black & White Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  /* Black background, white content containers */
+  --background: #000000;
+  --foreground: #ffffff;
   --primary: #000000;
   --primary-foreground: #ffffff;
-  --secondary: #f9fafb;
+  --secondary: #ffffff;
   --secondary-foreground: #000000;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --accent: #f3f4f6;
-  --accent-foreground: #111827;
-  --border: #e5e7eb;
-  --input: #f3f4f6;
-  --ring: #6b7280;
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --border: #2a2a2a;
+  --input: #1a1a1a;
+  --ring: #404040;
   
   /* Green Accent - Primary Brand Color */
   --green-primary: #00ff00;
@@ -26,8 +27,6 @@
 @theme {
   --breakpoint-2xl: 1400px;
 }
-
-/* Remove default container padding since we're adding it manually */
 
 @theme inline {
   --color-background: var(--background);
@@ -64,6 +63,7 @@ html {
   scroll-behavior: smooth;
 }
 
+/* IMPORTANT: Black background for body */
 body {
   background: var(--background);
   color: var(--foreground);

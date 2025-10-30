@@ -44,7 +44,7 @@ export default async function LanguageLayout({
   return (
     <>
       <Header lang={validLang} />
-      <main className="pt-20 px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
+      <main className="pt-20">
         {children}
       </main>
       <Footer lang={validLang} />
