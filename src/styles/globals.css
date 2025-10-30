@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Colors */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 142 76% 36%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    @apply font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1 {
+    @apply scroll-m-20 text-6xl font-black tracking-tight lg:text-8xl;
+  }
+  
+  h2 {
+    @apply scroll-m-20 text-4xl font-black tracking-tight lg:text-6xl;
+  }
+  
+  h3 {
+    @apply scroll-m-20 text-3xl font-bold tracking-tight lg:text-4xl;
+  }
+  
+  h4 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+  
+  p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+  
+  a {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Button variants */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-primary px-8 py-4 
+           text-base font-semibold text-primary-foreground shadow transition-all
+           hover:bg-primary/90 hover:scale-105 focus-visible:outline-none 
+           focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none 
+           disabled:opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-border 
+           bg-secondary px-8 py-4 text-base font-semibold text-secondary-foreground 
+           shadow-sm transition-all hover:bg-secondary/80 hover:scale-105 
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  /* Section styles */
+  .section {
+    @apply py-16 lg:py-24;
+  }
+  
+  .section-dark {
+    @apply bg-background text-foreground;
+  }
+  
+  .section-light {
+    @apply bg-white text-black;
+  }
+  
+  /* Card styles */
+  .card {
+    @apply rounded-lg border border-border bg-secondary p-6 shadow-lg 
+           transition-all hover:shadow-xl;
+  }
+}

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow analytics dashboard
+Disallow: /dashboard.html
+
+# Sitemap location
+Sitemap: https://stackmoneyup.com/sitemap.xml
