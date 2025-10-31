@@ -13,8 +13,8 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <main className="min-h-screen">
-      {/* Hero Section - "Discover Your" */}
-      <section className="relative min-h-screen bg-white text-black flex items-center">
+      {/* Hero Section - BLACK BACKGROUND */}
+      <section className="relative min-h-screen bg-black text-white flex items-center">
         <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center py-24 lg:py-0">
             {/* Hero Content - Left Side */}
@@ -28,20 +28,20 @@ export default async function HomePage({ params }: HomePageProps) {
                 Personal Finance Growth
               </h1>
               
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-gray-400 leading-relaxed">
                 No bullshit. No easy money promises. Just real strategies for building wealth.
               </p>
               
               <div className="flex gap-4 pt-4">
                 <a
                   href={`/${validLang}/blog`}
-                  className="inline-block rounded-full bg-black px-12 py-4 text-base font-bold transition-all hover:bg-gray-800 hover:-translate-y-1 shadow-lg text-white"
+                  className="inline-block rounded-full bg-white px-12 py-4 text-base font-bold transition-all hover:bg-gray-200 hover:-translate-y-1 shadow-lg text-black"
                 >
                   Read Articles
                 </a>
                 <a
                   href={`#about`}
-                  className="inline-block rounded-full bg-transparent border-2 border-black px-12 py-4 text-base font-bold transition-all hover:bg-black hover:text-white hover:-translate-y-1 text-black"
+                  className="inline-block rounded-full bg-transparent border-2 border-white px-12 py-4 text-base font-bold transition-all hover:bg-white hover:text-black hover:-translate-y-1 text-white"
                 >
                   Learn More
                 </a>
@@ -207,8 +207,8 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      {/* Achieve Financial Section - White with Laptop Mockup */}
-      <section className="relative bg-white py-32 lg:py-40 text-black">
+      {/* Achieve Financial Section - BLACK BACKGROUND with Laptop Mockup */}
+      <section className="relative bg-black py-32 lg:py-40 text-white">
         <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
@@ -216,12 +216,12 @@ export default async function HomePage({ params }: HomePageProps) {
               <h2 className="text-4xl lg:text-5xl font-black leading-tight">
                 {t.achieve.title}
               </h2>
-              <p className="text-lg leading-relaxed text-gray-600">
+              <p className="text-lg leading-relaxed text-gray-400">
                 {t.achieve.text}
               </p>
               <a
                 href={`/${validLang}/blog`}
-                className="inline-block rounded-full bg-black px-12 py-4 text-base font-bold transition-all hover:bg-gray-800 hover:-translate-y-1 text-white"
+                className="inline-block rounded-full bg-white px-12 py-4 text-base font-bold transition-all hover:bg-gray-200 hover:-translate-y-1 text-black"
               >
                 {t.achieve.cta}
               </a>
@@ -250,23 +250,23 @@ export default async function HomePage({ params }: HomePageProps) {
             </p>
           </div>
 
-          {/* Top Card */}
-          <div className="mb-16 rounded-2xl bg-gray-50 border-2 border-gray-200 p-8 lg:p-12 text-black">
+          {/* Top Card - BLACK */}
+          <div className="mb-16 rounded-2xl bg-black border-2 border-gray-800 p-8 lg:p-12 text-white">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
               <div className="flex items-center gap-6">
-                <div className="flex h-16 w-16 lg:h-20 lg:w-20 items-center justify-center rounded-full bg-gray-200">
-                  <svg className="w-8 h-8 lg:w-10 lg:h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex h-16 w-16 lg:h-20 lg:w-20 items-center justify-center rounded-full bg-gray-800">
+                  <svg className="w-8 h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
                   <h2 className="text-2xl lg:text-3xl font-black mb-2">{t.growWealth.title}</h2>
-                  <p className="text-gray-600">{t.growWealth.subtitle}</p>
+                  <p className="text-gray-400">{t.growWealth.subtitle}</p>
                 </div>
               </div>
               <a
                 href={`/${validLang}/blog`}
-                className="rounded-full bg-black px-12 py-4 text-base font-bold transition-all hover:bg-gray-800 hover:-translate-y-1 whitespace-nowrap text-white"
+                className="rounded-full bg-white px-12 py-4 text-base font-bold transition-all hover:bg-gray-200 hover:-translate-y-1 whitespace-nowrap text-black"
               >
                 {t.growWealth.cta}
               </a>
