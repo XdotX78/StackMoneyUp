@@ -17,10 +17,10 @@
   --input: #1a1a1a;
   --ring: #404040;
   
-  /* Green Accent - Primary Brand Color */
+  /* Green Accent - Primary Brand Color - BRIGHTER */
   --green-primary: #00ff00;
-  --green-glow: rgba(0, 255, 0, 0.1);
-  --green-hover: rgba(0, 255, 0, 0.15);
+  --green-glow: rgba(0, 255, 0, 0.15);
+  --green-hover: rgba(0, 255, 0, 0.2);
 }
 
 /* Container Configuration */
@@ -81,18 +81,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(4rem, 10vw, 7rem);
   font-weight: 900;
+  letter-spacing: -0.04em;
 }
 
 h2 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(3rem, 7vw, 5rem);
   font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 h3 {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 p {
