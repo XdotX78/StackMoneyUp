@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { Language } from '@/types/blog';
+import { isAuthenticated } from '@/lib/auth';
 
 interface NavItem {
   label: {
@@ -19,6 +20,13 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setAuthenticated(isAuthenticated());
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -92,11 +100,26 @@ export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
                 </Link>
               </div>
 
+              {/* Auth Button Mobile */}
+              {mounted && (
+                <Link
+                  href={authenticated ? `/${lang}/dashboard` : `/${lang}/login`}
+                  onClick={toggleMenu}
+                  className={`px-6 py-3 rounded-md font-semibold text-center transition-colors mt-2 ${
+                    authenticated
+                      ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                      : 'bg-white text-black hover:bg-gray-100'
+                  }`}
+                >
+                  {authenticated ? 'Dashboard' : 'Login'}
+                </Link>
+              )}
+
               {/* Contact Button Mobile */}
               <Link
                 href={`/${lang}#contact`}
                 onClick={toggleMenu}
-                className="bg-emerald-600 text-white px-6 py-3 rounded-md font-semibold text-center hover:bg-emerald-700 transition-colors mt-2"
+                className="bg-emerald-600 text-white px-6 py-3 rounded-md font-semibold text-center hover:bg-emerald-700 transition-colors"
               >
                 Contact
               </Link>

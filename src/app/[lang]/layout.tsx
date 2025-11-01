@@ -3,6 +3,7 @@ import { isValidLanguage, getDefaultLanguage } from "@/lib/translations";
 import type { Language } from "@/types/blog";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { Toaster } from "react-hot-toast";
 
 interface LanguageLayoutProps {
   children: React.ReactNode;
@@ -27,10 +28,33 @@ export async function generateMetadata({
   };
   
   const validLang = isValidLanguage(lang) ? lang as Language : getDefaultLanguage();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com';
   
   return {
     title: titles[validLang],
     description: descriptions[validLang],
+    metadataBase: new URL(siteUrl),
+    openGraph: {
+      title: titles[validLang],
+      description: descriptions[validLang],
+      url: `${siteUrl}/${validLang}`,
+      siteName: 'StackMoneyUp',
+      type: 'website',
+      locale: validLang === 'it' ? 'it_IT' : 'en_US',
+      alternateLocale: validLang === 'it' ? 'en_US' : 'it_IT',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: titles[validLang],
+      description: descriptions[validLang],
+    },
+    alternates: {
+      canonical: `${siteUrl}/${validLang}`,
+      languages: {
+        en: `${siteUrl}/en`,
+        it: `${siteUrl}/it`,
+      },
+    },
   };
 }
 
@@ -48,6 +72,34 @@ export default async function LanguageLayout({
         {children}
       </main>
       <Footer lang={validLang} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#fff',
+            color: '#1f2937',
+            border: '2px solid #e5e7eb',
+            borderRadius: '0.5rem',
+            padding: '16px',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+            borderColor: '#10b981',
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+            borderColor: '#ef4444',
+          },
+        }}
+      />
     </>
   );
 }

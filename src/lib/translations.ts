@@ -89,6 +89,86 @@ interface FooterTranslations {
   linkedin: string;
 }
 
+interface BlogPageTranslations {
+  title: string;
+  subtitle: string;
+  searchPlaceholder: string;
+  categoryLabel: string;
+  all: string;
+  activeFilters: string;
+  clearFilters: string;
+  foundArticles: string;
+  foundArticle: string;
+  noPostsFound: string;
+  noPostsFoundSubtitle: string;
+}
+
+interface LoginPageTranslations {
+  title: string;
+  subtitle: string;
+  emailLabel: string;
+  passwordLabel: string;
+  emailPlaceholder: string;
+  passwordPlaceholder: string;
+  signIn: string;
+  signingIn: string;
+  mockAuthNote: string;
+  loginFailed: string;
+}
+
+interface DashboardTranslations {
+  title: string;
+  welcomeBack: string;
+  totalPosts: string;
+  postsCreated: string;
+  published: string;
+  livePosts: string;
+  drafts: string;
+  unpublishedPosts: string;
+  quickActions: string;
+  newPost: string;
+  manageTags: string;
+  recentPosts: string;
+  noPostsYet: string;
+  createFirstPost: string;
+  logout: string;
+  loading: string;
+}
+
+interface NewPostTranslations {
+  title: string;
+  subtitle: string;
+}
+
+interface PostFormTranslations {
+  slug: string;
+  slugHelper: string;
+  category: string;
+  categoryPlaceholder: string;
+  coverImage: string;
+  coverImageHelper: string;
+  tags: string;
+  tagsHelper: string;
+  tagsPlaceholder: string;
+  content: string;
+  published: string;
+  featured: string;
+  cancel: string;
+  createPost: string;
+  updatePost: string;
+  english: string;
+  italian: string;
+  englishPlaceholder: string;
+  italianPlaceholder: string;
+}
+
+interface CategoryTranslations {
+  [key: string]: {
+    en: string;
+    it: string;
+  };
+}
+
 interface LanguageTranslations {
   nav: NavigationTranslations;
   hero: HeroTranslations;
@@ -100,6 +180,12 @@ interface LanguageTranslations {
   posts: BlogPostPreview[];
   about: AboutTranslations;
   footer: FooterTranslations;
+  blogPage: BlogPageTranslations;
+  login: LoginPageTranslations;
+  dashboard: DashboardTranslations;
+  newPost: NewPostTranslations;
+  postForm: PostFormTranslations;
+  categories: CategoryTranslations;
 }
 
 export const translations: Record<Language, LanguageTranslations> = {
@@ -223,6 +309,82 @@ export const translations: Record<Language, LanguageTranslations> = {
       facebook: "Facebook",
       instagram: "Instagram",
       linkedin: "LinkedIn"
+    },
+    blogPage: {
+      title: "Blog",
+      subtitle: "Explore our articles on personal finance, investing, and financial growth",
+      searchPlaceholder: "Search articles...",
+      categoryLabel: "Category:",
+      all: "All",
+      activeFilters: "Active filters:",
+      clearFilters: "Clear filters",
+      foundArticles: "Found {count} articles",
+      foundArticle: "Found {count} article",
+      noPostsFound: "No posts found",
+      noPostsFoundSubtitle: "Try adjusting your search or filters"
+    },
+    login: {
+      title: "StackMoneyUp",
+      subtitle: "Sign in to access the dashboard",
+      emailLabel: "Email",
+      passwordLabel: "Password",
+      emailPlaceholder: "your@email.com",
+      passwordPlaceholder: "Enter your password",
+      signIn: "Sign In",
+      signingIn: "Signing in...",
+      mockAuthNote: "Mock authentication - any email/password works",
+      loginFailed: "Login failed. Please try again."
+    },
+    dashboard: {
+      title: "Dashboard",
+      welcomeBack: "Welcome back",
+      totalPosts: "Total Posts",
+      postsCreated: "Posts created",
+      published: "Published",
+      livePosts: "Live posts",
+      drafts: "Drafts",
+      unpublishedPosts: "Unpublished posts",
+      quickActions: "Quick Actions",
+      newPost: "+ New Post",
+      manageTags: "Manage Tags",
+      recentPosts: "Recent Posts",
+      noPostsYet: "No posts yet",
+      createFirstPost: "Create Your First Post",
+      logout: "Logout",
+      loading: "Loading..."
+    },
+    newPost: {
+      title: "Create New Post",
+      subtitle: "Write your blog post in both English and Italian"
+    },
+    postForm: {
+      slug: "Slug",
+      slugHelper: "Auto-generated from title, but you can edit it",
+      category: "Category",
+      categoryPlaceholder: "e.g., Investing, Saving & Emergency Fund, Budgeting & Spending",
+      coverImage: "Cover Image URL",
+      coverImageHelper: "URL for the blog post cover image",
+      tags: "Tags (comma-separated)",
+      tagsHelper: "Separate tags with commas",
+      tagsPlaceholder: "investing, budgeting, mindset",
+      content: "Content",
+      published: "Published",
+      featured: "Featured",
+      cancel: "Cancel",
+      createPost: "Create Post",
+      updatePost: "Update Post",
+      english: "English",
+      italian: "Italian",
+      englishPlaceholder: "Start writing your blog post in English...",
+      italianPlaceholder: "Inizia a scrivere il tuo post in italiano..."
+    },
+    categories: {
+      'Investing': { en: 'Investing', it: 'Investimenti' },
+      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza' },
+      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese' },
+      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti' },
+      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più' },
+      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro' },
     }
   },
   it: {
@@ -346,9 +508,96 @@ export const translations: Record<Language, LanguageTranslations> = {
       facebook: "Facebook",
       instagram: "Instagram",
       linkedin: "LinkedIn"
+    },
+    blogPage: {
+      title: "Blog",
+      subtitle: "Esplora i nostri articoli su finanza personale, investimenti e crescita finanziaria",
+      searchPlaceholder: "Cerca articoli...",
+      categoryLabel: "Categoria:",
+      all: "Tutte",
+      activeFilters: "Filtri attivi:",
+      clearFilters: "Cancella filtri",
+      foundArticles: "Trovati {count} articoli",
+      foundArticle: "Trovato {count} articolo",
+      noPostsFound: "Nessun post trovato",
+      noPostsFoundSubtitle: "Prova ad aggiustare la tua ricerca o i filtri"
+    },
+    login: {
+      title: "StackMoneyUp",
+      subtitle: "Accedi per accedere alla dashboard",
+      emailLabel: "Email",
+      passwordLabel: "Password",
+      emailPlaceholder: "tua@email.com",
+      passwordPlaceholder: "Inserisci la tua password",
+      signIn: "Accedi",
+      signingIn: "Accesso in corso...",
+      mockAuthNote: "Autenticazione simulata - qualsiasi email/password funziona",
+      loginFailed: "Accesso fallito. Per favore riprova."
+    },
+    dashboard: {
+      title: "Dashboard",
+      welcomeBack: "Bentornato",
+      totalPosts: "Totale Post",
+      postsCreated: "Post creati",
+      published: "Pubblicati",
+      livePosts: "Post live",
+      drafts: "Bozze",
+      unpublishedPosts: "Post non pubblicati",
+      quickActions: "Azioni Rapide",
+      newPost: "+ Nuovo Post",
+      manageTags: "Gestisci Tag",
+      recentPosts: "Post Recenti",
+      noPostsYet: "Nessun post ancora",
+      createFirstPost: "Crea il Tuo Primo Post",
+      logout: "Esci",
+      loading: "Caricamento..."
+    },
+    newPost: {
+      title: "Crea Nuovo Post",
+      subtitle: "Scrivi il tuo post del blog in inglese e italiano"
+    },
+    postForm: {
+      slug: "Slug",
+      slugHelper: "Generato automaticamente dal titolo, ma puoi modificarlo",
+      category: "Categoria",
+      categoryPlaceholder: "es. Investimenti, Risparmio & Fondo Emergenza, Budget & Spese",
+      coverImage: "URL Immagine di Copertina",
+      coverImageHelper: "URL per l'immagine di copertina del post",
+      tags: "Tag (separati da virgola)",
+      tagsHelper: "Separa i tag con virgole",
+      tagsPlaceholder: "investimenti, budget, mentalità",
+      content: "Contenuto",
+      published: "Pubblicato",
+      featured: "In Evidenza",
+      cancel: "Annulla",
+      createPost: "Crea Post",
+      updatePost: "Aggiorna Post",
+      english: "Inglese",
+      italian: "Italiano",
+      englishPlaceholder: "Inizia a scrivere il tuo post del blog in inglese...",
+      italianPlaceholder: "Inizia a scrivere il tuo post in italiano..."
+    },
+    categories: {
+      'Investing': { en: 'Investing', it: 'Investimenti' },
+      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza' },
+      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese' },
+      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti' },
+      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più' },
+      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro' },
     }
   }
 };
+
+/**
+ * Get translated category name
+ */
+export function getCategoryTranslation(category: string, lang: Language): string {
+  const categories = translations[lang]?.categories;
+  if (categories && categories[category]) {
+    return categories[category][lang];
+  }
+  return category; // Fallback to original if not found
+}
 
 /**
  * Get translations for a specific language
