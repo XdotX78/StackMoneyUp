@@ -1,92 +1,87 @@
 /**
- * Frontend-only authentication utility
- * Uses sessionStorage for mock auth until Supabase is connected
+ * Real Supabase authentication utility
+ * Replaces the previous mock auth (sessionStorage)
  */
 
-const AUTH_KEY = 'stackmoneyup_auth';
-const USER_KEY = 'stackmoneyup_user';
+import { supabase } from './supabaseClient'
 
 export interface User {
-  id: string;
-  email: string;
-  name?: string;
+  id: string
+  email: string
+  name?: string
 }
 
 /**
- * Sign in with email and password (mock)
- * In production, this will use Supabase
+ * Sign in with email and password (Supabase)
  */
-export function signIn(email: string, password: string): Promise<User> {
-  return new Promise((resolve, reject) => {
-    // Simulate API delay
-    setTimeout(() => {
-      // Mock validation - accept any email/password for now
-      if (email && password) {
-        const user: User = {
-          id: 'mock-user-123',
-          email,
-          name: email.split('@')[0],
-        };
-        
-        // Store in sessionStorage
-        sessionStorage.setItem(AUTH_KEY, 'authenticated');
-        sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-        
-        resolve(user);
-      } else {
-        reject(new Error('Email and password are required'));
-      }
-    }, 500);
-  });
+export async function signIn(email: string, password: string): Promise<User> {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) throw new Error(error.message)
+
+  const user = data.user
+  if (!user) throw new Error('User not found')
+
+  return { id: user.id, email: user.email!, name: user.user_metadata?.name || '' }
+}
+
+/**
+ * Sign up (register new user)
+ */
+export async function signUp(email: string, password: string): Promise<User> {
+  const { data, error } = await supabase.auth.signUp({ email, password })
+  if (error) throw new Error(error.message)
+
+  const user = data.user
+  if (!user) throw new Error('User not found')
+
+  return { id: user.id, email: user.email!, name: user.user_metadata?.name || '' }
+}
+
+/**
+ * Sign in with Google (OAuth)
+ */
+export async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: `${window.location.origin}/` },
+  })
+  if (error) throw new Error(error.message)
 }
 
 /**
  * Sign out current user
  */
-export function signOut(): void {
-  sessionStorage.removeItem(AUTH_KEY);
-  sessionStorage.removeItem(USER_KEY);
+export async function signOut(): Promise<void> {
+  const { error } = await supabase.auth.signOut()
+  if (error) throw new Error(error.message)
 }
 
 /**
  * Get current authenticated user
  */
-export function getCurrentUser(): User | null {
-  if (typeof window === 'undefined') return null;
-  
-  const auth = sessionStorage.getItem(AUTH_KEY);
-  const userStr = sessionStorage.getItem(USER_KEY);
-  
-  if (auth === 'authenticated' && userStr) {
-    try {
-      return JSON.parse(userStr) as User;
-    } catch {
-      return null;
-    }
-  }
-  
-  return null;
+export async function getCurrentUser(): Promise<User | null> {
+  const { data, error } = await supabase.auth.getUser()
+  if (error) throw new Error(error.message)
+  if (!data.user) return null
+  return { id: data.user.id, email: data.user.email!, name: data.user.user_metadata?.name || '' }
 }
 
 /**
  * Check if user is authenticated
  */
-export function isAuthenticated(): boolean {
-  if (typeof window === 'undefined') return false;
-  return sessionStorage.getItem(AUTH_KEY) === 'authenticated';
+export async function isAuthenticated(): Promise<boolean> {
+  const { data } = await supabase.auth.getSession()
+  return !!data.session
 }
 
 /**
- * Require authentication - redirect to login if not authenticated
- * Use this in client components
+ * Require authentication (client-side redirect)
  */
-export function requireAuth(redirectTo: string = '/en/login'): boolean {
-  if (!isAuthenticated()) {
-    if (typeof window !== 'undefined') {
-      window.location.href = redirectTo;
-    }
-    return false;
+export async function requireAuth(redirectTo: string = '/en/login'): Promise<boolean> {
+  const loggedIn = await isAuthenticated()
+  if (!loggedIn && typeof window !== 'undefined') {
+    window.location.href = redirectTo
+    return false
   }
-  return true;
+  return true
 }
-
