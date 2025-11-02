@@ -6,6 +6,7 @@ import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTransl
 import { formatDate } from '@/lib/utils';
 import { Badge, Button } from '@/components/ui';
 import BlogEditor from '@/components/blog/BlogEditor';
+import ShareButtonsClient from './ShareButtonsClient';
 import type { Language } from '@/types/blog';
 
 interface BlogPostPageProps {

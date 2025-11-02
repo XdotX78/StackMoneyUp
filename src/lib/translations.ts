@@ -55,6 +55,7 @@ interface GrowWealthSection {
 interface BlogTranslations {
   title: string;
   readMore: string;
+  tagline: string;
 }
 
 interface BlogPostPreview {
@@ -108,12 +109,23 @@ interface LoginPageTranslations {
   subtitle: string;
   emailLabel: string;
   passwordLabel: string;
+  confirmPasswordLabel: string;
   emailPlaceholder: string;
   passwordPlaceholder: string;
+  confirmPasswordPlaceholder: string;
+  passwordsDontMatch: string;
   signIn: string;
   signingIn: string;
+  signInWithGoogle: string;
+  signUp: string;
+  signUpWithGoogle: string;
+  alreadyHaveAccount: string;
+  dontHaveAccount: string;
+  forgotPassword: string;
   mockAuthNote: string;
   loginFailed: string;
+  emailNotConfirmed: string;
+  checkEmailForConfirmation: string;
 }
 
 interface DashboardTranslations {
@@ -133,6 +145,41 @@ interface DashboardTranslations {
   createFirstPost: string;
   logout: string;
   loading: string;
+  deleteConfirm: string;
+}
+
+interface ProfileTranslations {
+  title: string;
+  subtitle: string;
+  personalInfo: string;
+  accountSettings: string;
+  displayName: string;
+  email: string;
+  emailVerified: string;
+  emailNotVerified: string;
+  changePassword: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+  updateProfile: string;
+  updating: string;
+  profileUpdated: string;
+  updateFailed: string;
+  passwordChanged: string;
+  passwordChangeFailed: string;
+  saveChanges: string;
+  cancel: string;
+  memberSince: string;
+  userId: string;
+  language: string;
+  avatar: string;
+  uploadAvatar: string;
+  uploading: string;
+  removeAvatar: string;
+  avatarUploaded: string;
+  avatarUploadFailed: string;
+  passwordsDontMatch: string;
+  passwordTooShort: string;
 }
 
 interface NewPostTranslations {
@@ -169,6 +216,30 @@ interface CategoryTranslations {
   };
 }
 
+interface PasswordResetTranslations {
+  forgotPasswordTitle: string;
+  forgotPasswordSubtitle: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  sendResetLink: string;
+  sendingResetLink: string;
+  resetLinkSent: string;
+  resetLinkSentMessage: string;
+  backToLogin: string;
+  resetPasswordTitle: string;
+  resetPasswordSubtitle: string;
+  newPasswordLabel: string;
+  confirmPasswordLabel: string;
+  newPasswordPlaceholder: string;
+  confirmPasswordPlaceholder: string;
+  updatePassword: string;
+  updatingPassword: string;
+  passwordUpdated: string;
+  passwordUpdatedMessage: string;
+  invalidToken: string;
+  invalidTokenMessage: string;
+}
+
 interface LanguageTranslations {
   nav: NavigationTranslations;
   hero: HeroTranslations;
@@ -183,9 +254,11 @@ interface LanguageTranslations {
   blogPage: BlogPageTranslations;
   login: LoginPageTranslations;
   dashboard: DashboardTranslations;
+  profile: ProfileTranslations;
   newPost: NewPostTranslations;
   postForm: PostFormTranslations;
   categories: CategoryTranslations;
+  passwordReset: PasswordResetTranslations;
 }
 
 export const translations: Record<Language, LanguageTranslations> = {
@@ -245,9 +318,10 @@ export const translations: Record<Language, LanguageTranslations> = {
           text: "Secure Your Financial Future: Explore the latest trends, strategies, and insights to help you make informed decisions and"
         }
       ]
-    },    blog: {
+    }, blog: {
       title: "Financial Wisdom",
-      readMore: "Read More →"
+      readMore: "Read More →",
+      tagline: "Financial Wisdom"
     },
     posts: [
       {
@@ -328,12 +402,23 @@ export const translations: Record<Language, LanguageTranslations> = {
       subtitle: "Sign in to access the dashboard",
       emailLabel: "Email",
       passwordLabel: "Password",
+      confirmPasswordLabel: "Confirm Password",
       emailPlaceholder: "your@email.com",
       passwordPlaceholder: "Enter your password",
+      confirmPasswordPlaceholder: "Re-enter your password",
+      passwordsDontMatch: "Passwords do not match",
       signIn: "Sign In",
       signingIn: "Signing in...",
-      mockAuthNote: "Mock authentication - any email/password works",
-      loginFailed: "Login failed. Please try again."
+      signInWithGoogle: "Sign in with Google",
+      signUp: "Sign Up",
+      signUpWithGoogle: "Sign up with Google",
+      alreadyHaveAccount: "Already have an account? Sign in",
+      dontHaveAccount: "Don't have an account? Sign up",
+      forgotPassword: "Forgot password?",
+      mockAuthNote: "Real Supabase authentication",
+      loginFailed: "Login failed. Please try again.",
+      emailNotConfirmed: "Please check your email to confirm your account. We've sent you a confirmation link.",
+      checkEmailForConfirmation: "Registration successful! Please check your email to confirm your account."
     },
     dashboard: {
       title: "Dashboard",
@@ -351,7 +436,41 @@ export const translations: Record<Language, LanguageTranslations> = {
       noPostsYet: "No posts yet",
       createFirstPost: "Create Your First Post",
       logout: "Logout",
-      loading: "Loading..."
+      loading: "Loading...",
+      deleteConfirm: "Are you sure you want to delete this post?"
+    },
+    profile: {
+      title: "Profile",
+      subtitle: "Manage your account settings and preferences",
+      personalInfo: "Personal Information",
+      accountSettings: "Account Settings",
+      displayName: "Display Name",
+      email: "Email",
+      emailVerified: "Email Verified",
+      emailNotVerified: "Email Not Verified",
+      changePassword: "Change Password",
+      currentPassword: "Current Password",
+      newPassword: "New Password",
+      confirmNewPassword: "Confirm New Password",
+      updateProfile: "Update Profile",
+      updating: "Updating...",
+      profileUpdated: "Profile updated successfully!",
+      updateFailed: "Failed to update profile. Please try again.",
+      passwordChanged: "Password changed successfully!",
+      passwordChangeFailed: "Failed to change password. Please try again.",
+      saveChanges: "Save Changes",
+      cancel: "Cancel",
+      memberSince: "Member Since",
+      userId: "User ID",
+      language: "Language",
+      avatar: "Avatar",
+      uploadAvatar: "Upload Avatar",
+      uploading: "Uploading...",
+      removeAvatar: "Remove Avatar",
+      avatarUploaded: "Avatar uploaded successfully!",
+      avatarUploadFailed: "Failed to upload avatar. Please try again.",
+      passwordsDontMatch: "New passwords do not match",
+      passwordTooShort: "Password must be at least 6 characters"
     },
     newPost: {
       title: "Create New Post",
@@ -385,6 +504,29 @@ export const translations: Record<Language, LanguageTranslations> = {
       'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti' },
       'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più' },
       'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro' },
+    },
+    passwordReset: {
+      forgotPasswordTitle: "Reset Password",
+      forgotPasswordSubtitle: "Enter your email address and we'll send you a link to reset your password",
+      emailLabel: "Email",
+      emailPlaceholder: "your@email.com",
+      sendResetLink: "Send Reset Link",
+      sendingResetLink: "Sending...",
+      resetLinkSent: "Reset link sent!",
+      resetLinkSentMessage: "Check your email for a password reset link. If you don't see it, check your spam folder.",
+      backToLogin: "Back to Login",
+      resetPasswordTitle: "Set New Password",
+      resetPasswordSubtitle: "Enter your new password below",
+      newPasswordLabel: "New Password",
+      confirmPasswordLabel: "Confirm Password",
+      newPasswordPlaceholder: "Enter new password",
+      confirmPasswordPlaceholder: "Confirm new password",
+      updatePassword: "Update Password",
+      updatingPassword: "Updating...",
+      passwordUpdated: "Password updated!",
+      passwordUpdatedMessage: "Your password has been successfully updated. You can now log in with your new password.",
+      invalidToken: "Invalid or expired link",
+      invalidTokenMessage: "This password reset link is invalid or has expired. Please request a new one."
     }
   },
   it: {
@@ -446,7 +588,8 @@ export const translations: Record<Language, LanguageTranslations> = {
     },
     blog: {
       title: "Saggezza Finanziaria",
-      readMore: "Leggi Tutto →"
+      readMore: "Leggi Tutto →",
+      tagline: "Saggezza Finanziaria"
     },
     posts: [
       {
@@ -527,12 +670,23 @@ export const translations: Record<Language, LanguageTranslations> = {
       subtitle: "Accedi per accedere alla dashboard",
       emailLabel: "Email",
       passwordLabel: "Password",
+      confirmPasswordLabel: "Conferma Password",
       emailPlaceholder: "tua@email.com",
       passwordPlaceholder: "Inserisci la tua password",
+      confirmPasswordPlaceholder: "Reinserisci la tua password",
+      passwordsDontMatch: "Le password non corrispondono",
       signIn: "Accedi",
       signingIn: "Accesso in corso...",
-      mockAuthNote: "Autenticazione simulata - qualsiasi email/password funziona",
-      loginFailed: "Accesso fallito. Per favore riprova."
+      signInWithGoogle: "Accedi con Google",
+      signUp: "Registrati",
+      signUpWithGoogle: "Registrati con Google",
+      alreadyHaveAccount: "Hai già un account? Accedi",
+      dontHaveAccount: "Non hai un account? Registrati",
+      forgotPassword: "Password dimenticata?",
+      mockAuthNote: "Autenticazione Supabase reale",
+      loginFailed: "Accesso fallito. Per favore riprova.",
+      emailNotConfirmed: "Per favore controlla la tua email per confermare il tuo account. Ti abbiamo inviato un link di conferma.",
+      checkEmailForConfirmation: "Registrazione completata! Controlla la tua email per confermare il tuo account."
     },
     dashboard: {
       title: "Dashboard",
@@ -550,7 +704,41 @@ export const translations: Record<Language, LanguageTranslations> = {
       noPostsYet: "Nessun post ancora",
       createFirstPost: "Crea il Tuo Primo Post",
       logout: "Esci",
-      loading: "Caricamento..."
+      loading: "Caricamento...",
+      deleteConfirm: "Sei sicuro di voler eliminare questo post?"
+    },
+    profile: {
+      title: "Profilo",
+      subtitle: "Gestisci le impostazioni del tuo account e le preferenze",
+      personalInfo: "Informazioni Personali",
+      accountSettings: "Impostazioni Account",
+      displayName: "Nome Visualizzato",
+      email: "Email",
+      emailVerified: "Email Verificata",
+      emailNotVerified: "Email Non Verificata",
+      changePassword: "Cambia Password",
+      currentPassword: "Password Attuale",
+      newPassword: "Nuova Password",
+      confirmNewPassword: "Conferma Nuova Password",
+      updateProfile: "Aggiorna Profilo",
+      updating: "Aggiornamento...",
+      profileUpdated: "Profilo aggiornato con successo!",
+      updateFailed: "Impossibile aggiornare il profilo. Per favore riprova.",
+      passwordChanged: "Password cambiata con successo!",
+      passwordChangeFailed: "Impossibile cambiare la password. Per favore riprova.",
+      saveChanges: "Salva Modifiche",
+      cancel: "Annulla",
+      memberSince: "Membro dal",
+      userId: "ID Utente",
+      language: "Lingua",
+      avatar: "Avatar",
+      uploadAvatar: "Carica Avatar",
+      uploading: "Caricamento...",
+      removeAvatar: "Rimuovi Avatar",
+      avatarUploaded: "Avatar caricato con successo!",
+      avatarUploadFailed: "Impossibile caricare l'avatar. Per favore riprova.",
+      passwordsDontMatch: "Le nuove password non corrispondono",
+      passwordTooShort: "La password deve essere di almeno 6 caratteri"
     },
     newPost: {
       title: "Crea Nuovo Post",
@@ -584,6 +772,29 @@ export const translations: Record<Language, LanguageTranslations> = {
       'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti' },
       'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più' },
       'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro' },
+    },
+    passwordReset: {
+      forgotPasswordTitle: "Reimposta Password",
+      forgotPasswordSubtitle: "Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password",
+      emailLabel: "Email",
+      emailPlaceholder: "tua@email.com",
+      sendResetLink: "Invia Link di Reset",
+      sendingResetLink: "Invio in corso...",
+      resetLinkSent: "Link di reset inviato!",
+      resetLinkSentMessage: "Controlla la tua email per il link di reset password. Se non lo vedi, controlla la cartella spam.",
+      backToLogin: "Torna al Login",
+      resetPasswordTitle: "Imposta Nuova Password",
+      resetPasswordSubtitle: "Inserisci la tua nuova password qui sotto",
+      newPasswordLabel: "Nuova Password",
+      confirmPasswordLabel: "Conferma Password",
+      newPasswordPlaceholder: "Inserisci nuova password",
+      confirmPasswordPlaceholder: "Conferma nuova password",
+      updatePassword: "Aggiorna Password",
+      updatingPassword: "Aggiornamento in corso...",
+      passwordUpdated: "Password aggiornata!",
+      passwordUpdatedMessage: "La tua password è stata aggiornata con successo. Ora puoi accedere con la tua nuova password.",
+      invalidToken: "Link non valido o scaduto",
+      invalidTokenMessage: "Questo link di reset password non è valido o è scaduto. Per favore richiedine uno nuovo."
     }
   }
 };

@@ -4,6 +4,7 @@ import type { Language } from "@/types/blog";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
+import AuthProviderWrapper from "@/components/providers/AuthProviderWrapper";
 
 interface LanguageLayoutProps {
   children: React.ReactNode;
@@ -66,7 +67,7 @@ export default async function LanguageLayout({
   const validLang = isValidLanguage(lang) ? lang as Language : getDefaultLanguage();
   
   return (
-    <>
+    <AuthProviderWrapper>
       <Header lang={validLang} />
       <main className="pt-20">
         {children}
@@ -89,17 +90,21 @@ export default async function LanguageLayout({
               primary: '#10b981',
               secondary: '#fff',
             },
-            borderColor: '#10b981',
+            style: {
+              border: '2px solid #10b981',
+            },
           },
           error: {
             iconTheme: {
               primary: '#ef4444',
               secondary: '#fff',
             },
-            borderColor: '#ef4444',
+            style: {
+              border: '2px solid #ef4444',
+            },
           },
         }}
       />
-    </>
+    </AuthProviderWrapper>
   );
 }

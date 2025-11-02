@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { Card, CardHeader, CardContent, Button, Badge, Input } from '@/components/ui';
-import { isAuthenticated } from '@/lib/auth';
+import { useAuth } from '@/hooks/useAuth';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { formatDate } from '@/lib/utils';
 import type { Language } from '@/types/blog';
@@ -63,19 +63,21 @@ export default function PostsPage({ params }: PostsPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'drafts'>('all');
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date');
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    params.then(({ lang: paramLang }) => {
+    const loadLang = async () => {
+      const { lang: paramLang } = await params;
       const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
       setLang(validLang);
 
-      // Check authentication
-      if (!isAuthenticated()) {
+      if (!loading && !user) {
         router.push(`/${validLang}/login`);
       }
-    });
-  }, [params, router]);
+    };
+    loadLang();
+  }, [params, router, user, loading]);
 
   const t = getTranslations(lang);
 
@@ -120,14 +122,14 @@ export default function PostsPage({ params }: PostsPageProps) {
   }, [posts, searchQuery, statusFilter, sortBy, lang]);
 
   const handleDelete = (postId: string) => {
-    if (confirm(t.dashboard.deleteConfirm || 'Are you sure you want to delete this post?')) {
+    if (confirm(t.dashboard.deleteConfirm)) {
       // TODO: Delete from Supabase
       setPosts(posts.filter(p => p.id !== postId));
       toast.success(lang === 'it' ? 'Post eliminato!' : 'Post deleted!');
     }
   };
 
-  if (!isAuthenticated()) {
+  if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse">{t.dashboard.loading}</div>

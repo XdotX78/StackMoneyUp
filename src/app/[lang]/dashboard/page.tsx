@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardHeader, CardContent, Button } from '@/components/ui';
-import { isAuthenticated, getCurrentUser, signOut } from '@/lib/auth';
+import { useAuth } from '@/hooks/useAuth';
 import { getTranslations } from '@/lib/translations';
 import type { Language } from '@/types/blog';
+import { getCurrentUser } from '@/lib/auth';
+import { logError } from '@/lib/logger';
 
 interface DashboardPageProps {
   params: Promise<{ lang: string }>;
@@ -14,32 +16,50 @@ interface DashboardPageProps {
 
 export default function DashboardPage({ params }: DashboardPageProps) {
   const [lang, setLang] = useState<Language>('en');
-  const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
+  const [userData, setUserData] = useState<Awaited<ReturnType<typeof getCurrentUser>>>(null);
+  const { user, loading: authLoading, signOut } = useAuth();
   const router = useRouter();
   const t = getTranslations(lang);
 
   useEffect(() => {
-    params.then(({ lang }) => {
+    const loadUser = async () => {
+      const { lang } = await params;
       const validLang = lang === 'it' ? 'it' : 'en';
       setLang(validLang);
 
-      // Check authentication
-      if (!isAuthenticated()) {
+      if (!user) {
         router.push(`/${validLang}/login`);
         return;
       }
 
-      // Get current user
-      setUser(getCurrentUser());
-    });
-  }, [params, router]);
+      try {
+        // Get current user data
+        const currentUser = await getCurrentUser();
+        setUserData(currentUser);
+      } catch (error) {
+        logError('Error loading user:', error, { lang: validLang });
+        router.push(`/${validLang}/login`);
+      }
+    };
 
-  const handleLogout = () => {
-    signOut();
-    router.push(`/${lang}/login`);
+    if (!authLoading) {
+      loadUser();
+    }
+  }, [params, router, user, authLoading]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push(`/${lang}/login`);
+      router.refresh();
+    } catch (error) {
+      logError('Error signing out:', error, { lang });
+      // Still redirect even if signOut fails
+      router.push(`/${lang}/login`);
+    }
   };
 
-  if (!user) {
+  if (authLoading || !user || !userData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse">{t.dashboard.loading}</div>
@@ -53,10 +73,16 @@ export default function DashboardPage({ params }: DashboardPageProps) {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl font-black mb-2">{t.dashboard.title}</h1>
-          <p className="text-gray-600">{t.dashboard.welcomeBack}, {user.name || user.email}</p>
+          <p className="text-gray-600">{t.dashboard.welcomeBack}, {userData.name || userData.email}</p>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">{user.email}</span>
+          <Link
+            href={`/${lang}/dashboard/profile`}
+            className="text-sm text-gray-600 hover:text-emerald-600 transition-colors font-medium"
+          >
+            {lang === 'it' ? 'Profilo' : 'Profile'}
+          </Link>
+          <span className="text-sm text-gray-600">{userData.email}</span>
           <Button variant="outline" onClick={handleLogout}>
             {t.dashboard.logout}
           </Button>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
-import { isAuthenticated } from '@/lib/auth';
+import { useAuth } from '@/hooks/useAuth';
 import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language, BlogPost } from '@/types/blog';
 
@@ -55,16 +55,17 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [lang, setLang] = useState<Language>('en');
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<Partial<BlogPost> | null>(null);
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const t = getTranslations(lang);
 
   useEffect(() => {
-    params.then(async ({ lang: paramLang, slug }) => {
+    const loadData = async () => {
+      const { lang: paramLang, slug } = await params;
       const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
       setLang(validLang);
 
-      // Check authentication
-      if (!isAuthenticated()) {
+      if (!authLoading && !user) {
         router.push(`/${validLang}/login`);
         return;
       }
@@ -72,8 +73,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       // TODO: Fetch post from Supabase by slug
       // For now, use mock data
       setPost(mockPost);
-    });
-  }, [params, router]);
+    };
+    loadData();
+  }, [params, router, user, authLoading]);
 
   const handleSubmit = async (data: PostFormData) => {
     setLoading(true);

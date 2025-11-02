@@ -1,25 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { isAuthenticated, getCurrentUser } from '@/lib/auth';
-import { Button } from '@/components/ui';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 interface AuthButtonProps {
   lang: string;
 }
 
 export default function AuthButton({ lang }: AuthButtonProps) {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const { user, loading } = useAuthContext();
 
-  useEffect(() => {
-    setMounted(true);
-    setAuthenticated(isAuthenticated());
-  }, []);
-
-  // Don't render on server
-  if (!mounted) {
+  if (loading) {
     return (
       <Link
         href={`/${lang}/login`}
@@ -30,7 +21,7 @@ export default function AuthButton({ lang }: AuthButtonProps) {
     );
   }
 
-  if (authenticated) {
+  if (user) {
     return (
       <Link
         href={`/${lang}/dashboard`}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
-import { isAuthenticated } from '@/lib/auth';
+import { useAuth } from '@/hooks/useAuth';
 import { getTranslations } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 
@@ -15,21 +15,22 @@ interface NewPostPageProps {
 export default function NewPostPage({ params }: NewPostPageProps) {
   const [lang, setLang] = useState<Language>('en');
   const [loading, setLoading] = useState(false);
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const t = getTranslations(lang);
 
   useEffect(() => {
-    params.then(({ lang }) => {
+    const loadLang = async () => {
+      const { lang } = await params;
       const validLang = lang === 'it' ? 'it' : 'en';
       setLang(validLang);
 
-      // Check authentication
-      if (!isAuthenticated()) {
+      if (!authLoading && !user) {
         router.push(`/${validLang}/login`);
-        return;
       }
-    });
-  }, [params, router]);
+    };
+    loadLang();
+  }, [params, router, user, authLoading]);
 
   const handleSubmit = async (data: PostFormData) => {
     setLoading(true);

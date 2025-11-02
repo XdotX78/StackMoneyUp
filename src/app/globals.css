@@ -147,6 +147,18 @@ footer h3 {
   margin-bottom: 0;
 }
 
+/* Profile Section - Override global heading styles */
+[class*="profile"] h1,
+[class*="profile"] h2,
+[class*="Profile"] h1,
+[class*="Profile"] h2 {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  margin-bottom: inherit !important;
+}
+
 /* TipTap Editor Styles */
 .ProseMirror {
   outline: none;

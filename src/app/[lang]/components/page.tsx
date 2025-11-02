@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { 
   Button, 
+  Input,
   Textarea, 
   Card, 
   CardHeader, 
@@ -73,7 +74,7 @@ export default function ComponentShowcase() {
                 type="email"
                 placeholder="your@email.com"
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
               />
               <Input 
                 label="Password"

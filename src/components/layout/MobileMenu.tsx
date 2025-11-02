@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import type { Language } from '@/types/blog';
-import { isAuthenticated } from '@/lib/auth';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 interface NavItem {
   label: {
@@ -20,13 +20,9 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    setAuthenticated(isAuthenticated());
-  }, []);
+  const { user, loading } = useAuthContext();
+  const authenticated = !!user;
+  const mounted = !loading;
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
