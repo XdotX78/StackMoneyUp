@@ -2,7 +2,6 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input, Button } from '@/components/ui';
 
 export default function MaintenancePage() {
   const [password, setPassword] = useState('');
@@ -24,11 +23,12 @@ export default function MaintenancePage() {
         body: JSON.stringify({ password }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
         throw new Error(data.error || 'Invalid password');
       }
+
+      const data = await response.json();
 
       // Success - redirect to home page
       router.refresh();
@@ -50,11 +50,11 @@ export default function MaintenancePage() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
           className="absolute top-1/4 -left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
-          style={{ backgroundColor: 'var(--green-primary)' }}
+                  style={{ backgroundColor: '#00ff00' }}
         />
         <div 
           className="absolute bottom-1/4 -right-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
-          style={{ backgroundColor: 'var(--green-primary)' }}
+                  style={{ backgroundColor: '#00ff00' }}
         />
       </div>
 
@@ -62,7 +62,7 @@ export default function MaintenancePage() {
         <div 
           className="bg-white rounded-2xl p-8 sm:p-10 border-2 shadow-2xl"
           style={{ 
-            borderColor: 'var(--green-primary)',
+            borderColor: '#00ff00',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 0, 0.1)'
           }}
         >
@@ -90,7 +90,7 @@ export default function MaintenancePage() {
               <h1 className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 Site Under Maintenance
               </h1>
-              <div className="w-16 h-1 mx-auto mt-3" style={{ backgroundColor: 'var(--green-primary)' }} />
+              <div className="w-16 h-1 mx-auto mt-3 bg-green-500" />
             </div>
             <p className="text-gray-600 text-base font-medium mb-2">
               We're working on something awesome!
@@ -127,7 +127,7 @@ export default function MaintenancePage() {
                   placeholder="Enter maintenance password"
                   required
                   disabled={loading}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
                   }}
@@ -136,20 +136,19 @@ export default function MaintenancePage() {
               </div>
             </div>
 
-            <Button
+            <button
               type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full font-bold text-lg py-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              disabled={loading}
+              className="w-full font-bold text-lg py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white"
               style={{
-                background: 'linear-gradient(135deg, var(--green-primary) 0%, #00cc00 100%)',
+                background: loading 
+                  ? '#6b7280' 
+                  : 'linear-gradient(135deg, #00ff00 0%, #00cc00 100%)',
                 boxShadow: loading ? 'none' : '0 10px 25px rgba(0, 255, 0, 0.3)'
               }}
-              isLoading={loading}
-              disabled={loading}
             >
               {loading ? 'Verifying...' : 'Access Site'}
-            </Button>
+            </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-gray-200">
