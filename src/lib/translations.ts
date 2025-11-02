@@ -495,7 +495,12 @@ export const translations: Record<Language, LanguageTranslations> = {
       english: "English",
       italian: "Italian",
       englishPlaceholder: "Start writing your blog post in English...",
-      italianPlaceholder: "Inizia a scrivere il tuo post in italiano..."
+      italianPlaceholder: "Inizia a scrivere il tuo post in italiano...",
+      preview: "Preview",
+      previewTitle: "Blog Post Preview",
+      previewEnglish: "English Preview",
+      previewItalian: "Italian Preview",
+      closePreview: "Close Preview"
     },
     categories: {
       'Investing': { en: 'Investing', it: 'Investimenti' },
@@ -763,7 +768,12 @@ export const translations: Record<Language, LanguageTranslations> = {
       english: "Inglese",
       italian: "Italiano",
       englishPlaceholder: "Inizia a scrivere il tuo post del blog in inglese...",
-      italianPlaceholder: "Inizia a scrivere il tuo post in italiano..."
+      italianPlaceholder: "Inizia a scrivere il tuo post in italiano...",
+      preview: "Anteprima",
+      previewTitle: "Anteprima del Post",
+      previewEnglish: "Anteprima Inglese",
+      previewItalian: "Anteprima Italiana",
+      closePreview: "Chiudi Anteprima"
     },
     categories: {
       'Investing': { en: 'Investing', it: 'Investimenti' },

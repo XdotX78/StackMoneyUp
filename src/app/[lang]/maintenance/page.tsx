@@ -66,38 +66,43 @@ export default function MaintenancePage() {
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 0, 0.1)'
           }}
         >
-          <div className="text-center mb-10">
-            <div className="mb-6">
-              <svg 
-                className="w-20 h-20 mx-auto mb-4 text-gray-700" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
-                />
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
-                />
-              </svg>
-              <h1 className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Site Under Maintenance
+          <div className="text-center mb-8">
+            <div className="mb-8">
+              <div className="mb-6">
+                <svg 
+                  className="w-24 h-24 mx-auto mb-6 text-gray-800" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
+                  />
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
+                  />
+                </svg>
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-black mb-4 text-gray-900 leading-tight">
+                Site Under<br />Maintenance
               </h1>
-              <div className="w-16 h-1 mx-auto mt-3 bg-green-500" />
+              <div className="w-20 h-1.5 mx-auto mt-4 mb-6 bg-green-500 rounded-full" />
             </div>
-            <p className="text-gray-600 text-base font-medium mb-2">
-              We're working on something awesome!
-            </p>
-            <p className="text-gray-500 text-sm">
-              Please enter the maintenance password to continue.
-            </p>
+            <div className="space-y-3 mb-2">
+              <p className="text-gray-700 text-lg font-semibold">
+                We're working on something awesome!
+              </p>
+              <p className="text-gray-600 text-base leading-relaxed max-w-md mx-auto">
+                This website is currently undergoing maintenance.<br />
+                Please enter the authorized password below to access the site.
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -110,13 +115,13 @@ export default function MaintenancePage() {
               </div>
             )}
 
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
+            <div className="space-y-3">
+              <label className="block text-base font-bold text-gray-800">
                 Maintenance Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
@@ -124,12 +129,12 @@ export default function MaintenancePage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter maintenance password"
+                  placeholder="Enter the maintenance password"
                   required
                   disabled={loading}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full pl-14 pr-4 py-4 text-base bg-white border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-3 focus:ring-green-400 focus:border-green-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                   style={{
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
                   }}
                   autoFocus
                 />
@@ -139,24 +144,27 @@ export default function MaintenancePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full font-bold text-lg py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white"
+              className="w-full font-black text-lg py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white uppercase tracking-wide"
               style={{
                 background: loading 
                   ? '#6b7280' 
                   : 'linear-gradient(135deg, #00ff00 0%, #00cc00 100%)',
-                boxShadow: loading ? 'none' : '0 10px 25px rgba(0, 255, 0, 0.3)'
+                boxShadow: loading ? 'none' : '0 12px 30px rgba(0, 255, 0, 0.4)'
               }}
             >
-              {loading ? 'Verifying...' : 'Access Site'}
+              {loading ? 'Verifying Password...' : 'Access Site'}
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mt-8 pt-6 border-t-2 border-gray-200">
+            <div className="flex items-start justify-center gap-3 text-xs text-gray-600">
+              <svg className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p>This site is in maintenance mode. Only authorized users can access it.</p>
+              <p className="text-center leading-relaxed">
+                This site is currently in maintenance mode.<br />
+                <span className="font-semibold">Only authorized personnel with the correct password can access it.</span>
+              </p>
             </div>
           </div>
         </div>

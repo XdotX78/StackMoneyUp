@@ -120,6 +120,7 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
   const [lang, setLang] = useState<Language>('en');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const t = getTranslations(lang);
 
   useEffect(() => {
@@ -135,13 +136,29 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
     return Array.from(cats).sort();
   }, []);
 
-  // Filter posts based on search and category
+  // Extract unique tags from posts
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    mockPosts.forEach(post => {
+      post.tags?.forEach(tag => tags.add(tag));
+    });
+    return Array.from(tags).sort();
+  }, []);
+
+  // Filter posts based on search, category, and tags
   const filteredPosts = useMemo(() => {
     let filtered = [...mockPosts];
 
     // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(post => post.category === selectedCategory);
+    }
+
+    // Filter by selected tags (posts must have at least one selected tag)
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter(post => 
+        post.tags.some(tag => selectedTags.includes(tag))
+      );
     }
 
     // Filter by search query
@@ -161,18 +178,27 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
     }
 
     return filtered;
-  }, [searchQuery, selectedCategory, lang]);
+  }, [searchQuery, selectedCategory, selectedTags, lang]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
+    setSelectedTags([]);
   };
 
-  const hasActiveFilters = searchQuery.trim() !== '' || selectedCategory !== 'all';
+  const hasActiveFilters = searchQuery.trim() !== '' || selectedCategory !== 'all' || selectedTags.length > 0;
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">
@@ -228,6 +254,28 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
           ))}
         </div>
 
+        {/* Tag Filters */}
+        {allTags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-semibold text-gray-700">
+              {lang === 'it' ? 'Tag:' : 'Tags:'}
+            </span>
+            {allTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  selectedTags.includes(tag)
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Active Filters & Clear */}
         {hasActiveFilters && (
           <div className="flex items-center justify-between">
@@ -245,6 +293,11 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
                   {getCategoryTranslation(selectedCategory, lang)}
                 </Badge>
               )}
+              {selectedTags.map(tag => (
+                <Badge key={tag} variant="info" size="sm">
+                  {tag}
+                </Badge>
+              ))}
             </div>
             <Button variant="ghost" size="sm" onClick={clearFilters}>
               {t.blogPage.clearFilters}

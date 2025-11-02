@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import BlogEditor from './BlogEditor';
-import { Tabs } from '@/components/ui';
+import BlogPostPreview from './BlogPostPreview';
+import { Tabs, Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/ui';
 import { Input, Textarea, Button } from '@/components/ui';
 import { generateSlug, calculateReadTime } from '@/lib/utils';
 import { getTranslations } from '@/lib/translations';
@@ -57,6 +58,8 @@ export default function PostForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewLang, setPreviewLang] = useState<'en' | 'it'>('en');
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasAutoSavedRef = useRef(false);
 
@@ -404,21 +407,87 @@ export default function PostForm({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-4 pt-6 border-t">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel}>
-            {t.postForm.cancel}
-          </Button>
-        )}
-        <Button
-          type="submit"
-          variant="primary"
-          isLoading={isLoading}
-          disabled={isLoading}
+      <div className="flex items-center justify-between pt-6 border-t">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={() => setShowPreview(true)}
+          className="flex items-center gap-2"
         >
-          {initialData ? t.postForm.updatePost : t.postForm.createPost}
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          {t.postForm.preview}
         </Button>
+        <div className="flex items-center gap-4">
+          {onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              {t.postForm.cancel}
+            </Button>
+          )}
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={isLoading}
+            disabled={isLoading}
+          >
+            {initialData ? t.postForm.updatePost : t.postForm.createPost}
+          </Button>
+        </div>
       </div>
+
+      {/* Preview Modal */}
+      <Modal isOpen={showPreview} onClose={() => setShowPreview(false)} size="xl">
+        <ModalHeader>
+          {t.postForm.previewTitle}
+        </ModalHeader>
+        <ModalBody className="max-h-[80vh] overflow-y-auto">
+          <div className="space-y-6">
+            {/* Language Tabs for Preview */}
+            <div className="flex gap-2 border-b border-gray-200">
+              <button
+                onClick={() => setPreviewLang('en')}
+                className={`px-4 py-2 font-medium text-sm transition-colors ${
+                  previewLang === 'en'
+                    ? 'border-b-2 border-emerald-600 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {t.postForm.previewEnglish}
+              </button>
+              <button
+                onClick={() => setPreviewLang('it')}
+                className={`px-4 py-2 font-medium text-sm transition-colors ${
+                  previewLang === 'it'
+                    ? 'border-b-2 border-emerald-600 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {t.postForm.previewItalian}
+              </button>
+            </div>
+
+            {/* Preview Content */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <BlogPostPreview
+                title={previewLang === 'en' ? formData.title_en : formData.title_it}
+                excerpt={previewLang === 'en' ? formData.excerpt_en : formData.excerpt_it}
+                content={previewLang === 'en' ? formData.content_en : formData.content_it}
+                category={formData.category}
+                tags={formData.tags}
+                cover_image={formData.cover_image}
+                lang={previewLang}
+              />
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="outline" onClick={() => setShowPreview(false)}>
+            {t.postForm.closePreview}
+          </Button>
+        </ModalFooter>
+      </Modal>
     </form>
   );
 }

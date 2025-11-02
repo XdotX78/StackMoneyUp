@@ -2,6 +2,8 @@
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui';
+import { uploadBlogImage } from '@/lib/storage';
+import toast from 'react-hot-toast';
 
 interface ImageUploadProps {
   onUploadComplete: (url: string) => void;
@@ -22,13 +24,17 @@ export default function ImageUpload({
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      onError?.('Please select an image file');
+      const errorMsg = 'Please select an image file';
+      onError?.(errorMsg);
+      toast.error(errorMsg);
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      onError?.('Image size must be less than 5MB');
+      const errorMsg = 'Image size must be less than 5MB';
+      onError?.(errorMsg);
+      toast.error(errorMsg);
       return;
     }
 
@@ -36,14 +42,7 @@ export default function ImageUpload({
     setProgress(0);
 
     try {
-      // TODO: Replace with actual Supabase upload
-      // For now, using a placeholder URL
-      // Once Supabase is set up, use:
-      // const { data, error } = await supabase.storage
-      //   .from('blog-images')
-      //   .upload(`/${Date.now()}-${file.name}`, file);
-      
-      // Simulate upload progress
+      // Simulate upload progress (since Supabase doesn't provide real-time progress)
       const progressInterval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 90) {
@@ -52,22 +51,21 @@ export default function ImageUpload({
           }
           return prev + 10;
         });
-      }, 100);
+      }, 150);
 
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Upload to Supabase Storage
+      const imageUrl = await uploadBlogImage(file);
+      
+      clearInterval(progressInterval);
+      setProgress(100);
 
-      // For now, create a data URL (temporary solution)
-      // In production, this will be replaced with Supabase Storage URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        clearInterval(progressInterval);
-        setProgress(100);
-        const result = reader.result as string;
-        onUploadComplete(result);
-        setUploading(false);
-      };
-      reader.readAsDataURL(file);
+      // Small delay to show 100% completion
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // Call the completion callback with the public URL
+      onUploadComplete(imageUrl);
+      setUploading(false);
+      toast.success('Image uploaded successfully!');
 
       // Reset file input
       if (fileInputRef.current) {
@@ -76,7 +74,9 @@ export default function ImageUpload({
     } catch (error) {
       setUploading(false);
       setProgress(0);
-      onError?.('Failed to upload image. Please try again.');
+      const errorMsg = error instanceof Error ? error.message : 'Failed to upload image. Please try again.';
+      onError?.(errorMsg);
+      toast.error(errorMsg);
     }
   };
 

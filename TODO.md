@@ -19,6 +19,11 @@
 - [x] Better user feedback for auth errors
 - [x] Integrated auth patterns (useAuth hook + AuthContext)
 - [x] Fixed all async/await issues with isAuthenticated()
+- [x] Add password reset functions to auth.ts (resetPassword, updatePassword)
+- [x] Create forgot-password page with email input form
+- [x] Create reset-password page for handling reset token from email
+- [x] Add 'Forgot password?' link to login page
+- [x] Add password reset translations (EN/IT)
 
 ### 🚀 Core Features
 - [x] Multi-language (EN / IT)
@@ -52,18 +57,20 @@
 - [ ] User profiles table (bio, avatar, preferences)
 - [ ] Tags / categories relationship
 - [ ] Comments system (optional)
-- [x] Supabase Storage + policy for image uploads - Avatar upload implemented (need to create 'avatars' bucket)
+- [x] Supabase Storage + policy for image uploads - Avatar upload implemented
+- [x] Blog image upload to Supabase Storage - Blog images upload implemented with proper RLS policies
 - [ ] Database migrations + seed data
 
 ---
 
 ## 🎨 FRONTEND FEATURES
-- [ ] Password reset (forgot password)  
+- [x] Password reset (forgot password)  
 - [x] Email verification UI - User-friendly messages added
-- [ ] Blog post preview (before publishing)  
-- [ ] Search + filter by category/tags  
-- [ ] "Related posts" suggestions  
-- [ ] Reading time indicator  
+- [x] Blog image upload to Supabase Storage
+- [x] Blog post preview (before publishing) - Modal preview with EN/IT toggle  
+- [x] Search + filter by category/tags - Enhanced with tag filtering, clickable tags
+- [x] "Related posts" suggestions - Smart scoring based on category + tags  
+- [x] Reading time indicator - Displayed on all blog cards and post pages  
 - [x] Social media share buttons - ShareButtonsClient component implemented
 
 ---
@@ -90,9 +97,13 @@
 ## ⚙️ DEVOPS & DEPLOYMENT
 - [ ] Configure environment variables (prod)  
 - [ ] Production build optimization  
-- [ ] Deploy on Vercel (or similar)  
+- [x] Deploy on Netlify (or similar) - Netlify.toml configured
 - [ ] CI/CD pipeline (GitHub Actions?)  
 - [x] Error logging - Basic logger utility created (can be extended with Sentry/Logtail)  
+- [x] Create maintenance page component with password form
+- [x] Update middleware to check maintenance mode and password cookie
+- [x] Create API route to verify maintenance password and set cookie
+- [x] Add environment variables documentation for maintenance mode
 - [ ] Google Analytics / Plausible integration
 
 ---

@@ -61,7 +61,7 @@ export default function BlogCard({ post, lang }: BlogCardProps) {
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags.slice(0, 3).map((tag, index) => (
-                <Badge key={index} variant="default" size="sm">
+                <Badge key={index} variant="default" size="sm" className="cursor-default">
                   {tag}
                 </Badge>
               ))}

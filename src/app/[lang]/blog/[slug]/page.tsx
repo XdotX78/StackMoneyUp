@@ -260,7 +260,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </div>
 
       {/* Related Posts */}
-      <RelatedPosts currentSlug={slug} category={post.category} lang={validLang} />
+      <RelatedPosts currentSlug={slug} category={post.category} tags={post.tags} lang={validLang} />
 
       {/* Footer Actions */}
       <div className="mt-12 pt-8 border-t border-gray-200">
@@ -277,13 +277,52 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 }
 
 // Related Posts Component
-function RelatedPosts({ currentSlug, category, lang }: { currentSlug: string; category: string; lang: Language }) {
-  // Get posts from same category, excluding current post
-  const relatedPosts = mockPosts
-    .filter(p => p.category === category && p.slug !== currentSlug && p.published)
-    .slice(0, 3);
+function RelatedPosts({ currentSlug, category, tags, lang }: { 
+  currentSlug: string; 
+  category: string; 
+  tags?: string[];
+  lang: Language;
+}) {
+  const currentPost = mockPosts.find(p => p.slug === currentSlug);
+  const currentPostTags = currentPost?.tags || tags || [];
 
-  if (relatedPosts.length === 0) {
+  // Score posts by relevance:
+  // - Same category: +2 points
+  // - Shared tags: +1 point per tag
+  // Then sort by score, then by date
+  const scoredPosts = mockPosts
+    .filter(p => p.slug !== currentSlug && p.published)
+    .map(post => {
+      let score = 0;
+      
+      // Same category gets priority
+      if (post.category === category) {
+        score += 2;
+      }
+      
+      // Shared tags add points
+      if (currentPostTags.length > 0 && post.tags) {
+        const sharedTags = post.tags.filter(tag => currentPostTags.includes(tag));
+        score += sharedTags.length;
+      }
+      
+      return { post, score };
+    })
+    .filter(item => item.score > 0) // Only show posts with at least some relevance
+    .sort((a, b) => {
+      // Sort by score (highest first)
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      // Then by date (newest first)
+      const dateA = a.post.published_at || '';
+      const dateB = b.post.published_at || '';
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    })
+    .slice(0, 3)
+    .map(item => item.post);
+
+  if (scoredPosts.length === 0) {
     return null;
   }
 
@@ -293,7 +332,7 @@ function RelatedPosts({ currentSlug, category, lang }: { currentSlug: string; ca
         {lang === 'it' ? 'Articoli Correlati' : 'Related Articles'}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {relatedPosts.map((post) => {
+        {scoredPosts.map((post) => {
           const title = post.title[lang] || post.title.en;
           const excerpt = post.excerpt[lang] || post.excerpt.en;
           
