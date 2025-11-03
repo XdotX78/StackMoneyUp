@@ -11,14 +11,25 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Format date to readable string
  */
-export function formatDate(date: string | Date, locale: string = 'en-US'): string {
+export function formatDate(
+  date: string | Date, 
+  locale: string = 'en-US',
+  options?: { includeTime?: boolean }
+): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
-  return new Intl.DateTimeFormat(locale, {
+  const formatOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(dateObj);
+  };
+
+  if (options?.includeTime) {
+    formatOptions.hour = '2-digit';
+    formatOptions.minute = '2-digit';
+  }
+  
+  return new Intl.DateTimeFormat(locale, formatOptions).format(dateObj);
 }
 
 /**

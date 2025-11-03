@@ -86,6 +86,35 @@ export interface Author {
  * Language Types
  */
 
+/**
+ * Comment Types
+ */
+
+export interface Comment {
+  id: string;
+  post_id: string;
+  parent_id?: string | null;
+  author_id: string;
+  author_name?: string;
+  author_avatar?: string | null;
+  content: string;
+  approved: boolean;
+  edited: boolean;
+  created_at: string;
+  updated_at: string;
+  replies?: Comment[];
+  reply_count?: number;
+}
+
+export interface CommentFormData {
+  content: string;
+  parent_id?: string | null;
+}
+
+/**
+ * Language Types
+ */
+
 export type Language = 'en' | 'it';
 
 export type LocalizedContent = {

@@ -207,6 +207,11 @@ interface PostFormTranslations {
   italian: string;
   englishPlaceholder: string;
   italianPlaceholder: string;
+  preview: string;
+  previewTitle: string;
+  previewEnglish: string;
+  previewItalian: string;
+  closePreview: string;
 }
 
 interface CategoryTranslations {

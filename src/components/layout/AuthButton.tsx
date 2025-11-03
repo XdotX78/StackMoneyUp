@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { useRole } from '@/hooks/useRole';
 
 interface AuthButtonProps {
   lang: string;
@@ -9,6 +10,7 @@ interface AuthButtonProps {
 
 export default function AuthButton({ lang }: AuthButtonProps) {
   const { user, loading } = useAuthContext();
+  const { canManagePosts } = useRole();
 
   if (loading) {
     return (
@@ -22,13 +24,15 @@ export default function AuthButton({ lang }: AuthButtonProps) {
   }
 
   if (user) {
+    // Regular users see "Profile", editors/admins see "Dashboard"
+    const isEditorOrAdmin = canManagePosts();
     return (
       <Link
-        href={`/${lang}/dashboard`}
+        href={isEditorOrAdmin ? `/${lang}/dashboard` : `/${lang}/dashboard/profile`}
         className="bg-emerald-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-emerald-700 transition-all text-sm"
         style={{ color: '#ffffff' }}
       >
-        Dashboard
+        {isEditorOrAdmin ? 'Dashboard' : 'Profile'}
       </Link>
     );
   }

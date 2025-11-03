@@ -4,7 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
+import { LoadingSkeleton } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
+import { getPostBySlug, updatePost } from '@/lib/blog';
 import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language, BlogPost } from '@/types/blog';
 
@@ -12,50 +15,13 @@ interface EditPostPageProps {
   params: Promise<{ lang: string; slug: string }>;
 }
 
-// Mock post data (replace with Supabase fetch)
-const mockPost: Partial<BlogPost> = {
-  id: '1',
-  slug: 'compound-effect-investing',
-  title: {
-    en: 'The Compound Effect of Consistent Investing',
-    it: "L'Effetto Composto degli Investimenti Costanti",
-  },
-  excerpt: {
-    en: 'Why investing $100 monthly beats trying to time the market with $10,000 once.',
-    it: 'Perché investire 100€ mensili batte il tentativo di cronometrare il mercato.',
-  },
-  content: {
-    en: JSON.stringify({
-      type: 'doc',
-      content: [
-        {
-          type: 'paragraph',
-          content: [{ type: 'text', text: 'When it comes to building wealth, consistency trumps timing every single time.' }]
-        }
-      ]
-    }),
-    it: JSON.stringify({
-      type: 'doc',
-      content: [
-        {
-          type: 'paragraph',
-          content: [{ type: 'text', text: 'Quando si tratta di costruire ricchezza, la costanza batte sempre il tempismo.' }]
-        }
-      ]
-    }),
-  },
-  category: 'Investing', // This can be changed when editing
-  tags: ['investing', 'compound-interest', 'long-term'],
-  cover_image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80',
-  published: true,
-  featured: false,
-};
-
 export default function EditPostPage({ params }: EditPostPageProps) {
   const [lang, setLang] = useState<Language>('en');
   const [loading, setLoading] = useState(false);
-  const [post, setPost] = useState<Partial<BlogPost> | null>(null);
+  const [postLoading, setPostLoading] = useState(true);
+  const [post, setPost] = useState<BlogPost | null>(null);
   const { user, loading: authLoading } = useAuth();
+  const { canManagePosts } = useRole();
   const router = useRouter();
   const t = getTranslations(lang);
 
@@ -70,20 +36,62 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         return;
       }
 
-      // TODO: Fetch post from Supabase by slug
-      // For now, use mock data
-      setPost(mockPost);
+      // Check if user has editor/admin role
+      if (!authLoading && user && !canManagePosts()) {
+        router.push(`/${validLang}/dashboard`);
+        return;
+      }
+
+      // Fetch post from Supabase
+      if (user && !authLoading) {
+        try {
+          setPostLoading(true);
+          const fetchedPost = await getPostBySlug(slug);
+          if (!fetchedPost) {
+            toast.error(validLang === 'it' ? 'Post non trovato' : 'Post not found');
+            router.push(`/${validLang}/dashboard/posts`);
+            return;
+          }
+          setPost(fetchedPost);
+        } catch (error) {
+          console.error('Error loading post:', error);
+          toast.error(error instanceof Error ? error.message : 'Failed to load post');
+          router.push(`/${validLang}/dashboard/posts`);
+        } finally {
+          setPostLoading(false);
+        }
+      }
     };
     loadData();
-  }, [params, router, user, authLoading]);
+  }, [params, router, user, authLoading, canManagePosts]);
 
   const handleSubmit = async (data: PostFormData) => {
+    if (!post) return;
+    
     setLoading(true);
     
     try {
-      // TODO: Update post in Supabase
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Prepare scheduled_at if provided
+      const scheduledAt = data.scheduled_at 
+        ? new Date(data.scheduled_at).toISOString()
+        : undefined;
+
+      // Update post in Supabase
+      await updatePost(post.id, {
+        slug: data.slug,
+        title_en: data.title_en,
+        title_it: data.title_it,
+        excerpt_en: data.excerpt_en,
+        excerpt_it: data.excerpt_it,
+        content_en: data.content_en,
+        content_it: data.content_it,
+        category: data.category,
+        tags: data.tags,
+        cover_image: data.cover_image,
+        published: data.published,
+        featured: data.featured,
+        scheduled_at: scheduledAt,
+      });
       
       toast.success(lang === 'it' ? 'Post aggiornato con successo!' : 'Post updated successfully!');
       
@@ -92,7 +100,12 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         router.push(`/${lang}/dashboard/posts`);
       }, 500);
     } catch (error) {
-      toast.error(lang === 'it' ? 'Errore nel salvare il post. Riprova.' : 'Failed to save post. Please try again.');
+      console.error('Error updating post:', error);
+      toast.error(
+        error instanceof Error 
+          ? error.message 
+          : (lang === 'it' ? 'Errore nel salvare il post. Riprova.' : 'Failed to save post. Please try again.')
+      );
     } finally {
       setLoading(false);
     }
@@ -102,10 +115,13 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     router.push(`/${lang}/dashboard/posts`);
   };
 
-  if (!post) {
+  if (authLoading || postLoading || !post) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">{t.dashboard.loading}</div>
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        <div className="space-y-6">
+          <LoadingSkeleton variant="text" width="300px" height="40px" />
+          <LoadingSkeleton variant="rectangular" height="400px" />
+        </div>
       </div>
     );
   }

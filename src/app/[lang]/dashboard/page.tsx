@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardHeader, CardContent, Button } from '@/components/ui';
+import { Card, CardHeader, CardContent, Button, LoadingSkeleton } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
 import { getTranslations } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 import { getCurrentUser } from '@/lib/auth';
@@ -18,6 +19,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
   const [lang, setLang] = useState<Language>('en');
   const [userData, setUserData] = useState<Awaited<ReturnType<typeof getCurrentUser>>>(null);
   const { user, loading: authLoading, signOut } = useAuth();
+  const { canManagePosts, isAdmin, loading: roleLoading } = useRole();
   const router = useRouter();
   const t = getTranslations(lang);
 
@@ -36,6 +38,16 @@ export default function DashboardPage({ params }: DashboardPageProps) {
         // Get current user data
         const currentUser = await getCurrentUser();
         setUserData(currentUser);
+
+        // Redirect regular users to profile page (they only have access to profile)
+        if (currentUser && !currentUser.role) {
+          router.push(`/${validLang}/dashboard/profile`);
+          return;
+        }
+        if (currentUser && currentUser.role === 'user') {
+          router.push(`/${validLang}/dashboard/profile`);
+          return;
+        }
       } catch (error) {
         logError('Error loading user:', error, { lang: validLang });
         router.push(`/${validLang}/login`);
@@ -59,10 +71,17 @@ export default function DashboardPage({ params }: DashboardPageProps) {
     }
   };
 
-  if (authLoading || !user || !userData) {
+  if (authLoading || roleLoading || !user || !userData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">{t.dashboard.loading}</div>
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        <div className="space-y-6">
+          <LoadingSkeleton variant="text" width="200px" height="32px" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <LoadingSkeleton key={i} variant="card" height="150px" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -73,7 +92,20 @@ export default function DashboardPage({ params }: DashboardPageProps) {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl font-black mb-2">{t.dashboard.title}</h1>
-          <p className="text-gray-600">{t.dashboard.welcomeBack}, {userData.name || userData.email}</p>
+          <div className="flex items-center gap-3">
+            <p className="text-gray-600">{t.dashboard.welcomeBack}, {userData.name || userData.email}</p>
+            {userData.role && (
+              <span className={`px-2 py-1 text-xs font-semibold rounded ${
+                userData.role === 'admin'
+                  ? 'bg-red-100 text-red-800'
+                  : userData.role === 'editor'
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-gray-100 text-gray-800'
+              }`}>
+                {userData.role.toUpperCase()}
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <Link
@@ -129,17 +161,47 @@ export default function DashboardPage({ params }: DashboardPageProps) {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4">
-            <Link href={`/${lang}/dashboard/new-post`}>
-              <Button variant="primary" size="lg">
-                {t.dashboard.newPost}
-              </Button>
-            </Link>
-            <Link href={`/${lang}/dashboard/posts`}>
-              <Button variant="outline" size="lg">
-                {lang === 'it' ? 'Gestisci Post' : 'Manage Posts'}
-              </Button>
-            </Link>
+            {canManagePosts() && (
+              <>
+                <Link href={`/${lang}/dashboard/new-post`}>
+                  <Button variant="primary" size="lg">
+                    {t.dashboard.newPost}
+                  </Button>
+                </Link>
+                <Link href={`/${lang}/dashboard/posts`}>
+                  <Button variant="outline" size="lg">
+                    {lang === 'it' ? 'Gestisci Post' : 'Manage Posts'}
+                  </Button>
+                </Link>
+                <Link href={`/${lang}/dashboard/media`}>
+                  <Button variant="outline" size="lg">
+                    {lang === 'it' ? 'Libreria Media' : 'Media Library'}
+                  </Button>
+                </Link>
+                <Link href={`/${lang}/dashboard/tags`}>
+                  <Button variant="outline" size="lg">
+                    {lang === 'it' ? 'Gestione Tag' : 'Manage Tags'}
+                  </Button>
+                </Link>
+              </>
+            )}
+            {isAdmin() && (
+              <Link href={`/${lang}/dashboard/analytics`}>
+                <Button variant="outline" size="lg">
+                  {lang === 'it' ? 'Analisi' : 'Analytics'}
+                </Button>
+              </Link>
+            )}
           </div>
+          {!canManagePosts() && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-800">
+                {lang === 'it'
+                  ? 'Non hai i permessi per gestire i post. Contatta un amministratore per ottenere i permessi di editor.'
+                  : 'You don\'t have permission to manage posts. Contact an administrator to get editor permissions.'}
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
+import { createPost } from '@/lib/blog';
 import { getTranslations } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 
@@ -16,6 +18,7 @@ export default function NewPostPage({ params }: NewPostPageProps) {
   const [lang, setLang] = useState<Language>('en');
   const [loading, setLoading] = useState(false);
   const { user, loading: authLoading } = useAuth();
+  const { canManagePosts } = useRole();
   const router = useRouter();
   const t = getTranslations(lang);
 
@@ -27,27 +30,56 @@ export default function NewPostPage({ params }: NewPostPageProps) {
 
       if (!authLoading && !user) {
         router.push(`/${validLang}/login`);
+        return;
+      }
+
+      // Check if user has editor/admin role
+      if (!authLoading && user && !canManagePosts()) {
+        router.push(`/${validLang}/dashboard`);
       }
     };
     loadLang();
-  }, [params, router, user, authLoading]);
+  }, [params, router, user, authLoading, canManagePosts]);
 
   const handleSubmit = async (data: PostFormData) => {
     setLoading(true);
     
     try {
-      // TODO: Replace with actual Supabase save
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Prepare scheduled_at if provided
+      const scheduledAt = data.scheduled_at 
+        ? new Date(data.scheduled_at).toISOString()
+        : undefined;
+
+      // Create post in Supabase
+      await createPost({
+        slug: data.slug,
+        title_en: data.title_en,
+        title_it: data.title_it,
+        excerpt_en: data.excerpt_en,
+        excerpt_it: data.excerpt_it,
+        content_en: data.content_en,
+        content_it: data.content_it,
+        category: data.category,
+        tags: data.tags,
+        cover_image: data.cover_image,
+        published: data.published,
+        featured: data.featured,
+        scheduled_at: scheduledAt,
+      });
       
       toast.success(lang === 'it' ? 'Post salvato con successo!' : 'Post saved successfully!');
       
       // Redirect to dashboard after successful save
       setTimeout(() => {
-        router.push(`/${lang}/dashboard`);
+        router.push(`/${lang}/dashboard/posts`);
       }, 500);
     } catch (error) {
-      toast.error(lang === 'it' ? 'Errore nel salvare il post. Riprova.' : 'Failed to save post. Please try again.');
+      console.error('Error saving post:', error);
+      toast.error(
+        error instanceof Error 
+          ? error.message 
+          : (lang === 'it' ? 'Errore nel salvare il post. Riprova.' : 'Failed to save post. Please try again.')
+      );
     } finally {
       setLoading(false);
     }

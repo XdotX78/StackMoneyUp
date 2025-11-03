@@ -15,5 +15,12 @@ export { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';
 
 export { Tabs } from './Tabs';
 
-
-
+export {
+  LoadingSkeleton,
+  PostCardSkeleton,
+  BlogGridSkeleton,
+  CommentSkeleton,
+  CommentsSkeleton,
+  TableSkeleton,
+  ProfileSkeleton,
+} from './LoadingSkeleton';

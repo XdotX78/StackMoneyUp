@@ -1,126 +1,23 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Button, Badge } from '@/components/ui';
+import { Button, Badge, BlogGridSkeleton } from '@/components/ui';
 import { BlogGrid } from '@/components/blog';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
+import { getPublishedPosts } from '@/lib/blog';
 import type { BlogPostSummary, Language } from '@/types/blog';
 
 interface BlogPageClientProps {
   params: Promise<{ lang: string }>;
 }
 
-// Mock blog posts data (replace with Supabase when ready)
-const mockPosts: BlogPostSummary[] = [
-  {
-    id: '1',
-    slug: 'compound-effect-investing',
-    title: {
-      en: 'The Compound Effect of Consistent Investing',
-      it: "L'Effetto Composto degli Investimenti Costanti",
-    },
-    excerpt: {
-      en: 'Why investing $100 monthly beats trying to time the market with $10,000 once.',
-      it: 'Perché investire 100€ mensili batte il tentativo di cronometrare il mercato.',
-    },
-    cover_image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80',
-    category: 'Investing',
-    tags: ['investing', 'compound-interest', 'long-term'],
-    read_time: 5,
-    published_at: '2024-12-15T10:00:00Z',
-  },
-  {
-    id: '2',
-    slug: '50-30-20-rule',
-    title: {
-      en: 'The 50/30/20 Rule Isn\'t Perfect',
-      it: 'La Regola 50/30/20 Non È Perfetta',
-    },
-    excerpt: {
-      en: 'Why the popular budgeting rule fails for most people and what to do instead.',
-      it: 'Perché la popolare regola di budget fallisce per la maggior parte delle persone.',
-    },
-    cover_image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
-    category: 'Budgeting & Spending',
-    tags: ['budgeting', 'personal-finance', 'tips'],
-    read_time: 7,
-    published_at: '2024-12-10T10:00:00Z',
-  },
-  {
-    id: '3',
-    slug: 'stop-chasing-quick-wins',
-    title: {
-      en: 'Stop Chasing Quick Wins',
-      it: 'Smetti di Cercare Vincite Rapide',
-    },
-    excerpt: {
-      en: 'The psychology behind get-rich-quick schemes and why they fail.',
-      it: 'La psicologia dietro gli schemi di arricchimento rapido e perché falliscono.',
-    },
-    cover_image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80',
-    category: 'Money Mindset',
-    tags: ['mindset', 'psychology', 'investing'],
-    read_time: 6,
-    published_at: '2024-11-20T10:00:00Z',
-  },
-  {
-    id: '4',
-    slug: 'debt-snowball-vs-avalanche',
-    title: {
-      en: 'Debt Snowball vs. Debt Avalanche',
-      it: 'Debito a Palla di Neve vs. Valanga di Debito',
-    },
-    excerpt: {
-      en: 'The psychological vs. mathematical approach to debt payoff.',
-      it: "L'approccio psicologico vs. matematico per estinguere i debiti.",
-    },
-    cover_image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80',
-    category: 'Debt & Loans',
-    tags: ['debt', 'personal-finance', 'strategies'],
-    read_time: 8,
-    published_at: '2024-11-15T10:00:00Z',
-  },
-  {
-    id: '5',
-    slug: 'why-6-months-not-enough',
-    title: {
-      en: 'Why 6 Months Isn\'t Enough',
-      it: 'Perché 6 Mesi Non Bastano',
-    },
-    excerpt: {
-      en: 'The case for building a larger emergency fund in uncertain times.',
-      it: 'Il caso per costruire un fondo di emergenza più grande in tempi incerti.',
-    },
-    cover_image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
-    category: 'Saving & Emergency Fund',
-    tags: ['emergency-fund', 'savings', 'financial-security'],
-    read_time: 6,
-    published_at: '2024-10-25T10:00:00Z',
-  },
-  {
-    id: '6',
-    slug: 'side-hustles-that-scale',
-    title: {
-      en: 'Side Hustles That Actually Scale',
-      it: 'Side Hustle che Scalano Davvero',
-    },
-    excerpt: {
-      en: 'Beyond Uber and DoorDash. Real side businesses that can grow.',
-      it: 'Oltre Uber e DoorDash. Veri business secondari che possono crescere.',
-    },
-    cover_image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80',
-    category: 'Income & Earning More',
-    tags: ['side-hustle', 'income', 'entrepreneurship'],
-    read_time: 9,
-    published_at: '2024-10-15T10:00:00Z',
-  },
-];
-
 export default function BlogPageClient({ params }: BlogPageClientProps) {
   const [lang, setLang] = useState<Language>('en');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [posts, setPosts] = useState<BlogPostSummary[]>([]);
+  const [loading, setLoading] = useState(true);
   const t = getTranslations(lang);
 
   useEffect(() => {
@@ -130,24 +27,42 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
     });
   }, [params]);
 
+  // Fetch posts from Supabase
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        setLoading(true);
+        const fetchedPosts = await getPublishedPosts();
+        setPosts(fetchedPosts);
+      } catch (error) {
+        console.error('Error loading posts:', error);
+        setPosts([]); // Fallback to empty array on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, []);
+
   // Extract unique categories from posts
   const categories = useMemo(() => {
-    const cats = new Set(mockPosts.map(post => post.category));
+    const cats = new Set(posts.map(post => post.category));
     return Array.from(cats).sort();
-  }, []);
+  }, [posts]);
 
   // Extract unique tags from posts
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    mockPosts.forEach(post => {
+    posts.forEach(post => {
       post.tags?.forEach(tag => tags.add(tag));
     });
     return Array.from(tags).sort();
-  }, []);
+  }, [posts]);
 
   // Filter posts based on search, category, and tags
   const filteredPosts = useMemo(() => {
-    let filtered = [...mockPosts];
+    let filtered = [...posts];
 
     // Filter by category
     if (selectedCategory !== 'all') {
@@ -178,7 +93,7 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
     }
 
     return filtered;
-  }, [searchQuery, selectedCategory, selectedTags, lang]);
+  }, [posts, searchQuery, selectedCategory, selectedTags, lang]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -315,7 +230,11 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
       </div>
 
       {/* Blog Grid */}
-      <BlogGrid posts={filteredPosts} lang={lang} />
+      {loading ? (
+        <BlogGridSkeleton count={6} />
+      ) : (
+        <BlogGrid posts={filteredPosts} lang={lang} />
+      )}
     </div>
   );
 }

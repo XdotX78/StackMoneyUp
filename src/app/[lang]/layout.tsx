@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
 import AuthProviderWrapper from "@/components/providers/AuthProviderWrapper";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 interface LanguageLayoutProps {
   children: React.ReactNode;
@@ -67,13 +68,14 @@ export default async function LanguageLayout({
   const validLang = isValidLanguage(lang) ? lang as Language : getDefaultLanguage();
   
   return (
-    <AuthProviderWrapper>
-      <Header lang={validLang} />
-      <main className="pt-20">
-        {children}
-      </main>
-      <Footer lang={validLang} />
-      <Toaster
+    <ErrorBoundary>
+      <AuthProviderWrapper>
+        <Header lang={validLang} />
+        <main className="pt-20">
+          {children}
+        </main>
+        <Footer lang={validLang} />
+        <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,
@@ -105,6 +107,7 @@ export default async function LanguageLayout({
           },
         }}
       />
-    </AuthProviderWrapper>
+      </AuthProviderWrapper>
+    </ErrorBoundary>
   );
 }

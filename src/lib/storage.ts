@@ -76,3 +76,73 @@ export async function uploadBlogImage(file: File): Promise<string> {
   return publicUrl
 }
 
+/**
+ * List all blog images uploaded by the current user
+ * @returns Array of image objects with URL and metadata
+ */
+export async function listBlogImages(): Promise<Array<{ url: string; path: string; name: string; created_at: string }>> {
+  const user = await getCurrentUser()
+  if (!user) {
+    throw new Error('You must be logged in to view images')
+  }
+
+  // List all files in the user's folder
+  const { data, error } = await supabase.storage
+    .from('blog-images')
+    .list(user.id, {
+      limit: 100,
+      sortBy: { column: 'created_at', order: 'desc' }
+    })
+
+  if (error) {
+    // If folder doesn't exist, return empty array
+    if (error.message.includes('not found')) {
+      return []
+    }
+    throw new Error(error.message)
+  }
+
+  if (!data || data.length === 0) {
+    return []
+  }
+
+  // Get public URLs for all images
+  const images = data.map(file => {
+    const filePath = `${user.id}/${file.name}`
+    const { data: { publicUrl } } = supabase.storage
+      .from('blog-images')
+      .getPublicUrl(filePath)
+
+    return {
+      url: publicUrl,
+      path: filePath,
+      name: file.name,
+      created_at: file.created_at
+    }
+  })
+
+  return images
+}
+
+/**
+ * Delete a blog image from Supabase Storage
+ * @param imagePath - The path to the image (e.g., "user-id/filename.jpg")
+ */
+export async function deleteBlogImage(imagePath: string): Promise<void> {
+  const user = await getCurrentUser()
+  if (!user) {
+    throw new Error('You must be logged in to delete images')
+  }
+
+  // Verify the image belongs to the current user
+  if (!imagePath.startsWith(user.id + '/')) {
+    throw new Error('You can only delete your own images')
+  }
+
+  const { error } = await supabase.storage
+    .from('blog-images')
+    .remove([imagePath])
+
+  if (error) throw new Error(error.message)
+}
+

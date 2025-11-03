@@ -121,8 +121,9 @@ export default function LoginPage({ params }: LoginPageProps) {
     setGoogleLoading(true);
 
     try {
-      await signInWithGoogle();
-      // The redirect will be handled by Supabase OAuth
+      await signInWithGoogle(lang);
+      // The redirect will be handled by Supabase OAuth callback
+      // User will be redirected to Google, then back to /auth/callback
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Google authentication failed. Please try again.');
       setGoogleLoading(false);

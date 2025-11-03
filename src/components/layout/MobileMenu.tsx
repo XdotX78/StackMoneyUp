@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { Language } from '@/types/blog';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { useRole } from '@/hooks/useRole';
 
 interface NavItem {
   label: {
@@ -21,6 +22,7 @@ interface MobileMenuProps {
 export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading } = useAuthContext();
+  const { canManagePosts } = useRole();
   const authenticated = !!user;
   const mounted = !loading;
 
@@ -99,7 +101,13 @@ export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
               {/* Auth Button Mobile */}
               {mounted && (
                 <Link
-                  href={authenticated ? `/${lang}/dashboard` : `/${lang}/login`}
+                  href={
+                    authenticated
+                      ? canManagePosts()
+                        ? `/${lang}/dashboard`
+                        : `/${lang}/dashboard/profile`
+                      : `/${lang}/login`
+                  }
                   onClick={toggleMenu}
                   className={`px-6 py-3 rounded-md font-semibold text-center transition-colors mt-2 ${
                     authenticated
@@ -107,7 +115,7 @@ export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
                       : 'bg-white text-black hover:bg-gray-100'
                   }`}
                 >
-                  {authenticated ? 'Dashboard' : 'Login'}
+                  {authenticated ? (canManagePosts() ? 'Dashboard' : 'Profile') : 'Login'}
                 </Link>
               )}
 

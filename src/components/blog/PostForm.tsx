@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import BlogEditor from './BlogEditor';
 import BlogPostPreview from './BlogPostPreview';
+import SEOPreview from './SEOPreview';
 import { Tabs, Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/ui';
 import { Input, Textarea, Button } from '@/components/ui';
-import { generateSlug, calculateReadTime } from '@/lib/utils';
+import { generateSlug, calculateReadTime, formatDate } from '@/lib/utils';
 import { getTranslations } from '@/lib/translations';
 import type { BlogPost, Language } from '@/types/blog';
 
@@ -31,6 +32,7 @@ export interface PostFormData {
   cover_image?: string;
   published: boolean;
   featured: boolean;
+  scheduled_at?: string; // ISO date string for scheduled publishing
 }
 
 export default function PostForm({
@@ -54,11 +56,15 @@ export default function PostForm({
     cover_image: initialData?.cover_image || '',
     published: initialData?.published || false,
     featured: initialData?.featured || false,
+    scheduled_at: initialData?.published_at && new Date(initialData.published_at) > new Date()
+      ? initialData.published_at
+      : undefined,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
   const [showPreview, setShowPreview] = useState(false);
+  const [showSEOPreview, setShowSEOPreview] = useState(false);
   const [previewLang, setPreviewLang] = useState<'en' | 'it'>('en');
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasAutoSavedRef = useRef(false);
@@ -385,41 +391,118 @@ export default function PostForm({
       </div>
 
       {/* Status Toggles */}
-      <div className="flex items-center gap-6">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={formData.published}
-            onChange={(e) => handleInputChange('published', e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300"
-          />
-          <span className="text-sm font-medium">{t.postForm.published}</span>
-        </label>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={formData.featured}
-            onChange={(e) => handleInputChange('featured', e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300"
-          />
-          <span className="text-sm font-medium">{t.postForm.featured}</span>
-        </label>
+      <div className="space-y-4">
+        <div className="flex items-center gap-6">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.published}
+              onChange={(e) => {
+                const newPublished = e.target.checked;
+                handleInputChange('published', newPublished);
+                // Clear scheduled date if publishing now
+                if (newPublished) {
+                  handleInputChange('scheduled_at', undefined);
+                }
+              }}
+              className="w-4 h-4 rounded border-gray-300"
+            />
+            <span className="text-sm font-medium">{t.postForm.published}</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={formData.featured}
+              onChange={(e) => handleInputChange('featured', e.target.checked)}
+              className="w-4 h-4 rounded border-gray-300"
+            />
+            <span className="text-sm font-medium">{t.postForm.featured}</span>
+          </label>
+        </div>
+
+        {/* Schedule Publishing */}
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={!!formData.scheduled_at}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  // Set default to tomorrow at 9 AM
+                  const tomorrow = new Date();
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  tomorrow.setHours(9, 0, 0, 0);
+                  handleInputChange('scheduled_at', tomorrow.toISOString());
+                  handleInputChange('published', false);
+                } else {
+                  handleInputChange('scheduled_at', undefined);
+                }
+              }}
+              className="w-4 h-4 rounded border-gray-300"
+            />
+            <span className="text-sm font-medium">
+              {lang === 'it' ? 'Pubblica in seguito' : 'Schedule for later'}
+            </span>
+          </label>
+          {formData.scheduled_at && (
+            <input
+              type="datetime-local"
+              value={formData.scheduled_at ? new Date(formData.scheduled_at).toISOString().slice(0, 16) : ''}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const date = new Date(e.target.value);
+                  handleInputChange('scheduled_at', date.toISOString());
+                } else {
+                  handleInputChange('scheduled_at', undefined);
+                }
+              }}
+              min={new Date().toISOString().slice(0, 16)}
+              className="px-4 py-2 border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          )}
+        </div>
+        {formData.scheduled_at && (
+          <div className="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>
+              {lang === 'it'
+                ? `Pubblicazione programmata per: ${formatDate(formData.scheduled_at, 'it-IT', { includeTime: true })}`
+                : `Scheduled for: ${formatDate(formData.scheduled_at, 'en-US', { includeTime: true })}`
+              }
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-6 border-t">
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={() => setShowPreview(true)}
-          className="flex items-center gap-2"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          {t.postForm.preview}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={() => setShowPreview(true)}
+            className="flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            {t.postForm.preview}
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={() => setShowSEOPreview(true)}
+            className="flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {lang === 'it' ? 'SEO' : 'SEO'}
+          </Button>
+        </div>
         <div className="flex items-center gap-4">
           {onCancel && (
             <Button type="button" variant="outline" onClick={onCancel}>
@@ -485,6 +568,54 @@ export default function PostForm({
         <ModalFooter>
           <Button variant="outline" onClick={() => setShowPreview(false)}>
             {t.postForm.closePreview}
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* SEO Preview Modal */}
+      <Modal isOpen={showSEOPreview} onClose={() => setShowSEOPreview(false)} size="xl">
+        <ModalHeader>
+          {lang === 'it' ? 'Anteprima SEO' : 'SEO Preview'}
+        </ModalHeader>
+        <ModalBody className="max-h-[80vh] overflow-y-auto">
+          <div className="space-y-6">
+            {/* Language Tabs for SEO Preview */}
+            <div className="flex gap-2 border-b border-gray-200">
+              <button
+                onClick={() => setPreviewLang('en')}
+                className={`px-4 py-2 font-medium text-sm transition-colors ${
+                  previewLang === 'en'
+                    ? 'border-b-2 border-emerald-600 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                English
+              </button>
+              <button
+                onClick={() => setPreviewLang('it')}
+                className={`px-4 py-2 font-medium text-sm transition-colors ${
+                  previewLang === 'it'
+                    ? 'border-b-2 border-emerald-600 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Italiano
+              </button>
+            </div>
+
+            {/* SEO Preview Content */}
+            <SEOPreview
+              title={previewLang === 'en' ? formData.title_en : formData.title_it}
+              excerpt={previewLang === 'en' ? formData.excerpt_en : formData.excerpt_it}
+              slug={formData.slug}
+              cover_image={formData.cover_image}
+              lang={previewLang}
+            />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="outline" onClick={() => setShowSEOPreview(false)}>
+            {lang === 'it' ? 'Chiudi' : 'Close'}
           </Button>
         </ModalFooter>
       </Modal>

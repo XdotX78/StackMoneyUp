@@ -3,9 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
+import { getPostBySlug, incrementPostViews } from '@/lib/blog';
 import { formatDate } from '@/lib/utils';
 import { Badge, Button } from '@/components/ui';
 import BlogEditor from '@/components/blog/BlogEditor';
+import CommentsSection from '@/components/blog/CommentsSection';
 import ShareButtonsClient from './ShareButtonsClient';
 import type { Language } from '@/types/blog';
 
@@ -18,8 +20,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const { lang, slug } = await params;
   const validLang = isValidLanguage(lang) ? (lang as Language) : getDefaultLanguage();
   
-  // Find post by slug
-  const post = mockPosts.find(p => p.slug === slug);
+  // Fetch post from Supabase
+  const post = await getPostBySlug(slug);
   
   if (!post || !post.published) {
     return {
@@ -77,108 +79,26 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-// Mock blog posts data (same as blog listing page - replace with Supabase)
-const mockPosts = [
-  {
-    id: '1',
-    slug: 'compound-effect-investing',
-    title: {
-      en: 'The Compound Effect of Consistent Investing',
-      it: "L'Effetto Composto degli Investimenti Costanti",
-    },
-    excerpt: {
-      en: 'Why investing $100 monthly beats trying to time the market with $10,000 once.',
-      it: 'Perché investire 100€ mensili batte il tentativo di cronometrare il mercato.',
-    },
-    content: {
-      en: JSON.stringify({
-        type: 'doc',
-        content: [
-          {
-            type: 'paragraph',
-            content: [{ type: 'text', text: 'When it comes to building wealth, consistency trumps timing every single time.' }]
-          },
-          {
-            type: 'paragraph',
-            content: [{ type: 'text', text: 'Most people wait for the "perfect moment" to invest - saving up $10,000, researching the best stocks, trying to time the market just right. But here\'s the reality: that perfect moment never comes.' }]
-          },
-          {
-            type: 'paragraph',
-            content: [{ type: 'text', text: 'The compound effect of investing $100 monthly over 20 years will almost always outperform a single $10,000 investment, even if you time it "perfectly".' }]
-          }
-        ]
-      }),
-      it: JSON.stringify({
-        type: 'doc',
-        content: [
-          {
-            type: 'paragraph',
-            content: [{ type: 'text', text: 'Quando si tratta di costruire ricchezza, la costanza batte sempre il tempismo.' }]
-          },
-          {
-            type: 'paragraph',
-            content: [{ type: 'text', text: 'La maggior parte delle persone aspetta il "momento perfetto" per investire, ma la realtà è che quel momento perfetto non arriva mai.' }]
-          }
-        ]
-      }),
-    },
-    cover_image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80',
-    category: 'Investing',
-    tags: ['investing', 'compound-interest', 'long-term'],
-    read_time: 5,
-    published_at: '2024-12-15T10:00:00Z',
-    published: true,
-  },
-  {
-    id: '2',
-    slug: '50-30-20-rule',
-    title: {
-      en: 'The 50/30/20 Rule Isn\'t Perfect',
-      it: 'La Regola 50/30/20 Non È Perfetta',
-    },
-    excerpt: {
-      en: 'Why the popular budgeting rule fails for most people and what to do instead.',
-      it: 'Perché la popolare regola di budget fallisce per la maggior parte delle persone.',
-    },
-    content: {
-      en: JSON.stringify({
-        type: 'doc',
-        content: [
-          { type: 'paragraph', content: [{ type: 'text', text: 'The 50/30/20 rule is everywhere in personal finance advice.' }] }
-        ]
-      }),
-      it: JSON.stringify({
-        type: 'doc',
-        content: [
-          { type: 'paragraph', content: [{ type: 'text', text: 'La regola 50/30/20 è ovunque nei consigli di finanza personale.' }] }
-        ]
-      }),
-    },
-    cover_image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
-    category: 'Budgeting & Spending',
-    tags: ['budgeting', 'personal-finance', 'tips'],
-    read_time: 7,
-    published_at: '2024-12-10T10:00:00Z',
-    published: true,
-  },
-  // Add other posts...
-];
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { lang, slug } = await params;
   const validLang = isValidLanguage(lang) ? (lang as Language) : getDefaultLanguage();
   const t = getTranslations(validLang);
 
-  // Find post by slug
-  const post = mockPosts.find(p => p.slug === slug);
+  // Fetch post from Supabase
+  const post = await getPostBySlug(slug);
 
   if (!post || !post.published) {
     notFound();
   }
 
+  // Increment views (async, don't wait for it)
+  incrementPostViews(slug).catch(err => console.error('Error incrementing views:', err));
+
   const title = post.title[validLang] || post.title.en;
   const content = post.content[validLang] || post.content.en;
-  const formattedDate = formatDate(post.published_at, validLang === 'it' ? 'it-IT' : 'en-US');
+  const formattedDate = post.published_at 
+    ? formatDate(post.published_at, validLang === 'it' ? 'it-IT' : 'en-US')
+    : formatDate(new Date(), validLang === 'it' ? 'it-IT' : 'en-US');
 
   return (
     <article className="container mx-auto px-4 py-12 max-w-4xl">
@@ -259,6 +179,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </div>
 
+      {/* Comments Section */}
+      <CommentsSection postId={post.id} postSlug={slug} lang={validLang} />
+
       {/* Related Posts */}
       <RelatedPosts currentSlug={slug} category={post.category} tags={post.tags} lang={validLang} />
 
@@ -277,21 +200,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 }
 
 // Related Posts Component
-function RelatedPosts({ currentSlug, category, tags, lang }: { 
+async function RelatedPosts({ currentSlug, category, tags, lang }: { 
   currentSlug: string; 
   category: string; 
   tags?: string[];
   lang: Language;
 }) {
-  const currentPost = mockPosts.find(p => p.slug === currentSlug);
-  const currentPostTags = currentPost?.tags || tags || [];
+  const { getPublishedPosts } = await import('@/lib/blog');
+  const allPosts = await getPublishedPosts();
+  const currentPostTags = tags || [];
 
   // Score posts by relevance:
   // - Same category: +2 points
   // - Shared tags: +1 point per tag
   // Then sort by score, then by date
-  const scoredPosts = mockPosts
-    .filter(p => p.slug !== currentSlug && p.published)
+  const scoredPosts = allPosts
+    .filter(p => p.slug !== currentSlug)
     .map(post => {
       let score = 0;
       

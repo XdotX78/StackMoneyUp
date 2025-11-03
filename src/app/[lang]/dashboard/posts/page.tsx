@@ -4,66 +4,29 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { Card, CardHeader, CardContent, Button, Badge, Input } from '@/components/ui';
+import { Card, CardHeader, CardContent, Button, Badge, Input, LoadingSkeleton, TableSkeleton } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
+import { isEditor } from '@/lib/auth';
+import { getAllPosts, deletePost, updatePost } from '@/lib/blog';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { formatDate } from '@/lib/utils';
-import type { Language } from '@/types/blog';
+import type { BlogPost, Language } from '@/types/blog';
 
 interface PostsPageProps {
   params: Promise<{ lang: string }>;
 }
 
-// Mock posts data (replace with Supabase)
-const mockPosts = [
-  {
-    id: '1',
-    slug: 'compound-effect-investing',
-    title: {
-      en: 'The Compound Effect of Consistent Investing',
-      it: "L'Effetto Composto degli Investimenti Costanti",
-    },
-    category: 'Investing',
-    published: true,
-    featured: false,
-    published_at: '2024-12-15T10:00:00Z',
-    updated_at: '2024-12-15T10:00:00Z',
-  },
-  {
-    id: '2',
-    slug: '50-30-20-rule',
-    title: {
-      en: 'The 50/30/20 Rule Isn\'t Perfect',
-      it: 'La Regola 50/30/20 Non È Perfetta',
-    },
-    category: 'Budgeting & Spending',
-    published: false,
-    featured: false,
-    published_at: null,
-    updated_at: '2024-12-10T10:00:00Z',
-  },
-  {
-    id: '3',
-    slug: 'stop-chasing-quick-wins',
-    title: {
-      en: 'Stop Chasing Quick Wins in Personal Finance',
-      it: 'Smetti di Cercare Vittorie Rapide nella Finanza Personale',
-    },
-    category: 'Money Mindset',
-    published: true,
-    featured: true,
-    published_at: '2024-11-20T10:00:00Z',
-    updated_at: '2024-11-20T10:00:00Z',
-  },
-];
-
 export default function PostsPage({ params }: PostsPageProps) {
   const [lang, setLang] = useState<Language>('en');
-  const [posts, setPosts] = useState(mockPosts);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [postsLoading, setPostsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'drafts'>('all');
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date');
-  const { user, loading } = useAuth();
+  const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
+  const { user, loading: authLoading } = useAuth();
+  const { canManagePosts } = useRole();
   const router = useRouter();
 
   useEffect(() => {
@@ -72,12 +35,38 @@ export default function PostsPage({ params }: PostsPageProps) {
       const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
       setLang(validLang);
 
-      if (!loading && !user) {
+      if (!authLoading && !user) {
         router.push(`/${validLang}/login`);
+        return;
+      }
+
+      // Check if user has editor/admin role
+      if (!authLoading && user && !canManagePosts()) {
+        router.push(`/${validLang}/dashboard`);
       }
     };
     loadLang();
-  }, [params, router, user, loading]);
+  }, [params, router, user, authLoading, canManagePosts]);
+
+  // Fetch posts from Supabase
+  useEffect(() => {
+    const loadPosts = async () => {
+      if (!user || authLoading) return;
+      
+      try {
+        setPostsLoading(true);
+        const fetchedPosts = await getAllPosts();
+        setPosts(fetchedPosts);
+      } catch (error) {
+        console.error('Error loading posts:', error);
+        toast.error(error instanceof Error ? error.message : 'Failed to load posts');
+      } finally {
+        setPostsLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, [user, authLoading]);
 
   const t = getTranslations(lang);
 
@@ -121,18 +110,132 @@ export default function PostsPage({ params }: PostsPageProps) {
     return filtered;
   }, [posts, searchQuery, statusFilter, sortBy, lang]);
 
-  const handleDelete = (postId: string) => {
-    if (confirm(t.dashboard.deleteConfirm)) {
-      // TODO: Delete from Supabase
+  const handleDelete = async (postId: string) => {
+    if (!confirm(t.dashboard.deleteConfirm)) return;
+
+    try {
+      await deletePost(postId);
       setPosts(posts.filter(p => p.id !== postId));
+      setSelectedPosts(selectedPosts.filter(id => id !== postId));
       toast.success(lang === 'it' ? 'Post eliminato!' : 'Post deleted!');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to delete post');
     }
   };
 
-  if (loading || !user) {
+  const togglePostSelection = (postId: string) => {
+    setSelectedPosts(prev =>
+      prev.includes(postId)
+        ? prev.filter(id => id !== postId)
+        : [...prev, postId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedPosts.length === filteredAndSortedPosts.length && 
+        filteredAndSortedPosts.every(p => selectedPosts.includes(p.id))) {
+      // Deselect all filtered posts
+      setSelectedPosts(prev => prev.filter(id => !filteredAndSortedPosts.find(p => p.id === id)));
+    } else {
+      // Select all filtered posts (keep previously selected posts that aren't in current filter)
+      const filteredIds = filteredAndSortedPosts.map(p => p.id);
+      setSelectedPosts(prev => [...new Set([...prev, ...filteredIds])]);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedPosts.length === 0) return;
+    
+    const count = selectedPosts.length;
+    if (!confirm(
+      lang === 'it'
+        ? `Sei sicuro di voler eliminare ${count} post?`
+        : `Are you sure you want to delete ${count} post${count > 1 ? 's' : ''}?`
+    )) return;
+
+    try {
+      // Delete all selected posts
+      await Promise.all(selectedPosts.map(id => deletePost(id)));
+      setPosts(posts.filter(p => !selectedPosts.includes(p.id)));
+      setSelectedPosts([]);
+      toast.success(
+        lang === 'it'
+          ? `${count} post eliminati!`
+          : `${count} post${count > 1 ? 's' : ''} deleted!`
+      );
+    } catch (error) {
+      console.error('Error deleting posts:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to delete posts');
+    }
+  };
+
+  const handleBulkPublish = async () => {
+    if (selectedPosts.length === 0) return;
+    
+    const count = selectedPosts.length;
+    try {
+      // Update all selected posts to published
+      await Promise.all(
+        selectedPosts.map(id => 
+          updatePost(id, { published: true })
+        )
+      );
+      
+      // Refresh posts list
+      const fetchedPosts = await getAllPosts();
+      setPosts(fetchedPosts);
+      setSelectedPosts([]);
+      
+      toast.success(
+        lang === 'it'
+          ? `${count} post pubblicati!`
+          : `${count} post${count > 1 ? 's' : ''} published!`
+      );
+    } catch (error) {
+      console.error('Error publishing posts:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to publish posts');
+    }
+  };
+
+  const handleBulkUnpublish = async () => {
+    if (selectedPosts.length === 0) return;
+    
+    const count = selectedPosts.length;
+    try {
+      // Update all selected posts to unpublished
+      await Promise.all(
+        selectedPosts.map(id => 
+          updatePost(id, { published: false })
+        )
+      );
+      
+      // Refresh posts list
+      const fetchedPosts = await getAllPosts();
+      setPosts(fetchedPosts);
+      setSelectedPosts([]);
+      
+      toast.success(
+        lang === 'it'
+          ? `${count} post depubblicati!`
+          : `${count} post${count > 1 ? 's' : ''} unpublished!`
+      );
+    } catch (error) {
+      console.error('Error unpublishing posts:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to unpublish posts');
+    }
+  };
+
+  if (authLoading || postsLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">{t.dashboard.loading}</div>
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <LoadingSkeleton variant="text" width="200px" height="32px" />
+            <LoadingSkeleton variant="rectangular" width="120px" height="40px" />
+          </div>
+          <TableSkeleton rows={5} cols={5} />
+        </div>
       </div>
     );
   }
@@ -211,6 +314,57 @@ export default function PostsPage({ params }: PostsPageProps) {
         </CardContent>
       </Card>
 
+      {/* Bulk Actions Bar */}
+      {selectedPosts.length > 0 && (
+        <Card className="mb-6 bg-emerald-50 border-emerald-200">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-emerald-900">
+                  {validLang === 'it' 
+                    ? `${selectedPosts.length} post selezionati`
+                    : `${selectedPosts.length} post${selectedPosts.length > 1 ? 's' : ''} selected`
+                  }
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBulkPublish}
+                  className="border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white"
+                >
+                  {validLang === 'it' ? 'Pubblica' : 'Publish'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBulkUnpublish}
+                  className="border-gray-400 text-gray-700 hover:bg-gray-400 hover:text-white"
+                >
+                  {validLang === 'it' ? 'Depubblica' : 'Unpublish'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBulkDelete}
+                  className="border-red-600 text-red-700 hover:bg-red-600 hover:text-white"
+                >
+                  {validLang === 'it' ? 'Elimina' : 'Delete'}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedPosts([])}
+                >
+                  {validLang === 'it' ? 'Deseleziona' : 'Clear'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Posts Table */}
       <Card>
         <CardHeader>
@@ -246,6 +400,15 @@ export default function PostsPage({ params }: PostsPageProps) {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700 w-12">
+                      <input
+                        type="checkbox"
+                        checked={filteredAndSortedPosts.length > 0 && 
+                                filteredAndSortedPosts.every(p => selectedPosts.includes(p.id))}
+                        onChange={toggleSelectAll}
+                        className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                      />
+                    </th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
                       {validLang === 'it' ? 'Titolo' : 'Title'}
                     </th>
@@ -265,7 +428,20 @@ export default function PostsPage({ params }: PostsPageProps) {
                 </thead>
                 <tbody>
                   {filteredAndSortedPosts.map((post) => (
-                    <tr key={post.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr 
+                      key={post.id} 
+                      className={`border-b border-gray-100 hover:bg-gray-50 ${
+                        selectedPosts.includes(post.id) ? 'bg-emerald-50' : ''
+                      }`}
+                    >
+                      <td className="py-3 px-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedPosts.includes(post.id)}
+                          onChange={() => togglePostSelection(post.id)}
+                          className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                        />
+                      </td>
                       <td className="py-3 px-4">
                         <Link 
                           href={`/${lang}/blog/${post.slug}`}
@@ -283,6 +459,10 @@ export default function PostsPage({ params }: PostsPageProps) {
                         {post.published ? (
                           <Badge variant="success" size="sm">
                             {t.dashboard.published}
+                          </Badge>
+                        ) : post.published_at && new Date(post.published_at) > new Date() ? (
+                          <Badge variant="info" size="sm" className="bg-blue-100 text-blue-800">
+                            {validLang === 'it' ? 'Programmato' : 'Scheduled'}
                           </Badge>
                         ) : (
                           <Badge variant="default" size="sm">
