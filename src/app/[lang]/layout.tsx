@@ -79,10 +79,11 @@ export default async function LanguageLayout({
         position="top-right"
         toastOptions={{
           duration: 4000,
+          className: 'dark:bg-gray-800 dark:text-white dark:border-gray-700',
           style: {
-            background: '#fff',
-            color: '#1f2937',
-            border: '2px solid #e5e7eb',
+            background: 'var(--background)',
+            color: 'var(--foreground)',
+            border: '2px solid var(--border)',
             borderRadius: '0.5rem',
             padding: '16px',
             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',

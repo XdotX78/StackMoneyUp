@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { Language } from '@/types/blog';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 interface NavItem {
   label: {
@@ -73,6 +74,11 @@ export default function MobileMenu({ lang, navItems }: MobileMenuProps) {
                   {item.label[lang]}
                 </Link>
               ))}
+
+              {/* Theme Toggle Mobile */}
+              <div className="flex items-center justify-center pt-4 border-t border-gray-800">
+                <ThemeToggle />
+              </div>
 
               {/* Language Switcher Mobile */}
               <div className="flex gap-4 pt-4 border-t border-gray-800">

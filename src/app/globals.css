@@ -2,7 +2,7 @@
 
 /* StackMoneyUp Professional Black & White Theme */
 :root {
-  /* Black background, white content containers */
+  /* Light mode - Black background, white content containers */
   --background: #000000;
   --foreground: #ffffff;
   --primary: #000000;
@@ -21,6 +21,28 @@
   --green-primary: #00ff00;
   --green-glow: rgba(0, 255, 0, 0.15);
   --green-hover: rgba(0, 255, 0, 0.2);
+}
+
+/* Dark mode - White background, black content containers */
+.dark {
+  --background: #ffffff;
+  --foreground: #000000;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: #000000;
+  --secondary-foreground: #ffffff;
+  --muted: #f5f5f5;
+  --muted-foreground: #666666;
+  --accent: #000000;
+  --accent-foreground: #ffffff;
+  --border: #e5e5e5;
+  --input: #f5f5f5;
+  --ring: #cccccc;
+  
+  /* Green Accent - Slightly adjusted for dark mode */
+  --green-primary: #00cc00;
+  --green-glow: rgba(0, 204, 0, 0.15);
+  --green-hover: rgba(0, 204, 0, 0.2);
 }
 
 /* Container Configuration */

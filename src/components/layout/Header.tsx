@@ -4,6 +4,7 @@ import type { Language } from '@/types/blog';
 import LanguageSwitcher from './LanguageSwitcher';
 import MobileMenu from './MobileMenu';
 import AuthButton from './AuthButton';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 interface HeaderProps {
   lang: Language;
@@ -65,6 +66,9 @@ export default function Header({ lang }: HeaderProps) {
                 {item.label[lang]}
               </Link>
             ))}
+            
+            {/* Theme Toggle */}
+            <ThemeToggle />
             
             {/* Language Switcher */}
             <LanguageSwitcher currentLang={lang} />

@@ -8,6 +8,7 @@ import { formatDate } from '@/lib/utils';
 import { Badge, Button } from '@/components/ui';
 import BlogEditor from '@/components/blog/BlogEditor';
 import CommentsSection from '@/components/blog/CommentsSection';
+import { ReadingProgress } from '@/components/blog/ReadingProgress';
 import ShareButtonsClient from './ShareButtonsClient';
 import type { Language } from '@/types/blog';
 
@@ -95,13 +96,46 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   incrementPostViews(slug).catch(err => console.error('Error incrementing views:', err));
 
   const title = post.title[validLang] || post.title.en;
+  const excerpt = post.excerpt[validLang] || post.excerpt.en;
   const content = post.content[validLang] || post.content.en;
   const formattedDate = post.published_at 
     ? formatDate(post.published_at, validLang === 'it' ? 'it-IT' : 'en-US')
     : formatDate(new Date(), validLang === 'it' ? 'it-IT' : 'en-US');
 
+  // Generate JSON-LD structured data
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description: excerpt,
+    image: post.cover_image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com'}/og-image.jpg`,
+    datePublished: post.published_at || post.created_at,
+    dateModified: post.updated_at,
+    author: {
+      '@type': 'Organization',
+      name: 'StackMoneyUp',
+      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'StackMoneyUp',
+      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com'}/${validLang}/blog/${slug}`,
+    },
+    keywords: post.tags?.join(', ') || post.category,
+  };
+
   return (
-    <article className="container mx-auto px-4 py-12 max-w-4xl">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ReadingProgress />
+      <article className="container mx-auto px-4 py-12 max-w-4xl">
       {/* Back Button */}
       <Link 
         href={`/${validLang}/blog`}
@@ -196,6 +230,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </div>
     </article>
+    </>
   );
 }
 

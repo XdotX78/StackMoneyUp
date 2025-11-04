@@ -24,3 +24,5 @@ export {
   TableSkeleton,
   ProfileSkeleton,
 } from './LoadingSkeleton';
+
+export { ThemeToggle } from './ThemeToggle';
