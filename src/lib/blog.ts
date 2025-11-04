@@ -118,6 +118,92 @@ export async function getPublishedPosts(): Promise<BlogPostSummary[]> {
 }
 
 /**
+ * Search blog posts using PostgreSQL full-text search
+ */
+export async function searchPosts(
+  query: string,
+  options?: {
+    category?: string;
+    tags?: string[];
+    limit?: number;
+  }
+): Promise<BlogPostSummary[]> {
+  if (!query || query.trim().length === 0) {
+    // If no query, return all published posts (fallback to regular function)
+    return getPublishedPosts();
+  }
+
+  const searchQuery = query.trim();
+  const categoryFilter = options?.category && options.category !== 'all' ? options.category : null;
+  const tagsFilter = options?.tags && options.tags.length > 0 ? options.tags : null;
+  const limit = options?.limit || 100;
+
+  // Use Supabase RPC to call the search function
+  const { data, error } = await supabase.rpc('search_blog_posts', {
+    search_query: searchQuery,
+    lang_filter: null, // Can be extended later for language-specific search
+    category_filter: categoryFilter,
+    tags_filter: tagsFilter,
+  });
+
+  if (error) {
+    // If full-text search fails, fallback to basic filtering
+    console.warn('Full-text search failed, falling back to basic search:', error);
+    const allPosts = await getPublishedPosts();
+    return filterPostsBasic(allPosts, searchQuery, categoryFilter, tagsFilter).slice(0, limit);
+  }
+
+  if (!data) return []
+
+  // Transform the search results
+  return data.slice(0, limit).map((row: any) => transformBlogPostSummary(row))
+}
+
+/**
+ * Basic client-side filtering (fallback when full-text search is not available)
+ */
+function filterPostsBasic(
+  posts: BlogPostSummary[],
+  query: string,
+  category: string | null,
+  tags: string[] | null
+): BlogPostSummary[] {
+  let filtered = [...posts];
+  const queryLower = query.toLowerCase();
+
+  // Filter by category
+  if (category) {
+    filtered = filtered.filter(post => post.category === category);
+  }
+
+  // Filter by tags
+  if (tags && tags.length > 0) {
+    filtered = filtered.filter(post => 
+      post.tags.some(tag => tags.includes(tag))
+    );
+  }
+
+  // Filter by search query
+  filtered = filtered.filter(post => {
+    const titleEn = post.title.en.toLowerCase();
+    const titleIt = post.title.it.toLowerCase();
+    const excerptEn = post.excerpt.en.toLowerCase();
+    const excerptIt = post.excerpt.it.toLowerCase();
+    const categoryLower = post.category.toLowerCase();
+    const tagsLower = post.tags.join(' ').toLowerCase();
+
+    return titleEn.includes(queryLower) ||
+           titleIt.includes(queryLower) ||
+           excerptEn.includes(queryLower) ||
+           excerptIt.includes(queryLower) ||
+           categoryLower.includes(queryLower) ||
+           tagsLower.includes(queryLower);
+  });
+
+  return filtered;
+}
+
+/**
  * Get all blog posts (for dashboard - includes drafts)
  */
 export async function getAllPosts(): Promise<BlogPost[]> {

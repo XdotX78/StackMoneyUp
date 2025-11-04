@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Button, Badge, BlogGridSkeleton } from '@/components/ui';
 import { BlogGrid } from '@/components/blog';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
-import { getPublishedPosts } from '@/lib/blog';
+import { getPublishedPosts, searchPosts } from '@/lib/blog';
 import type { BlogPostSummary, Language } from '@/types/blog';
 
 interface BlogPageClientProps {
@@ -32,8 +32,18 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
     const loadPosts = async () => {
       try {
         setLoading(true);
-        const fetchedPosts = await getPublishedPosts();
-        setPosts(fetchedPosts);
+        
+        // Use full-text search if there's a search query, otherwise get all posts
+        if (searchQuery.trim()) {
+          const searchResults = await searchPosts(searchQuery.trim(), {
+            category: selectedCategory !== 'all' ? selectedCategory : undefined,
+            tags: selectedTags.length > 0 ? selectedTags : undefined,
+          });
+          setPosts(searchResults);
+        } else {
+          const fetchedPosts = await getPublishedPosts();
+          setPosts(fetchedPosts);
+        }
       } catch (error) {
         console.error('Error loading posts:', error);
         setPosts([]); // Fallback to empty array on error
@@ -42,8 +52,13 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
       }
     };
 
-    loadPosts();
-  }, []);
+    // Debounce search to avoid too many requests
+    const timeoutId = setTimeout(() => {
+      loadPosts();
+    }, searchQuery.trim() ? 300 : 0); // 300ms debounce for search
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, selectedCategory, selectedTags]);
 
   // Extract unique categories from posts
   const categories = useMemo(() => {
@@ -60,40 +75,29 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
     return Array.from(tags).sort();
   }, [posts]);
 
-  // Filter posts based on search, category, and tags
+  // Filter posts (now handled server-side for search, client-side for category/tags only)
   const filteredPosts = useMemo(() => {
     let filtered = [...posts];
 
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(post => post.category === selectedCategory);
-    }
+    // If search is active, filtering is already done server-side
+    // Only apply client-side filters if no search query
+    if (!searchQuery.trim()) {
+      // Filter by category (client-side when no search)
+      if (selectedCategory !== 'all') {
+        filtered = filtered.filter(post => post.category === selectedCategory);
+      }
 
-    // Filter by selected tags (posts must have at least one selected tag)
-    if (selectedTags.length > 0) {
-      filtered = filtered.filter(post => 
-        post.tags.some(tag => selectedTags.includes(tag))
-      );
+      // Filter by selected tags (client-side when no search)
+      if (selectedTags.length > 0) {
+        filtered = filtered.filter(post => 
+          post.tags.some(tag => selectedTags.includes(tag))
+        );
+      }
     }
-
-    // Filter by search query
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filtered = filtered.filter(post => {
-        const title = post.title[lang] || post.title.en;
-        const excerpt = post.excerpt[lang] || post.excerpt.en;
-        const category = post.category.toLowerCase();
-        const tags = post.tags.join(' ').toLowerCase();
-
-        return title.toLowerCase().includes(query) ||
-               excerpt.toLowerCase().includes(query) ||
-               tags.includes(query) ||
-               category.includes(query);
-      });
-    }
+    // When search is active, category and tags are already filtered server-side
 
     return filtered;
-  }, [posts, searchQuery, selectedCategory, selectedTags, lang]);
+  }, [posts, searchQuery, selectedCategory, selectedTags]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);

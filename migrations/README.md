@@ -52,6 +52,21 @@ Creates the comments system including:
 -- After 001_initial_schema.sql has been run
 ```
 
+### `004_fulltext_search.sql`
+
+Sets up PostgreSQL full-text search for blog posts:
+- Adds `search_vector` column to `blog_posts` table
+- Creates GIN index for fast full-text search
+- Adds trigger to automatically update search vector on post changes
+- Creates `search_blog_posts()` function for server-side search
+- Supports weighted search (title > excerpt > content)
+
+**Usage:**
+```sql
+-- Run in Supabase SQL Editor
+-- After 001_initial_schema.sql has been run
+```
+
 ---
 
 ## Running Migrations
@@ -95,6 +110,7 @@ psql -h your-db-host -U postgres -d postgres -f migrations/001_initial_schema.sq
 1. ✅ `001_initial_schema.sql` - Must run first
 2. ✅ `002_seed_data.sql` - Optional, run after schema
 3. ✅ `003_comments_schema.sql` - Comments system, run after initial schema
+4. ✅ `004_fulltext_search.sql` - Full-text search setup, run after initial schema
 
 ---
 
@@ -112,6 +128,38 @@ AND table_name IN ('profiles', 'blog_posts', 'tags', 'comments');
 ```
 
 Should return 4 rows (if all migrations are run).
+
+### 4. Full-Text Search Setup
+
+```sql
+-- Check if search_vector column exists
+SELECT column_name 
+FROM information_schema.columns 
+WHERE table_name = 'blog_posts' 
+AND column_name = 'search_vector';
+```
+
+Should return 1 row.
+
+```sql
+-- Check if search function exists
+SELECT routine_name 
+FROM information_schema.routines 
+WHERE routine_schema = 'public' 
+AND routine_name = 'search_blog_posts';
+```
+
+Should return 1 row.
+
+```sql
+-- Check if GIN index exists
+SELECT indexname 
+FROM pg_indexes 
+WHERE tablename = 'blog_posts' 
+AND indexname = 'blog_posts_search_vector_idx';
+```
+
+Should return 1 row.
 
 ### 2. RLS Enabled
 
