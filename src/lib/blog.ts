@@ -29,6 +29,7 @@ interface BlogPostRow {
   created_at: string
   updated_at: string
   published_at: string | null
+  scheduled_at: string | null
   author_id: string
 }
 

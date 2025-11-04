@@ -61,10 +61,11 @@ async function test(name: string, testFn: () => Promise<boolean>, expectedToPass
       message: success ? '✅ Passed' : `❌ Failed (expected ${expectedToPass ? 'pass' : 'fail'})`,
     });
   } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     results.push({
       name,
       passed: !expectedToPass, // If we expect failure, error is success
-      message: `❌ Error: ${error.message}`,
+      message: `❌ Error: ${errorMessage}`,
     });
   }
 }

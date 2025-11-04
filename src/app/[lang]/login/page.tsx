@@ -91,8 +91,8 @@ export default function LoginPage({ params }: LoginPageProps) {
           router.push(`/${lang}/dashboard`);
         } catch (signInError: unknown) {
           // Handle specific "Email not confirmed" error - check for various Supabase error formats
-          const errorMessage = signInError?.message?.toLowerCase() || '';
-          const errorCode = signInError?.code || '';
+          const errorMessage = (signInError instanceof Error ? signInError.message : String(signInError)).toLowerCase();
+          const errorCode = (signInError && typeof signInError === 'object' && 'code' in signInError) ? String(signInError.code) : '';
           
           // Check for email confirmation errors
           if (

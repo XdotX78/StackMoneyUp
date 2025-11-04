@@ -51,7 +51,7 @@ export default function LanguageSwitcher({ currentLang }: LanguageSwitcherProps)
           <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg border border-gray-800 overflow-hidden z-50">
             <Link
               href={`/en${pathWithoutLang}`}
-              onClick={() => toggleLanguage('en')}
+              onClick={toggleLanguage}
               className={`flex items-center gap-3 px-4 py-3 hover:bg-gray-800 transition-colors ${
                 currentLang === 'en' ? 'bg-gray-800 text-emerald-500' : 'text-gray-300'
               }`}
@@ -61,7 +61,7 @@ export default function LanguageSwitcher({ currentLang }: LanguageSwitcherProps)
             </Link>
             <Link
               href={`/it${pathWithoutLang}`}
-              onClick={() => toggleLanguage('it')}
+              onClick={toggleLanguage}
               className={`flex items-center gap-3 px-4 py-3 hover:bg-gray-800 transition-colors ${
                 currentLang === 'it' ? 'bg-gray-800 text-emerald-500' : 'text-gray-300'
               }`}

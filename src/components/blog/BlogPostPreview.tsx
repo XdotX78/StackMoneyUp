@@ -33,11 +33,15 @@ export default function BlogPostPreview({
       const parsed = JSON.parse(jsonContent);
       const extractText = (node: unknown): string => {
         if (typeof node === 'string') return node;
-        if (Array.isArray(node?.content)) {
-          return node.content.map(extractText).join(' ');
+        if (node && typeof node === 'object' && 'content' in node && Array.isArray(node.content)) {
+          return (node.content as unknown[]).map(extractText).join(' ');
         }
-        if (node?.text) return node.text;
-        if (node?.content) return extractText(node.content);
+        if (node && typeof node === 'object' && 'text' in node && typeof node.text === 'string') {
+          return node.text;
+        }
+        if (node && typeof node === 'object' && 'content' in node) {
+          return extractText(node.content);
+        }
         return '';
       };
       return extractText(parsed);

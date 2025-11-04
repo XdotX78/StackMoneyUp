@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { getPostComments, createComment, updateComment, deleteComment } from '@/lib/comments';
 import { formatDate } from '@/lib/utils';
@@ -25,7 +26,7 @@ export default function CommentsSection({ postId, lang }: CommentsSectionProps) 
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const { user } = useAuth();
-  // const router = useRouter(); // Reserved for future use
+  const router = useRouter();
 
   useEffect(() => {
     loadComments();

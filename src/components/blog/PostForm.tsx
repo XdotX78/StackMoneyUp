@@ -32,6 +32,7 @@ export interface PostFormData {
   published: boolean;
   featured: boolean;
   scheduled_at?: string; // ISO date string for scheduled publishing
+  savedAt?: string; // ISO date string for auto-save timestamp
 }
 
 export default function PostForm({
