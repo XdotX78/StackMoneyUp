@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation"; // Reserved for future use
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 

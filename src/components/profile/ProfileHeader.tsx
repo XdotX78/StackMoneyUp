@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation'; // Reserved for future use
 import Image from 'next/image';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { signOut } from '@/lib/auth';
 
 export default function ProfileHeader({ user, lang }: { user: SupabaseUser; lang: string }) {
-    const router = useRouter();
+    // const router = useRouter(); // Reserved for future use
     const name =
         (user.user_metadata?.name as string) ||
         user.email?.split('@')[0] ||

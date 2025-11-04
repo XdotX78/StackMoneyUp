@@ -1,9 +1,9 @@
 /**
- * Simple error logging utility
- * Logs to console in development, can be extended for production error tracking
+ * Error logging utility with optional Sentry integration
+ * Logs to console in development, sends to Sentry in production (if configured)
  */
 
-type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+// type LogLevel = 'error' | 'warn' | 'info' | 'debug'; // Reserved for future use
 
 interface LogContext {
   [key: string]: unknown;
@@ -11,17 +11,66 @@ interface LogContext {
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+// Lazy-load Sentry only if DSN is configured
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let sentry: any = null;
+
+async function getSentry() {
+  if (!sentry && process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    try {
+      // Dynamic import to avoid build errors if Sentry is not installed
+      // @ts-expect-error - Sentry is optional dependency
+      sentry = await import('@sentry/nextjs');
+    } catch {
+      // Sentry not installed - this is optional
+      console.warn('Sentry not installed. Install with: npm install @sentry/nextjs');
+    }
+  }
+  return sentry;
+}
+
 /**
  * Log an error message
  */
-export function logError(message: string, error?: Error | unknown, context?: LogContext): void {
-  if (!isDevelopment) {
-    // In production, you could send to error tracking service (Sentry, Logtail, etc.)
-    // For now, we silently handle it
-    return;
+export async function logError(message: string, error?: Error | unknown, context?: LogContext): Promise<void> {
+  // Always log to console in development
+  if (isDevelopment) {
+    console.error(`[Error] ${message}`, error || '', context || '');
   }
 
-  console.error(`[Error] ${message}`, error || '', context || '');
+  // Send to Sentry in production if configured
+  if (!isDevelopment && process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    const Sentry = await getSentry();
+    if (Sentry) {
+      const errorObj = error instanceof Error ? error : new Error(String(error || message));
+      Sentry.captureException(errorObj, {
+        tags: context as Record<string, string>,
+        extra: context,
+        contexts: {
+          message: { message },
+        },
+      });
+    }
+  }
+}
+
+/**
+ * Log an error message (synchronous version for use in React components)
+ */
+export function logErrorSync(message: string, error?: Error | unknown, context?: LogContext): void {
+  if (isDevelopment) {
+    console.error(`[Error] ${message}`, error || '', context || '');
+  }
+
+  // In production, queue for async sending
+  if (!isDevelopment && process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    // Use setTimeout to avoid blocking
+    setTimeout(() => {
+      logError(message, error, context).catch(() => {
+        // Silently fail if Sentry is not available
+      });
+    }, 0);
+  }
 }
 
 /**
@@ -52,7 +101,8 @@ export function logDebug(message: string, context?: LogContext): void {
  * Generic logger function
  */
 export const logger = {
-  error: logError,
+  error: logErrorSync, // Use sync version for easy use in components
+  errorAsync: logError, // Use async version for API routes
   warn: logWarning,
   info: logInfo,
   debug: logDebug,

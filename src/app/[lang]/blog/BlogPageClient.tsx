@@ -204,7 +204,7 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
               </span>
               {searchQuery && (
                 <Badge variant="info" size="sm">
-                  {t.blogPage.searchPlaceholder}: "{searchQuery}"
+                  {t.blogPage.searchPlaceholder}: &ldquo;{searchQuery}&rdquo;
                 </Badge>
               )}
               {selectedCategory !== 'all' && (

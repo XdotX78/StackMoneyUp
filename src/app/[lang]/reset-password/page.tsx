@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Input, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { updatePasswordWithToken } from '@/lib/auth';
 import { supabase } from '@/lib/supabaseClient';
 import { getTranslations } from '@/lib/translations';

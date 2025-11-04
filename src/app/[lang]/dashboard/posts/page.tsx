@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { Card, CardHeader, CardContent, Button, Badge, Input, LoadingSkeleton, TableSkeleton } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
-import { isEditor } from '@/lib/auth';
+// import { isEditor } from '@/lib/auth'; // Reserved for future use
 import { getAllPosts, deletePost, updatePost } from '@/lib/blog';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { formatDate } from '@/lib/utils';

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 
 interface NotFoundProps {
@@ -17,7 +17,7 @@ export default async function NotFound({ params }: NotFoundProps) {
     }
   }
   
-  const t = getTranslations(lang);
+  // Translations reserved for future use
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

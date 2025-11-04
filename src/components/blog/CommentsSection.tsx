@@ -5,10 +5,9 @@ import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { getPostComments, createComment, updateComment, deleteComment } from '@/lib/comments';
 import { formatDate } from '@/lib/utils';
-import { Button, Input, Badge, CommentsSkeleton } from '@/components/ui';
-import { useRouter } from 'next/navigation';
+import { Button, Badge, CommentsSkeleton } from '@/components/ui';
 import toast from 'react-hot-toast';
-import type { Comment, CommentFormData, Language } from '@/types/blog';
+import type { Comment, Language } from '@/types/blog';
 
 interface CommentsSectionProps {
   postId: string;
@@ -16,7 +15,7 @@ interface CommentsSectionProps {
   lang: Language;
 }
 
-export default function CommentsSection({ postId, postSlug, lang }: CommentsSectionProps) {
+export default function CommentsSection({ postId, lang }: CommentsSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -26,10 +25,11 @@ export default function CommentsSection({ postId, postSlug, lang }: CommentsSect
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const { user } = useAuth();
-  const router = useRouter();
+  // const router = useRouter(); // Reserved for future use
 
   useEffect(() => {
     loadComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
   const loadComments = async () => {
@@ -181,10 +181,11 @@ export default function CommentsSection({ postId, postSlug, lang }: CommentsSect
     }
   };
 
-  const startEdit = (comment: Comment) => {
-    setEditingId(comment.id);
-    setEditContent(comment.content);
-  };
+  // Reserved for future use
+  // const startEdit = (comment: Comment) => {
+  //   setEditingId(comment.id);
+  //   setEditContent(comment.content);
+  // };
 
   const cancelEdit = () => {
     setEditingId(null);
@@ -295,7 +296,7 @@ export default function CommentsSection({ postId, postSlug, lang }: CommentsSect
 
 interface CommentItemProps {
   comment: Comment;
-  user: any;
+  user: { id: string; role?: string } | null;
   lang: Language;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;

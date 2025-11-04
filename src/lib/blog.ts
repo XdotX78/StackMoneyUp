@@ -6,12 +6,36 @@
 import { supabase } from './supabaseClient'
 import { getCurrentUser } from './auth'
 import type { BlogPost, BlogPostSummary, Tag } from '@/types/blog'
-import { generateSlug } from './utils'
+// import { generateSlug } from './utils' // Reserved for future use
+
+/**
+ * Database row type for blog_posts table
+ */
+interface BlogPostRow {
+  id: string
+  slug: string
+  title_en: string
+  title_it: string
+  excerpt_en: string
+  excerpt_it: string
+  content_en: string
+  content_it: string
+  cover_image: string | null
+  category: string
+  tags: string[]
+  published: boolean
+  featured: boolean
+  read_time: number | null
+  created_at: string
+  updated_at: string
+  published_at: string | null
+  author_id: string
+}
 
 /**
  * Transform database row to BlogPost type
  */
-function transformBlogPost(row: any): BlogPost {
+function transformBlogPost(row: BlogPostRow): BlogPost {
   return {
     id: row.id,
     slug: row.slug,
@@ -43,7 +67,7 @@ function transformBlogPost(row: any): BlogPost {
 /**
  * Transform database row to BlogPostSummary type
  */
-function transformBlogPostSummary(row: any): BlogPostSummary {
+function transformBlogPostSummary(row: BlogPostRow): BlogPostSummary {
   return {
     id: row.id,
     slug: row.slug,
@@ -156,7 +180,7 @@ export async function searchPosts(
   if (!data) return []
 
   // Transform the search results
-  return data.slice(0, limit).map((row: any) => transformBlogPostSummary(row))
+  return data.slice(0, limit).map((row: BlogPostRow) => transformBlogPostSummary(row))
 }
 
 /**
@@ -301,7 +325,7 @@ export async function createPost(postData: {
   await ensureTagsExist(postData.tags)
 
   // Prepare database row
-  const dbRow: any = {
+  const dbRow: Partial<BlogPostRow> = {
     slug: postData.slug,
     title_en: postData.title_en,
     title_it: postData.title_it,
@@ -371,7 +395,7 @@ export async function updatePost(
   }
 
   // Prepare update object
-  const dbUpdates: any = {}
+  const dbUpdates: Partial<BlogPostRow> = {}
 
   if (updates.slug !== undefined) dbUpdates.slug = updates.slug
   if (updates.title_en !== undefined) dbUpdates.title_en = updates.title_en
@@ -475,7 +499,7 @@ export async function updateTag(
     throw new Error('You must be an editor or admin to update tags')
   }
 
-  const dbUpdates: any = {}
+  const dbUpdates: Partial<{ slug: string; name_en: string; name_it: string; description_en: string; description_it: string }> = {}
   if (updates.slug !== undefined) dbUpdates.slug = updates.slug
   if (updates.name_en !== undefined) dbUpdates.name_en = updates.name_en
   if (updates.name_it !== undefined) dbUpdates.name_it = updates.name_it

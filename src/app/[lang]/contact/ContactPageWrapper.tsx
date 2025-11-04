@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 import ContactPageClient from './ContactPageClient';
 

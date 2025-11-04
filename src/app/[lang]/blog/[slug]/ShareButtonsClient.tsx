@@ -23,7 +23,7 @@ export default function ShareButtonsClient({ title, url, lang }: ShareButtonsCli
     try {
       await navigator.clipboard.writeText(url);
       toast.success(lang === 'it' ? 'Link copiato!' : 'Link copied!');
-    } catch (err) {
+    } catch {
       toast.error(lang === 'it' ? 'Errore nella copia' : 'Failed to copy');
     }
   };

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
-import { signOut } from '@/lib/auth';
+// import { signOut } from '@/lib/auth'; // Reserved for future use
 import ProfileSidebar from './ProfileSidebar';
 import ProfileHeader from './ProfileHeader';
 import ProfileDetails from './ProfileDetails';

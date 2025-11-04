@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Card, CardHeader, CardContent, Button, Badge, Input, LoadingSkeleton } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
-import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { formatDate } from '@/lib/utils';
 import type { Language } from '@/types/blog';
 
@@ -129,7 +129,7 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
     return null;
   }
 
-  const t = getTranslations(lang);
+  // const t = getTranslations(lang); // Reserved for future use
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">

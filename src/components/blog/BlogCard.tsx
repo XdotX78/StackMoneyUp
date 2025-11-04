@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui';
-import { formatDate, calculateReadTime } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { getTranslations } from '@/lib/translations';
 import type { BlogPostSummary, Language } from '@/types/blog';
 

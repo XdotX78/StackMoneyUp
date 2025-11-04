@@ -31,18 +31,18 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
-    }
+    // Import logger dynamically to avoid SSR issues
+    import('@/lib/logger').then(({ logger }) => {
+      logger.error('ErrorBoundary caught an error', error, {
+        componentStack: errorInfo.componentStack,
+        errorBoundary: true,
+      });
+    });
 
     // Call custom error handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
-
-    // TODO: Send to error tracking service (Sentry, Logtail, etc.)
-    // logError(error, { errorInfo });
   }
 
   handleReset = () => {

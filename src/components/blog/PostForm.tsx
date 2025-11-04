@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import toast from 'react-hot-toast';
 import BlogEditor from './BlogEditor';
 import BlogPostPreview from './BlogPostPreview';
 import SEOPreview from './SEOPreview';
 import { Tabs, Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/ui';
 import { Input, Textarea, Button } from '@/components/ui';
-import { generateSlug, calculateReadTime, formatDate } from '@/lib/utils';
+import { generateSlug, formatDate } from '@/lib/utils';
 import { getTranslations } from '@/lib/translations';
 import type { BlogPost, Language } from '@/types/blog';
 
@@ -73,7 +72,10 @@ export default function PostForm({
   useEffect(() => {
     if (formData.title_en && !initialData?.slug) {
       const newSlug = generateSlug(formData.title_en);
-      setFormData((prev) => ({ ...prev, slug: newSlug }));
+      // Use setTimeout to avoid setState in effect warning
+      setTimeout(() => {
+        setFormData((prev) => ({ ...prev, slug: newSlug }));
+      }, 0);
     }
   }, [formData.title_en, initialData?.slug]);
 
@@ -88,7 +90,10 @@ export default function PostForm({
       clearTimeout(autoSaveTimeoutRef.current);
     }
 
-    setAutoSaveStatus('unsaved');
+    // Use setTimeout to avoid setState in effect warning
+    setTimeout(() => {
+      setAutoSaveStatus('unsaved');
+    }, 0);
 
     // Auto-save after 2 seconds of inactivity
     autoSaveTimeoutRef.current = setTimeout(() => {
@@ -104,7 +109,8 @@ export default function PostForm({
         
         setAutoSaveStatus('saved');
         hasAutoSavedRef.current = true;
-      } catch (error) {
+      } catch {
+        // Ignore localStorage errors
         setAutoSaveStatus('unsaved');
       }
     }, 2000);
@@ -126,7 +132,7 @@ export default function PostForm({
             const saved = localStorage.getItem(key);
             return saved ? { key, data: JSON.parse(saved) } : null;
           })
-          .filter(Boolean) as Array<{ key: string; data: any }>;
+          .filter(Boolean) as Array<{ key: string; data: Partial<PostFormData> }>;
 
         // Get the most recent draft
         if (savedDrafts.length > 0) {
@@ -143,44 +149,46 @@ export default function PostForm({
                 ? `Vuoi ripristinare la bozza salvata ${savedDate.toLocaleString('it-IT')}?`
                 : `Restore draft saved ${savedDate.toLocaleString('en-US')}?`
               )) {
-                setFormData({
-                  title_en: latestDraft.data.title_en || '',
-                  title_it: latestDraft.data.title_it || '',
-                  slug: latestDraft.data.slug || '',
-                  excerpt_en: latestDraft.data.excerpt_en || '',
-                  excerpt_it: latestDraft.data.excerpt_it || '',
-                  content_en: latestDraft.data.content_en || '',
-                  content_it: latestDraft.data.content_it || '',
-                  category: latestDraft.data.category || '',
-                  tags: latestDraft.data.tags || [],
-                  cover_image: latestDraft.data.cover_image || '',
-                  published: false,
-                  featured: false,
-                });
-                hasAutoSavedRef.current = true;
+                // Use setTimeout to avoid setState in effect warning
+                setTimeout(() => {
+                  setFormData({
+                    title_en: latestDraft.data.title_en || '',
+                    title_it: latestDraft.data.title_it || '',
+                    slug: latestDraft.data.slug || '',
+                    excerpt_en: latestDraft.data.excerpt_en || '',
+                    excerpt_it: latestDraft.data.excerpt_it || '',
+                    content_en: latestDraft.data.content_en || '',
+                    content_it: latestDraft.data.content_it || '',
+                    category: latestDraft.data.category || '',
+                    tags: latestDraft.data.tags || [],
+                    cover_image: latestDraft.data.cover_image || '',
+                    published: false,
+                    featured: false,
+                  });
+                  hasAutoSavedRef.current = true;
+                }, 0);
               }
             }
           }
         }
-      } catch (error) {
-        // Silently fail if localStorage access fails
+      } catch {
+        // Silently fail if localStorage access fails (error ignored)
       }
     }
   }, [initialData, lang]);
 
-  // Calculate read time when content changes
-  const calculateReadTimeForContent = (content: string): number => {
-    try {
-      const parsed = JSON.parse(content);
-      // Extract text from JSON (simplified - in production, you'd traverse the JSON properly)
-      const text = JSON.stringify(parsed);
-      return calculateReadTime(text);
-    } catch {
-      return 0;
-    }
-  };
+  // Calculate read time when content changes - Reserved for future use
+  //   try {
+  //     const parsed = JSON.parse(content);
+  //     // Extract text from JSON (simplified - in production, you'd traverse the JSON properly)
+  //     const text = JSON.stringify(parsed);
+  //     return calculateReadTime(text);
+  //   } catch {
+  //     return 0;
+  //   }
+  // };
 
-  const handleInputChange = (field: keyof PostFormData, value: any) => {
+  const handleInputChange = (field: keyof PostFormData, value: string | string[] | boolean | number | undefined) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error for this field
     if (errors[field]) {

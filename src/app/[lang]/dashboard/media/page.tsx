@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
 import { listBlogImages, deleteBlogImage, uploadBlogImage } from '@/lib/storage';
 import { formatDate } from '@/lib/utils';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 
 interface MediaPageProps {
@@ -89,7 +89,7 @@ export default function MediaPage({ params }: MediaPageProps) {
 
     setUploading(true);
     try {
-      const imageUrl = await uploadBlogImage(file);
+      await uploadBlogImage(file);
       toast.success(lang === 'it' ? 'Immagine caricata con successo!' : 'Image uploaded successfully!');
       await loadImages(); // Reload images list
     } catch (error) {
@@ -129,7 +129,7 @@ export default function MediaPage({ params }: MediaPageProps) {
       setCopiedUrl(url);
       toast.success(lang === 'it' ? 'URL copiato!' : 'URL copied to clipboard!');
       setTimeout(() => setCopiedUrl(null), 2000);
-    } catch (error) {
+    } catch {
       toast.error(lang === 'it' ? 'Impossibile copiare l\'URL' : 'Failed to copy URL');
     }
   };
@@ -157,7 +157,7 @@ export default function MediaPage({ params }: MediaPageProps) {
     return null;
   }
 
-  const t = getTranslations(lang);
+  // const t = getTranslations(lang); // Reserved for future use
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">

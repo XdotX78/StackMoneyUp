@@ -85,7 +85,7 @@ export default function BlogEditor({
       try {
         const parsed = JSON.parse(content);
         editor.commands.setContent(parsed);
-      } catch (error) {
+      } catch {
         // Failed to parse content - return empty string
       }
     }

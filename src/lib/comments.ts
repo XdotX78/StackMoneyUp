@@ -8,9 +8,37 @@ import { getCurrentUser } from './auth'
 import type { Comment, CommentFormData } from '@/types/blog'
 
 /**
+ * Profile data from Supabase join
+ */
+interface ProfileData {
+  full_name: string | null
+  id: string
+}
+
+/**
+ * Database row type for comments table with profile join
+ */
+interface CommentRow {
+  id: string
+  post_id: string
+  parent_id: string | null
+  author_id: string
+  author_name?: string
+  author_full_name?: string
+  author_avatar?: string | null
+  content: string
+  approved: boolean
+  edited: boolean
+  created_at: string
+  updated_at: string
+  reply_count?: number
+  profiles?: ProfileData | null
+}
+
+/**
  * Transform database row to Comment type
  */
-function transformComment(row: any): Comment {
+function transformComment(row: CommentRow): Comment {
   return {
     id: row.id,
     post_id: row.post_id,
@@ -52,8 +80,8 @@ export async function getPostComments(postId: string): Promise<Comment[]> {
 
   // Transform comments - get user email from profiles or use placeholder
   // Note: We can't access auth.users directly, so we use profile data
-  const comments = data.map((row: any) => {
-    const profile = row.profiles as any
+  const comments = data.map((row: CommentRow) => {
+    const profile = row.profiles
     // For now, use profile name or generate from ID
     // In production, you might want to store display name in profiles
     const authorName = profile?.full_name || `User ${row.author_id.substring(0, 8)}`
@@ -139,8 +167,8 @@ export async function getAllPostComments(postId: string): Promise<Comment[]> {
 
   if (!data) return []
 
-  return data.map((row: any) => {
-    const profile = row.profiles as any
+  return data.map((row: CommentRow) => {
+    const profile = row.profiles
     const authorName = profile?.full_name || `User ${row.author_id.substring(0, 8)}`
     return transformComment({
       ...row,
@@ -184,7 +212,7 @@ export async function createComment(
     throw new Error(error.message)
   }
 
-  const profile = data.profiles as any
+  const profile = data.profiles as ProfileData | null | undefined
   const authorName = profile?.full_name || user.name || `User ${user.id.substring(0, 8)}`
 
   return transformComment({
@@ -241,7 +269,7 @@ export async function updateComment(
     throw new Error(error.message)
   }
 
-  const profile = data.profiles as any
+  const profile = data.profiles as ProfileData | null | undefined
   const authorName = profile?.full_name || user.name || `User ${user.id.substring(0, 8)}`
 
   return transformComment({
@@ -315,7 +343,7 @@ export async function moderateComment(
     throw new Error(error.message)
   }
 
-  const profile = data.profiles as any
+  const profile = data.profiles as ProfileData | null | undefined
   const authorName = profile?.full_name || `User ${data.author_id.substring(0, 8)}`
 
   return transformComment({

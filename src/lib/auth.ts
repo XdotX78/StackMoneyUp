@@ -18,7 +18,7 @@ export interface User {
 /**
  * Normalize role from Supabase to lowercase (admin, editor, user)
  */
-function normalizeRole(role: any): UserRole {
+function normalizeRole(role: unknown): UserRole {
   if (!role || typeof role !== 'string') return 'user'
   const normalized = role.toLowerCase().trim()
   if (normalized === 'admin' || normalized === 'editor' || normalized === 'user') {
@@ -70,7 +70,7 @@ export async function signIn(email: string, password: string): Promise<User> {
  * Sign up (register new user)
  * Returns user and session (session is null if email confirmation is required)
  */
-export async function signUp(email: string, password: string): Promise<{ user: User; session: any }> {
+export async function signUp(email: string, password: string): Promise<{ user: User; session: { access_token: string; refresh_token: string; expires_in: number; expires_at?: number; token_type: string; user: { id: string; email?: string } } | null }> {
   const { data, error } = await supabase.auth.signUp({ email, password })
   if (error) throw new Error(error.message)
 
@@ -131,7 +131,7 @@ export async function getCurrentUser(): Promise<User | null> {
   if (!data.user) return null
 
   // Get profile data (role, full_name) from profiles table
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile } = await supabase
     .from('profiles')
     .select('role, full_name')
     .eq('id', data.user.id)
@@ -272,7 +272,7 @@ export async function uploadAvatar(file: File, userId: string): Promise<string> 
   const filePath = `avatars/${fileName}`
 
   // Upload to Supabase Storage
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('avatars')
     .upload(filePath, file, {
       cacheControl: '3600',

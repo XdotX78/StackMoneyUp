@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from "@/lib/translations";
+import { isValidLanguage, getDefaultLanguage } from "@/lib/translations";
 import type { Language } from "@/types/blog";
-import Image from "next/image";
+// import Image from "next/image"; // Reserved for future use
 import HomePageClient from "./HomePageClient";
 
 interface HomePageProps {
@@ -12,7 +12,7 @@ interface HomePageProps {
 export async function generateMetadata({ params }: HomePageProps): Promise<Metadata> {
   const { lang } = await params;
   const validLang = isValidLanguage(lang) ? (lang as Language) : getDefaultLanguage();
-  const t = getTranslations(validLang);
+  // Translations used directly in metadata
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com';
 
   return {

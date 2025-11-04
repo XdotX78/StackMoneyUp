@@ -8,7 +8,7 @@ import { LoadingSkeleton } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
 import { getPostBySlug, updatePost } from '@/lib/blog';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language, BlogPost } from '@/types/blog';
 
 interface EditPostPageProps {
@@ -23,7 +23,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const { user, loading: authLoading } = useAuth();
   const { canManagePosts } = useRole();
   const router = useRouter();
-  const t = getTranslations(lang);
+  // const t = getTranslations(lang); // Reserved for future use
 
   useEffect(() => {
     const loadData = async () => {

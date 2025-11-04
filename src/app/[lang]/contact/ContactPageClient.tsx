@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
-import { Input, Textarea, Button } from '@/components/ui';
+import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import { Button } from '@/components/ui';
 import { isValidEmail } from '@/lib/utils';
 import type { Language } from '@/types/blog';
 
@@ -26,7 +26,7 @@ export default function ContactPageClient({ params }: ContactPageClientProps) {
     });
   }, [params]);
 
-  const t = getTranslations(lang);
+  // Translations available for future use
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -79,7 +79,7 @@ export default function ContactPageClient({ params }: ContactPageClientProps) {
 
       // Hide success message after 5 seconds
       setTimeout(() => setSuccess(false), 5000);
-    } catch (error) {
+    } catch {
       setErrors({
         submit: lang === 'it' 
           ? 'Errore nell\'invio del messaggio. Per favore riprova.'

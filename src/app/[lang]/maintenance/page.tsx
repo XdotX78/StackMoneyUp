@@ -28,7 +28,8 @@ export default function MaintenancePage() {
         throw new Error(data.error || 'Invalid password');
       }
 
-      const data = await response.json();
+      // Verify response is successful (data not needed)
+      await response.json();
 
       // Success - redirect to home page
       router.refresh();
@@ -96,7 +97,7 @@ export default function MaintenancePage() {
             </div>
             <div className="space-y-3 mb-2">
               <p className="text-gray-700 text-lg font-semibold">
-                We're working on something awesome!
+                We&apos;re working on something awesome!
               </p>
               <p className="text-gray-600 text-base leading-relaxed max-w-md mx-auto">
                 This website is currently undergoing maintenance.<br />

@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Input, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { resetPassword } from '@/lib/auth';
 import { getTranslations } from '@/lib/translations';
 import type { Language } from '@/types/blog';
@@ -18,7 +17,6 @@ export default function ForgotPasswordPage({ params }: ForgotPasswordPageProps) 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
   const t = getTranslations(lang);
 
   useEffect(() => {

@@ -2,7 +2,7 @@
 
 **Last Updated:** January 2025  
 **Project:** StackMoneyUp – Personal Finance Blog Platform  
-**Status:** ~75% Complete - Core features done, production optimizations added, needs testing & monitoring setup
+**Status:** ~80% Complete - Core features done, UX enhancements added, needs testing & monitoring setup
 
 ---
 
@@ -16,11 +16,11 @@
 - Production deployment
 
 **PHASE 2: Enhance UX (IMPORTANT - 2-3 weeks)**
-- Full-text search
+- ✅ Full-text search - PostgreSQL full-text search with GIN indexes
 - Newsletter
-- Dark mode
-- RSS feed
-- Better SEO
+- ✅ Dark mode - Theme toggle with next-themes
+- ✅ RSS feed - RSS 2.0 feed with multi-language support
+- ✅ Better SEO - JSON-LD structured data, reading progress bar
 
 **PHASE 3: Growth Features (FUTURE - 3-4 weeks)**
 - Multi-author system
@@ -101,6 +101,8 @@
 - [x] Connect dashboard posts to Supabase - Full CRUD operations implemented
 - [x] Connect blog post detail to Supabase - Post detail page with view tracking
 - [x] Connect tags management to Supabase - Tag CRUD operations working
+- [x] Full-text search implementation - PostgreSQL full-text search with weighted search vectors
+- [x] Google OAuth image fix - Added Google user content hostnames to next.config.ts
 
 ---
 
@@ -120,7 +122,8 @@
 - [x] Configure OAuth redirect URLs - OAuth callback route created with multi-language support
 - [x] OAuth redirect + callback handling - Complete OAuth flow implemented
 - [x] Test full login → logout → refresh flow - Logout working correctly
-- [ ] Enable RLS + test unauthenticated access
+- [x] RLS testing script created - Automated RLS testing script (`scripts/test-rls.ts`)
+- [ ] Enable RLS + test unauthenticated access - Run `npm run test:rls` to test
 
 ---
 
@@ -157,6 +160,9 @@
 - [x] Performance optimizations - Image optimization (next/image), caching headers, lazy loading ready
 - [x] Error boundaries - ErrorBoundary component created and integrated
 - [x] Error monitoring - Setup guide created (PRODUCTION_MONITORING_SETUP.md)
+- [x] Error monitoring integration - Logger updated with Sentry support, ErrorBoundary integrated
+- [x] Security checklist created - Comprehensive security checklist (SECURITY_CHECKLIST.md)
+- [x] RLS testing script - Automated RLS testing script (`scripts/test-rls.ts`)
 - [ ] Accessibility audit (a11y) - Use axe-core or similar
 - [ ] Cross-browser testing - Test Chrome, Firefox, Safari, Edge
 - [ ] Performance monitoring - Core Web Vitals, Lighthouse scores
@@ -176,18 +182,18 @@
 ---
 
 ## 🚀 PHASE 2: ENHANCE USER EXPERIENCE (Important - 2-3 weeks)
-- [ ] Full-text search - Implement Supabase full-text search with filters
+- [x] Full-text search - PostgreSQL full-text search with weighted search vectors, GIN indexes, and RPC function ✅ DONE
 - [ ] Newsletter signup - Email subscription form + database storage
 - [ ] Newsletter integration - Connect with SendGrid/Mailchimp/Resend
-- [ ] RSS feed - Generate RSS feed for blog posts
-- [ ] Dark mode - Implement theme toggle with next-themes
-- [ ] Better SEO - JSON-LD structured data, improved meta tags
+- [x] RSS feed - RSS 2.0 feed with multi-language support, proper caching headers ✅ DONE
+- [x] Dark mode - Theme toggle with next-themes, dark mode variables, ThemeProvider ✅ DONE
+- [x] Better SEO - JSON-LD structured data for blog posts, improved meta tags ✅ DONE
 - [ ] Open Graph optimization - Custom OG images, better social sharing
 - [ ] Twitter Card optimization - Enhanced Twitter sharing
 - [ ] Share tracking - Track social shares in database
 - [ ] Print-friendly post layout - Optimized CSS for printing
 - [ ] Export post as PDF - PDF generation for blog posts
-- [ ] Reading progress bar - Show reading progress on long posts
+- [x] Reading progress bar - Reading progress indicator on blog post pages ✅ DONE
 - [ ] Bookmarking system - Allow users to save favorite posts
 
 ## 🌟 PHASE 3: GROWTH FEATURES (Future - 3-4 weeks)
@@ -219,13 +225,14 @@
 - [x] Rate limiting not implemented - Rate limiting middleware implemented (src/lib/rateLimit.ts)
 - [x] CSRF protection not implemented - CSRF utilities created (src/lib/csrf.ts)
 - [x] Security headers not configured - Security headers configured (HSTS, CSP, X-Frame-Options, etc.)
+- [x] Google OAuth image hostname error - Added Google user content domains to next.config.ts image remotePatterns
 
 ---
 
 ## 📊 PROJECT STATUS SUMMARY
 
-**Completed:** ~75%  
-**Remaining:** Testing (integration/E2E), Monitoring Setup, UX Enhancements
+**Completed:** ~80%  
+**Remaining:** Testing (integration/E2E), Monitoring Setup, Newsletter, Share tracking, Bookmarking
 
 **Strengths:**
 - ✅ Modern tech stack (Next.js 16, React 19, TypeScript)

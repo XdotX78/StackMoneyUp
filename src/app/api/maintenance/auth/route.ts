@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { withRateLimit, getClientIdentifier } from '@/lib/rateLimit';
+import { getClientIdentifier } from '@/lib/rateLimit';
 
 const MAINTENANCE_PASSWORD = process.env.MAINTENANCE_PASSWORD || '';
 const MAINTENANCE_COOKIE_NAME = 'maintenance-auth';
@@ -45,7 +45,7 @@ async function handlePost(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -35,7 +35,7 @@ export async function uploadBlogImage(file: File): Promise<string> {
   const filePath = `${user.id}/${fileName}`
 
   // Upload to Supabase Storage
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('blog-images')
     .upload(filePath, file, {
       cacheControl: '3600',
@@ -48,7 +48,7 @@ export async function uploadBlogImage(file: File): Promise<string> {
       const newFileName = `${timestamp}-${randomId}-${Date.now()}.${fileExt}`
       const newFilePath = `${user.id}/${newFileName}`
       
-      const { data: retryData, error: retryError } = await supabase.storage
+      const { error: retryError } = await supabase.storage
         .from('blog-images')
         .upload(newFilePath, file, {
           cacheControl: '3600',

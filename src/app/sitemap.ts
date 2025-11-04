@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { translations } from '@/lib/translations';
+// import { translations } from '@/lib/translations'; // Reserved for future use
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com';

@@ -31,7 +31,7 @@ export default function BlogPostPreview({
   const extractTextFromContent = (jsonContent: string): string => {
     try {
       const parsed = JSON.parse(jsonContent);
-      const extractText = (node: any): string => {
+      const extractText = (node: unknown): string => {
         if (typeof node === 'string') return node;
         if (Array.isArray(node?.content)) {
           return node.content.map(extractText).join(' ');

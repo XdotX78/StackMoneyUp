@@ -7,7 +7,7 @@ import { Card, CardHeader, CardContent, Button, Input, Badge, LoadingSkeleton, T
 import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
 import { getAllTags, deleteTag, updateTag } from '@/lib/blog';
-import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
 import type { Language, Tag } from '@/types/blog';
 
 interface TagsPageProps {

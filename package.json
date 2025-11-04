@@ -10,7 +10,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:rls": "tsx scripts/test-rls.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
@@ -48,6 +49,7 @@
     "eslint-config-next": "16.0.0",
     "jsdom": "^27.0.1",
     "tailwindcss": "^4",
+    "tsx": "^4.7.0",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }

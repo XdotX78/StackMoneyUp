@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
+import { isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { getPostBySlug, incrementPostViews } from '@/lib/blog';
 import { formatDate } from '@/lib/utils';
 import { Badge, Button } from '@/components/ui';
@@ -83,7 +83,6 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { lang, slug } = await params;
   const validLang = isValidLanguage(lang) ? (lang as Language) : getDefaultLanguage();
-  const t = getTranslations(validLang);
 
   // Fetch post from Supabase
   const post = await getPostBySlug(slug);

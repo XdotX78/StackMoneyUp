@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Input, Button } from '@/components/ui';
-import { signIn, signUp, signInWithGoogle, isAuthenticated, type User } from '@/lib/auth';
+import { Button } from '@/components/ui';
+import { signIn, signUp, signInWithGoogle, isAuthenticated } from '@/lib/auth';
 import { getTranslations } from '@/lib/translations';
 import type { Language } from '@/types/blog';
 
@@ -89,7 +89,7 @@ export default function LoginPage({ params }: LoginPageProps) {
           await signIn(email, password);
           // Redirect to dashboard after successful login
           router.push(`/${lang}/dashboard`);
-        } catch (signInError: any) {
+        } catch (signInError: unknown) {
           // Handle specific "Email not confirmed" error - check for various Supabase error formats
           const errorMessage = signInError?.message?.toLowerCase() || '';
           const errorCode = signInError?.code || '';

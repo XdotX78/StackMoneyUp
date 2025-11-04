@@ -45,10 +45,10 @@ vi.mock('next/navigation', () => ({
 }))
 
 // Mock Next.js Image component
-vi.mock('next/image', () => {
-  const React = require('react')
+vi.mock('next/image', async () => {
+  const React = await import('react')
   return {
-    default: (props: any) => React.createElement('img', props),
+    default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => React.createElement('img', props),
   }
 })
 

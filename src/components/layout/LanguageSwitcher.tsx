@@ -16,7 +16,7 @@ export default function LanguageSwitcher({ currentLang }: LanguageSwitcherProps)
   // Get the path without the language prefix
   const pathWithoutLang = pathname?.replace(/^\/(en|it)/, '') || '';
 
-  const toggleLanguage = (newLang: Language) => {
+  const toggleLanguage = () => {
     setIsOpen(false);
   };
 

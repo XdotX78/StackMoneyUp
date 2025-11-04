@@ -6,7 +6,7 @@ import { randomBytes, createHmac } from 'crypto';
 
 const CSRF_SECRET = process.env.CSRF_SECRET || process.env.NEXT_PUBLIC_SITE_URL || 'default-secret-change-in-production';
 const CSRF_TOKEN_LENGTH = 32;
-const CSRF_TOKEN_MAX_AGE = 60 * 60 * 1000; // 1 hour
+// const CSRF_TOKEN_MAX_AGE = 60 * 60 * 1000; // 1 hour - Reserved for future use
 
 /**
  * Generate a CSRF token
