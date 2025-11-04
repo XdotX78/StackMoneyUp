@@ -9,7 +9,28 @@
  * - Have test accounts ready (admin, editor, regular user)
  */
 
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { createClient } from '@supabase/supabase-js';
+
+// Load environment variables from .env.local
+try {
+  const envPath = join(process.cwd(), '.env.local');
+  const envFile = readFileSync(envPath, 'utf-8');
+  envFile.split('\n').forEach((line) => {
+    const trimmedLine = line.trim();
+    if (trimmedLine && !trimmedLine.startsWith('#')) {
+      const [key, ...valueParts] = trimmedLine.split('=');
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join('=').trim().replace(/^["']|["']$/g, '');
+        process.env[key.trim()] = value;
+      }
+    }
+  });
+} catch (error) {
+  // .env.local might not exist, that's okay if vars are set in environment
+  console.warn('⚠️  Could not load .env.local, using environment variables');
+}
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
