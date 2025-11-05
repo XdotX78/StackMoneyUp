@@ -16,6 +16,15 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 let sentry: any = null;
 
 async function getSentry() {
+  // ⚠️ SENTRY TEMPORARILY DISABLED
+  // Webpack tries to resolve this module at compile time even in try-catch
+  // This causes "Module not found" warnings on every compilation
+  // 
+  // TODO: Uncomment when Sentry is installed:
+  // npm install @sentry/nextjs
+  // Then configure following PRODUCTION_MONITORING_SETUP.md
+  
+  /* 
   if (!sentry && process.env.NEXT_PUBLIC_SENTRY_DSN) {
     try {
       // Dynamic import to avoid build errors if Sentry is not installed
@@ -26,6 +35,8 @@ async function getSentry() {
       console.warn('Sentry not installed. Install with: npm install @sentry/nextjs');
     }
   }
+  */
+  
   return sentry;
 }
 

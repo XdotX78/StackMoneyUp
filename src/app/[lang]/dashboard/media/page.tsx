@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { Card, CardHeader, CardContent, Button, Input, LoadingSkeleton } from '@/components/ui';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 import { listBlogImages, deleteBlogImage, uploadBlogImage } from '@/lib/storage';
 import { formatDate } from '@/lib/utils';
@@ -24,36 +24,36 @@ interface ImageItem {
 }
 
 export default function MediaPage({ params }: MediaPageProps) {
-  const [lang, setLang] = useState<Language>('en');
+  const { lang: paramLang } = use(params);
+  const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
+  const [lang, setLang] = useState<Language>(validLang);
   const [images, setImages] = useState<ImageItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
-  const { user, loading: authLoading } = useAuth();
-  const { canManagePosts } = useRole();
+  const { user, loading: authLoading } = useAuthContext();
+  const { canManagePosts, loading: roleLoading } = useRole();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const loadLang = async () => {
-      const { lang: paramLang } = await params;
-      const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
-      setLang(validLang);
+    setLang(validLang);
 
-      if (!authLoading && !user) {
-        router.push(`/${validLang}/login`);
-        return;
-      }
+    // Wait for both auth and role to finish loading
+    if (authLoading || roleLoading) return;
 
-      // Check if user has editor/admin role
-      if (!authLoading && user && !canManagePosts()) {
-        router.push(`/${validLang}/dashboard`);
-      }
-    };
-    loadLang();
-  }, [params, router, user, authLoading, canManagePosts]);
+    if (!user) {
+      router.push(`/${validLang}/login`);
+      return;
+    }
+
+    // Check if user has editor/admin role (only after role is loaded)
+    if (!canManagePosts()) {
+      router.push(`/${validLang}/dashboard`);
+    }
+  }, [validLang, router, user, authLoading, roleLoading, canManagePosts]);
 
   useEffect(() => {
     if (user) {

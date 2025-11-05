@@ -1,98 +1,117 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardHeader, CardContent, Button, Badge, Input, LoadingSkeleton } from '@/components/ui';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 import { isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { formatDate } from '@/lib/utils';
+import { getAllPostsAnalytics, getAnalyticsSummary, type PostAnalytics } from '@/lib/analytics';
+import toast from 'react-hot-toast';
 import type { Language } from '@/types/blog';
 
 interface AnalyticsPageProps {
   params: Promise<{ lang: string }>;
 }
 
-// Mock analytics data (replace with Supabase when ready)
-const mockPostsWithAnalytics = [
-  {
-    id: '1',
-    slug: 'compound-effect-investing',
-    title: {
-      en: 'The Compound Effect of Consistent Investing',
-      it: "L'Effetto Composto degli Investimenti Costanti",
-    },
-    category: 'Investing',
-    published: true,
-    published_at: '2024-12-15T10:00:00Z',
-    views: 1250,
-    reads: 890,
-    readRate: 71.2,
-    avgReadTime: 4.5,
-    shares: 45,
-  },
-  {
-    id: '2',
-    slug: '50-30-20-rule',
-    title: {
-      en: 'The 50/30/20 Rule Isn\'t Perfect',
-      it: 'La Regola 50/30/20 Non È Perfetta',
-    },
-    category: 'Budgeting & Spending',
-    published: false,
-    views: 0,
-    reads: 0,
-    readRate: 0,
-    avgReadTime: 0,
-    shares: 0,
-  },
-  {
-    id: '3',
-    slug: 'stop-chasing-quick-wins',
-    title: {
-      en: 'Stop Chasing Quick Wins in Personal Finance',
-      it: 'Smetti di Cercare Vittorie Rapide nella Finanza Personale',
-    },
-    category: 'Money Mindset',
-    published: true,
-    published_at: '2024-11-20T10:00:00Z',
-    views: 2840,
-    reads: 2100,
-    readRate: 73.9,
-    avgReadTime: 6.2,
-    shares: 132,
-  },
-];
+// Helper function to calculate summary from posts data (avoid double fetch)
+function calculateSummaryFromPosts(postsData: PostAnalytics[]) {
+  const publishedPosts = postsData.filter(p => p.published);
+  
+  const totalViews = publishedPosts.reduce((sum, p) => sum + p.views, 0);
+  const totalReads = publishedPosts.reduce((sum, p) => sum + p.reads, 0);
+  const avgReadRate = publishedPosts.length > 0
+    ? publishedPosts.reduce((sum, p) => sum + p.readRate, 0) / publishedPosts.length
+    : 0;
+  const totalShares = publishedPosts.reduce((sum, p) => sum + p.shares, 0);
+  const totalBookmarks = publishedPosts.reduce((sum, p) => sum + p.bookmarks, 0);
+
+  const shareBreakdown = publishedPosts.reduce(
+    (acc, p) => ({
+      twitter: acc.twitter + p.shareBreakdown.twitter,
+      facebook: acc.facebook + p.shareBreakdown.facebook,
+      linkedin: acc.linkedin + p.shareBreakdown.linkedin,
+      copy: acc.copy + p.shareBreakdown.copy,
+    }),
+    { twitter: 0, facebook: 0, linkedin: 0, copy: 0 }
+  );
+
+  return {
+    totalViews,
+    totalReads,
+    avgReadRate: Math.round(avgReadRate * 10) / 10,
+    totalShares,
+    totalBookmarks,
+    shareBreakdown,
+  };
+}
 
 export default function AnalyticsPage({ params }: AnalyticsPageProps) {
-  const [lang, setLang] = useState<Language>('en');
+  const { lang: paramLang } = use(params);
+  const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
+  const [lang, setLang] = useState<Language>(validLang);
   const [searchQuery, setSearchQuery] = useState('');
   const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | '90d'>('30d');
-  const { user, loading: authLoading } = useAuth();
-  const { isAdmin } = useRole();
+  const [posts, setPosts] = useState<PostAnalytics[]>([]);
+  const [summary, setSummary] = useState({
+    totalViews: 0,
+    totalReads: 0,
+    avgReadRate: 0,
+    totalShares: 0,
+    totalBookmarks: 0,
+    shareBreakdown: { twitter: 0, facebook: 0, linkedin: 0, copy: 0 },
+  });
+  const [loading, setLoading] = useState(true);
+  const { user, loading: authLoading } = useAuthContext();
+  const { isAdmin, loading: roleLoading } = useRole();
   const router = useRouter();
 
   useEffect(() => {
-    const loadLang = async () => {
-      const { lang: paramLang } = await params;
-      const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
-      setLang(validLang);
+    setLang(validLang);
+  }, [validLang]);
 
-      if (!authLoading && !user) {
-        router.push(`/${validLang}/login`);
-        return;
-      }
+  // Separate effect for auth/role checks and data loading
+  useEffect(() => {
+    // Wait for both auth and role to finish loading
+    if (authLoading || roleLoading) return;
 
-      // Check if user has admin role (analytics is admin-only)
-      if (!authLoading && user && !isAdmin()) {
-        router.push(`/${validLang}/dashboard`);
+    if (!user) {
+      router.push(`/${validLang}/login`);
+      return;
+    }
+
+    // Check if user has admin role (analytics is admin-only, only after role is loaded)
+    const hasAdminRole = isAdmin();
+    if (!hasAdminRole) {
+      router.push(`/${validLang}/dashboard`);
+      return;
+    }
+
+    // Load analytics data (only after role is confirmed)
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        // Fetch posts data only once
+        const postsData = await getAllPostsAnalytics();
+        setPosts(postsData);
+        
+        // Calculate summary from already-fetched posts data (no double fetch)
+        const summaryData = calculateSummaryFromPosts(postsData);
+        setSummary(summaryData);
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+        toast.error(lang === 'it' ? 'Errore nel caricamento delle analisi' : 'Error loading analytics');
+      } finally {
+        setLoading(false);
       }
     };
-    loadLang();
-  }, [params, router, user, authLoading, isAdmin]);
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validLang, router, user, authLoading, roleLoading]); // Removed isAdmin to prevent infinite loop
 
-  const filteredPosts = mockPostsWithAnalytics.filter(post => {
+  const filteredPosts = posts.filter(post => {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       const titleEn = post.title.en.toLowerCase();
@@ -102,15 +121,7 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
     return true;
   });
 
-  const publishedPosts = filteredPosts.filter(p => p.published);
-  const totalViews = publishedPosts.reduce((sum, p) => sum + p.views, 0);
-  const totalReads = publishedPosts.reduce((sum, p) => sum + p.reads, 0);
-  const avgReadRate = publishedPosts.length > 0
-    ? publishedPosts.reduce((sum, p) => sum + p.readRate, 0) / publishedPosts.length
-    : 0;
-  const totalShares = publishedPosts.reduce((sum, p) => sum + p.shares, 0);
-
-  if (authLoading) {
+  if (authLoading || loading) {
     return (
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="space-y-6">
@@ -158,7 +169,7 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-black text-emerald-600">
-              {totalViews.toLocaleString()}
+              {summary.totalViews.toLocaleString()}
             </p>
             <p className="text-sm text-gray-500 mt-2">
               {lang === 'it' ? 'Tutti i post pubblicati' : 'All published posts'}
@@ -174,7 +185,7 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-black text-blue-600">
-              {totalReads.toLocaleString()}
+              {summary.totalReads.toLocaleString()}
             </p>
             <p className="text-sm text-gray-500 mt-2">
               {lang === 'it' ? 'Articoli completati' : 'Articles completed'}
@@ -190,7 +201,7 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-black text-purple-600">
-              {avgReadRate.toFixed(1)}%
+              {summary.avgReadRate.toFixed(1)}%
             </p>
             <p className="text-sm text-gray-500 mt-2">
               {lang === 'it' ? 'Media complessiva' : 'Overall average'}
@@ -206,7 +217,7 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-black text-orange-600">
-              {totalShares.toLocaleString()}
+              {summary.totalShares.toLocaleString()}
             </p>
             <p className="text-sm text-gray-500 mt-2">
               {lang === 'it' ? 'Totali' : 'Total'}
@@ -285,6 +296,9 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
                     <th className="text-right py-3 px-4 font-semibold text-gray-700">
                       {lang === 'it' ? 'Condivisioni' : 'Shares'}
                     </th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">
+                      {lang === 'it' ? 'Segnalibri' : 'Bookmarks'}
+                    </th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
                       {lang === 'it' ? 'Azioni' : 'Actions'}
                     </th>
@@ -336,7 +350,20 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
                         ) : '-'}
                       </td>
                       <td className="py-3 px-4 text-right font-semibold text-orange-600">
-                        {post.published ? post.shares.toLocaleString() : '-'}
+                        {post.published ? (
+                          <div className="flex flex-col items-end">
+                            <span>{post.shares.toLocaleString()}</span>
+                            <div className="flex gap-1 mt-1 text-xs">
+                              <span className="text-blue-500" title="Twitter">T: {post.shareBreakdown.twitter}</span>
+                              <span className="text-blue-600" title="Facebook">F: {post.shareBreakdown.facebook}</span>
+                              <span className="text-blue-700" title="LinkedIn">L: {post.shareBreakdown.linkedin}</span>
+                              <span className="text-gray-500" title="Copy">C: {post.shareBreakdown.copy}</span>
+                            </div>
+                          </div>
+                        ) : '-'}
+                      </td>
+                      <td className="py-3 px-4 text-right font-semibold text-purple-600">
+                        {post.published ? post.bookmarks.toLocaleString() : '-'}
                       </td>
                       <td className="py-3 px-4">
                         <Link href={`/${lang}/dashboard/edit/${post.slug}`}>
@@ -354,23 +381,38 @@ export default function AnalyticsPage({ params }: AnalyticsPageProps) {
         </CardContent>
       </Card>
 
-      {/* Note */}
-      <Card className="mt-6 bg-blue-50 border-blue-200">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-3">
-            <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div className="text-sm text-blue-800">
-              <p className="font-semibold mb-1">
-                {lang === 'it' ? 'Nota' : 'Note'}
+      {/* Share Breakdown */}
+      <Card className="mt-6">
+        <CardHeader>
+          <h2 className="text-2xl font-bold">
+            {lang === 'it' ? 'Dettaglio Condivisioni' : 'Share Breakdown'}
+          </h2>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <p className="text-2xl font-black text-blue-500">
+                {summary.shareBreakdown.twitter}
               </p>
-              <p>
-                {lang === 'it'
-                  ? 'Le analisi mostrate sono dati demo. Quando integrerai Supabase, aggiungi il tracciamento delle visualizzazioni e delle letture.'
-                  : 'The analytics shown are demo data. When you integrate Supabase, add view and read tracking.'
-                }
+              <p className="text-sm text-gray-600 mt-1">Twitter</p>
+            </div>
+            <div className="text-center p-4 bg-blue-100 rounded-lg">
+              <p className="text-2xl font-black text-blue-600">
+                {summary.shareBreakdown.facebook}
               </p>
+              <p className="text-sm text-gray-600 mt-1">Facebook</p>
+            </div>
+            <div className="text-center p-4 bg-blue-200 rounded-lg">
+              <p className="text-2xl font-black text-blue-700">
+                {summary.shareBreakdown.linkedin}
+              </p>
+              <p className="text-sm text-gray-600 mt-1">LinkedIn</p>
+            </div>
+            <div className="text-center p-4 bg-gray-100 rounded-lg">
+              <p className="text-2xl font-black text-gray-600">
+                {summary.shareBreakdown.copy}
+              </p>
+              <p className="text-sm text-gray-600 mt-1">Link Copy</p>
             </div>
           </div>
         </CardContent>

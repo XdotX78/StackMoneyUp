@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { Card, CardHeader, CardContent, Button, Badge, Input, LoadingSkeleton, TableSkeleton } from '@/components/ui';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 // import { isEditor } from '@/lib/auth'; // Reserved for future use
 import { getAllPosts, deletePost, updatePost } from '@/lib/blog';
@@ -18,35 +18,35 @@ interface PostsPageProps {
 }
 
 export default function PostsPage({ params }: PostsPageProps) {
-  const [lang, setLang] = useState<Language>('en');
+  const { lang: paramLang } = use(params);
+  const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
+  const [lang, setLang] = useState<Language>(validLang);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'drafts'>('all');
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'category'>('date');
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
-  const { user, loading: authLoading } = useAuth();
-  const { canManagePosts } = useRole();
+  const { user, loading: authLoading } = useAuthContext();
+  const { canManagePosts, loading: roleLoading } = useRole();
   const router = useRouter();
 
   useEffect(() => {
-    const loadLang = async () => {
-      const { lang: paramLang } = await params;
-      const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
-      setLang(validLang);
+    setLang(validLang);
 
-      if (!authLoading && !user) {
-        router.push(`/${validLang}/login`);
-        return;
-      }
+    // Wait for both auth and role to finish loading
+    if (authLoading || roleLoading) return;
 
-      // Check if user has editor/admin role
-      if (!authLoading && user && !canManagePosts()) {
-        router.push(`/${validLang}/dashboard`);
-      }
-    };
-    loadLang();
-  }, [params, router, user, authLoading, canManagePosts]);
+    if (!user) {
+      router.push(`/${validLang}/login`);
+      return;
+    }
+
+    // Check if user has editor/admin role (only after role is loaded)
+    if (!canManagePosts()) {
+      router.push(`/${validLang}/dashboard`);
+    }
+  }, [validLang, router, user, authLoading, roleLoading, canManagePosts]);
 
   // Fetch posts from Supabase
   useEffect(() => {
@@ -240,18 +240,16 @@ export default function PostsPage({ params }: PostsPageProps) {
     );
   }
 
-  const validLang = lang;
-
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl font-black mb-2">
-            {validLang === 'it' ? 'Gestisci Post' : 'Manage Posts'}
+            {lang === 'it' ? 'Gestisci Post' : 'Manage Posts'}
           </h1>
           <p className="text-gray-600">
-            {validLang === 'it' ? 'Visualizza, modifica ed elimina i tuoi post' : 'View, edit, and delete your posts'}
+            {lang === 'it' ? 'Visualizza, modifica ed elimina i tuoi post' : 'View, edit, and delete your posts'}
           </p>
         </div>
         <Link href={`/${lang}/dashboard/new-post`}>
@@ -268,13 +266,13 @@ export default function PostsPage({ params }: PostsPageProps) {
             {/* Search */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {validLang === 'it' ? 'Cerca' : 'Search'}
+                {lang === 'it' ? 'Cerca' : 'Search'}
               </label>
               <Input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={validLang === 'it' ? 'Cerca per titolo o categoria...' : 'Search by title or category...'}
+                placeholder={lang === 'it' ? 'Cerca per titolo o categoria...' : 'Search by title or category...'}
                 className="w-full"
               />
             </div>
@@ -282,14 +280,14 @@ export default function PostsPage({ params }: PostsPageProps) {
             {/* Status Filter */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {validLang === 'it' ? 'Stato' : 'Status'}
+                      {lang === 'it' ? 'Stato' : 'Status'}
               </label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'drafts')}
                 className="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
-                <option value="all">{validLang === 'it' ? 'Tutti' : 'All'}</option>
+                <option value="all">{lang === 'it' ? 'Tutti' : 'All'}</option>
                 <option value="published">{t.dashboard.published}</option>
                 <option value="drafts">{t.dashboard.drafts}</option>
               </select>
@@ -298,16 +296,16 @@ export default function PostsPage({ params }: PostsPageProps) {
             {/* Sort */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {validLang === 'it' ? 'Ordina per' : 'Sort by'}
+                {lang === 'it' ? 'Ordina per' : 'Sort by'}
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'category')}
                 className="w-full px-4 py-2 bg-white border-2 border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
-                <option value="date">{validLang === 'it' ? 'Data' : 'Date'}</option>
-                <option value="title">{validLang === 'it' ? 'Titolo' : 'Title'}</option>
-                <option value="category">{validLang === 'it' ? 'Categoria' : 'Category'}</option>
+                <option value="date">{lang === 'it' ? 'Data' : 'Date'}</option>
+                <option value="title">{lang === 'it' ? 'Titolo' : 'Title'}</option>
+                <option value="category">{lang === 'it' ? 'Categoria' : 'Category'}</option>
               </select>
             </div>
           </div>
@@ -321,7 +319,7 @@ export default function PostsPage({ params }: PostsPageProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="font-semibold text-emerald-900">
-                  {validLang === 'it' 
+                  {lang === 'it' 
                     ? `${selectedPosts.length} post selezionati`
                     : `${selectedPosts.length} post${selectedPosts.length > 1 ? 's' : ''} selected`
                   }
@@ -334,7 +332,7 @@ export default function PostsPage({ params }: PostsPageProps) {
                   onClick={handleBulkPublish}
                   className="border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white"
                 >
-                  {validLang === 'it' ? 'Pubblica' : 'Publish'}
+                  {lang === 'it' ? 'Pubblica' : 'Publish'}
                 </Button>
                 <Button
                   variant="outline"
@@ -342,7 +340,7 @@ export default function PostsPage({ params }: PostsPageProps) {
                   onClick={handleBulkUnpublish}
                   className="border-gray-400 text-gray-700 hover:bg-gray-400 hover:text-white"
                 >
-                  {validLang === 'it' ? 'Depubblica' : 'Unpublish'}
+                  {lang === 'it' ? 'Depubblica' : 'Unpublish'}
                 </Button>
                 <Button
                   variant="outline"
@@ -350,14 +348,14 @@ export default function PostsPage({ params }: PostsPageProps) {
                   onClick={handleBulkDelete}
                   className="border-red-600 text-red-700 hover:bg-red-600 hover:text-white"
                 >
-                  {validLang === 'it' ? 'Elimina' : 'Delete'}
+                  {lang === 'it' ? 'Elimina' : 'Delete'}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedPosts([])}
                 >
-                  {validLang === 'it' ? 'Deseleziona' : 'Clear'}
+                  {lang === 'it' ? 'Deseleziona' : 'Clear'}
                 </Button>
               </div>
             </div>
@@ -370,12 +368,12 @@ export default function PostsPage({ params }: PostsPageProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
-              {validLang === 'it' ? 'Tutti i Post' : 'All Posts'}
+              {lang === 'it' ? 'Tutti i Post' : 'All Posts'}
             </h2>
             <span className="text-sm text-gray-500">
               {filteredAndSortedPosts.length} {filteredAndSortedPosts.length === 1 
-                ? (validLang === 'it' ? 'post' : 'post')
-                : (validLang === 'it' ? 'post' : 'posts')
+                ? (lang === 'it' ? 'post' : 'post')
+                : (lang === 'it' ? 'post' : 'posts')
               }
             </span>
           </div>
@@ -385,7 +383,7 @@ export default function PostsPage({ params }: PostsPageProps) {
             <div className="text-center py-12 text-gray-500">
               <p className="mb-4">
                 {searchQuery || statusFilter !== 'all'
-                  ? (validLang === 'it' ? 'Nessun post trovato con questi filtri.' : 'No posts found with these filters.')
+                  ? (lang === 'it' ? 'Nessun post trovato con questi filtri.' : 'No posts found with these filters.')
                   : t.dashboard.noPostsYet
                 }
               </p>
@@ -410,19 +408,19 @@ export default function PostsPage({ params }: PostsPageProps) {
                       />
                     </th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                      {validLang === 'it' ? 'Titolo' : 'Title'}
+                      {lang === 'it' ? 'Titolo' : 'Title'}
                     </th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                      {validLang === 'it' ? 'Categoria' : 'Category'}
+                      {lang === 'it' ? 'Categoria' : 'Category'}
                     </th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                      {validLang === 'it' ? 'Stato' : 'Status'}
+                      {lang === 'it' ? 'Stato' : 'Status'}
                     </th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                      {validLang === 'it' ? 'Data' : 'Date'}
+                      {lang === 'it' ? 'Data' : 'Date'}
                     </th>
                     <th className="text-right py-3 px-4 font-semibold text-gray-700">
-                      {validLang === 'it' ? 'Azioni' : 'Actions'}
+                      {lang === 'it' ? 'Azioni' : 'Actions'}
                     </th>
                   </tr>
                 </thead>
@@ -462,7 +460,7 @@ export default function PostsPage({ params }: PostsPageProps) {
                           </Badge>
                         ) : post.published_at && new Date(post.published_at) > new Date() ? (
                           <Badge variant="info" size="sm" className="bg-blue-100 text-blue-800">
-                            {validLang === 'it' ? 'Programmato' : 'Scheduled'}
+                            {lang === 'it' ? 'Programmato' : 'Scheduled'}
                           </Badge>
                         ) : (
                           <Badge variant="default" size="sm">
@@ -480,7 +478,7 @@ export default function PostsPage({ params }: PostsPageProps) {
                         <div className="flex items-center justify-end gap-2">
                           <Link href={`/${lang}/dashboard/edit/${post.slug}`}>
                             <Button variant="outline" size="sm">
-                              {validLang === 'it' ? 'Modifica' : 'Edit'}
+                              {lang === 'it' ? 'Modifica' : 'Edit'}
                             </Button>
                           </Link>
                           <Button 
@@ -488,7 +486,7 @@ export default function PostsPage({ params }: PostsPageProps) {
                             size="sm"
                             onClick={() => handleDelete(post.id)}
                           >
-                            {validLang === 'it' ? 'Elimina' : 'Delete'}
+                            {lang === 'it' ? 'Elimina' : 'Delete'}
                           </Button>
                         </div>
                       </td>

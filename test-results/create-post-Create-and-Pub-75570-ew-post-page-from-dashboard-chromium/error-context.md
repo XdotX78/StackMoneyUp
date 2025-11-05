@@ -1,0 +1,127 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "StackMoneyUp" [ref=e5] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=e6]: StackMoneyUp
+        - generic [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /en
+          - link "Blog" [ref=e9] [cursor=pointer]:
+            - /url: /en/blog
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /en/about
+          - link "Invest" [ref=e11] [cursor=pointer]:
+            - /url: /en/blog
+          - button "Toggle theme" [ref=e12] [cursor=pointer]: 🌓
+          - button "Change language" [ref=e14] [cursor=pointer]:
+            - generic [ref=e15]: 🌐
+            - generic [ref=e16]: en
+            - img [ref=e17]
+          - link "Login" [ref=e19] [cursor=pointer]:
+            - /url: /en/login
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /en#contact
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "StackMoneyUp" [level=1] [ref=e27]
+        - paragraph [ref=e29]: Sign in to access the dashboard
+      - button "Sign in with Google" [ref=e30] [cursor=pointer]:
+        - img [ref=e31]
+        - text: Sign in with Google
+      - generic [ref=e40]: or
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e43]
+          - generic [ref=e45]: Invalid login credentials
+        - generic [ref=e46]:
+          - generic [ref=e47]: Email
+          - generic [ref=e48]:
+            - generic:
+              - img
+            - textbox "your@email.com" [ref=e49]: test@example.com
+        - generic [ref=e50]:
+          - generic [ref=e51]: Password
+          - generic [ref=e52]:
+            - generic:
+              - img
+            - textbox "Enter your password" [ref=e53]: TestPassword123!
+            - button [ref=e54] [cursor=pointer]:
+              - img [ref=e55]
+        - button "Sign In" [ref=e58] [cursor=pointer]
+      - link "Forgot password?" [ref=e60] [cursor=pointer]:
+        - /url: /en/forgot-password
+      - button "Don't have an account? Sign up" [ref=e62] [cursor=pointer]
+      - generic [ref=e64]:
+        - img [ref=e65]
+        - paragraph [ref=e67]: Real Supabase authentication
+  - contentinfo [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - heading "StackMoneyUp" [level=2] [ref=e72]
+          - paragraph [ref=e73]: © 2025 StackMoneyUp, Inc. All rights reserved.
+          - paragraph [ref=e74]: Real strategies for building wealth. No bullshit. No easy money promises.
+        - generic [ref=e75]:
+          - heading "Quick Links" [level=3] [ref=e76]
+          - list [ref=e77]:
+            - listitem [ref=e78]:
+              - link "Home" [ref=e79] [cursor=pointer]:
+                - /url: /en
+            - listitem [ref=e80]:
+              - link "About" [ref=e81] [cursor=pointer]:
+                - /url: /en/about
+            - listitem [ref=e82]:
+              - link "Invest" [ref=e83] [cursor=pointer]:
+                - /url: /en/blog
+            - listitem [ref=e84]:
+              - link "Blog" [ref=e85] [cursor=pointer]:
+                - /url: /en/blog
+        - generic [ref=e86]:
+          - heading "Explore More" [level=3] [ref=e87]
+          - list [ref=e88]:
+            - listitem [ref=e89]:
+              - link "Contact" [ref=e90] [cursor=pointer]:
+                - /url: /en#contact
+            - listitem [ref=e91]:
+              - link "Privacy" [ref=e92] [cursor=pointer]:
+                - /url: /en/privacy
+            - listitem [ref=e93]:
+              - link "Terms" [ref=e94] [cursor=pointer]:
+                - /url: /en/terms
+            - listitem [ref=e95]:
+              - link "Sitemap" [ref=e96] [cursor=pointer]:
+                - /url: /en/sitemap
+            - listitem [ref=e97]:
+              - link "RSS Feed" [ref=e98] [cursor=pointer]:
+                - /url: /en/rss?lang=en
+                - img [ref=e99]
+                - text: RSS Feed
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - heading "Newsletter" [level=3] [ref=e105]
+            - paragraph [ref=e106]: Get the latest financial strategies delivered to your inbox. Coming soon!
+          - generic [ref=e107]:
+            - textbox "Your email" [ref=e109]
+            - button "Notify Me" [ref=e110] [cursor=pointer]
+      - paragraph [ref=e112]: © 2025 StackMoneyUp, Inc. All rights reserved.
+  - generic [ref=e115]:
+    - generic [ref=e116]:
+      - heading "🍪 We value your privacy" [level=3] [ref=e117]
+      - paragraph [ref=e118]:
+        - text: We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+        - link "Learn more" [ref=e119] [cursor=pointer]:
+          - /url: /en/privacy
+    - generic [ref=e120]:
+      - button "Reject Non-Essential" [ref=e121] [cursor=pointer]
+      - button "Customize" [ref=e122] [cursor=pointer]
+      - button "Accept All" [ref=e123] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e129] [cursor=pointer]:
+    - img [ref=e130]
+  - alert [ref=e133]
+```

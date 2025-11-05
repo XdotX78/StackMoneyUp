@@ -1,0 +1,108 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "StackMoneyUp" [ref=e5] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=e6]: StackMoneyUp
+        - generic [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /en
+          - link "Blog" [ref=e9] [cursor=pointer]:
+            - /url: /en/blog
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /en/about
+          - link "Invest" [ref=e11] [cursor=pointer]:
+            - /url: /en/blog
+          - button "Toggle theme" [ref=e12] [cursor=pointer]: 🌓
+          - button "Change language" [ref=e14] [cursor=pointer]:
+            - generic [ref=e15]: 🌐
+            - generic [ref=e16]: en
+            - img [ref=e17]
+          - link "Login" [ref=e19] [cursor=pointer]:
+            - /url: /en/login
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /en#contact
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "Reset Password" [level=1] [ref=e27]
+        - paragraph [ref=e29]: Enter your email address and we'll send you a link to reset your password
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: Email
+          - generic [ref=e33]:
+            - generic:
+              - img
+            - textbox "your@email.com" [ref=e34]
+        - button "Send Reset Link" [ref=e35] [cursor=pointer]
+        - link "Back to Login" [ref=e37] [cursor=pointer]:
+          - /url: /en/login
+  - contentinfo [ref=e38]:
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - heading "StackMoneyUp" [level=2] [ref=e42]
+          - paragraph [ref=e43]: © 2025 StackMoneyUp, Inc. All rights reserved.
+          - paragraph [ref=e44]: Real strategies for building wealth. No bullshit. No easy money promises.
+        - generic [ref=e45]:
+          - heading "Quick Links" [level=3] [ref=e46]
+          - list [ref=e47]:
+            - listitem [ref=e48]:
+              - link "Home" [ref=e49] [cursor=pointer]:
+                - /url: /en
+            - listitem [ref=e50]:
+              - link "About" [ref=e51] [cursor=pointer]:
+                - /url: /en/about
+            - listitem [ref=e52]:
+              - link "Invest" [ref=e53] [cursor=pointer]:
+                - /url: /en/blog
+            - listitem [ref=e54]:
+              - link "Blog" [ref=e55] [cursor=pointer]:
+                - /url: /en/blog
+        - generic [ref=e56]:
+          - heading "Explore More" [level=3] [ref=e57]
+          - list [ref=e58]:
+            - listitem [ref=e59]:
+              - link "Contact" [ref=e60] [cursor=pointer]:
+                - /url: /en#contact
+            - listitem [ref=e61]:
+              - link "Privacy" [ref=e62] [cursor=pointer]:
+                - /url: /en/privacy
+            - listitem [ref=e63]:
+              - link "Terms" [ref=e64] [cursor=pointer]:
+                - /url: /en/terms
+            - listitem [ref=e65]:
+              - link "Sitemap" [ref=e66] [cursor=pointer]:
+                - /url: /en/sitemap
+            - listitem [ref=e67]:
+              - link "RSS Feed" [ref=e68] [cursor=pointer]:
+                - /url: /en/rss?lang=en
+                - img [ref=e69]
+                - text: RSS Feed
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - heading "Newsletter" [level=3] [ref=e75]
+            - paragraph [ref=e76]: Get the latest financial strategies delivered to your inbox. Coming soon!
+          - generic [ref=e77]:
+            - textbox "Your email" [ref=e79]
+            - button "Notify Me" [ref=e80] [cursor=pointer]
+      - paragraph [ref=e82]: © 2025 StackMoneyUp, Inc. All rights reserved.
+  - generic [ref=e85]:
+    - generic [ref=e86]:
+      - heading "🍪 We value your privacy" [level=3] [ref=e87]
+      - paragraph [ref=e88]:
+        - text: We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+        - link "Learn more" [ref=e89] [cursor=pointer]:
+          - /url: /en/privacy
+    - generic [ref=e90]:
+      - button "Reject Non-Essential" [ref=e91] [cursor=pointer]
+      - button "Customize" [ref=e92] [cursor=pointer]
+      - button "Accept All" [ref=e93] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e99] [cursor=pointer]:
+    - img [ref=e100]
+  - alert [ref=e103]
+```

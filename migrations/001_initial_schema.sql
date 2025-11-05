@@ -224,7 +224,11 @@ CREATE INDEX IF NOT EXISTS blog_posts_published_at_idx ON public.blog_posts(publ
 
 -- Function to automatically create profile when user signs up
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, role, full_name)
   VALUES (
@@ -234,7 +238,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Trigger to create profile on user signup
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
@@ -245,12 +249,15 @@ CREATE TRIGGER on_auth_user_created
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Triggers for updated_at
 DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
@@ -273,7 +280,10 @@ CREATE TRIGGER update_tags_updated_at
 
 -- Function to update tag counts when posts change
 CREATE OR REPLACE FUNCTION public.update_tag_counts_on_post_change()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
 DECLARE
   old_tags TEXT[];
   new_tags TEXT[];
@@ -317,7 +327,7 @@ BEGIN
     RETURN NEW;
   END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Triggers for tag count updates
 DROP TRIGGER IF EXISTS update_tag_counts_on_post_insert ON public.blog_posts;

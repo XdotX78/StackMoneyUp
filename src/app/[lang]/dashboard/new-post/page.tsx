@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 import { createPost } from '@/lib/blog';
 import { getTranslations } from '@/lib/translations';
@@ -15,38 +15,38 @@ interface NewPostPageProps {
 }
 
 export default function NewPostPage({ params }: NewPostPageProps) {
-  const [lang, setLang] = useState<Language>('en');
+  const { lang: paramLang } = use(params);
+  const validLang = paramLang === 'it' ? 'it' : 'en';
+  const [lang, setLang] = useState<Language>(validLang);
   const [loading, setLoading] = useState(false);
-  const { user, loading: authLoading } = useAuth();
-  const { canManagePosts } = useRole();
+  const { user, loading: authLoading } = useAuthContext();
+  const { canManagePosts, loading: roleLoading } = useRole();
   const router = useRouter();
   const t = getTranslations(lang);
 
   useEffect(() => {
-    const loadLang = async () => {
-      const { lang } = await params;
-      const validLang = lang === 'it' ? 'it' : 'en';
-      setLang(validLang);
+    setLang(validLang);
 
-      if (!authLoading && !user) {
-        router.push(`/${validLang}/login`);
-        return;
-      }
+    // Wait for both auth and role to finish loading
+    if (authLoading || roleLoading) return;
 
-      // Check if user has editor/admin role
-      if (!authLoading && user && !canManagePosts()) {
-        router.push(`/${validLang}/dashboard`);
-      }
-    };
-    loadLang();
-  }, [params, router, user, authLoading, canManagePosts]);
+    if (!user) {
+      router.push(`/${validLang}/login`);
+      return;
+    }
+
+    // Check if user has editor/admin role (only after role is loaded)
+    if (!canManagePosts()) {
+      router.push(`/${validLang}/dashboard`);
+    }
+  }, [validLang, router, user, authLoading, roleLoading, canManagePosts]);
 
   const handleSubmit = async (data: PostFormData) => {
     setLoading(true);
-    
+
     try {
       // Prepare scheduled_at if provided
-      const scheduledAt = data.scheduled_at 
+      const scheduledAt = data.scheduled_at
         ? new Date(data.scheduled_at).toISOString()
         : undefined;
 
@@ -66,9 +66,9 @@ export default function NewPostPage({ params }: NewPostPageProps) {
         featured: data.featured,
         scheduled_at: scheduledAt,
       });
-      
+
       toast.success(lang === 'it' ? 'Post salvato con successo!' : 'Post saved successfully!');
-      
+
       // Redirect to dashboard after successful save
       setTimeout(() => {
         router.push(`/${lang}/dashboard/posts`);
@@ -76,8 +76,8 @@ export default function NewPostPage({ params }: NewPostPageProps) {
     } catch (error) {
       console.error('Error saving post:', error);
       toast.error(
-        error instanceof Error 
-          ? error.message 
+        error instanceof Error
+          ? error.message
           : (lang === 'it' ? 'Errore nel salvare il post. Riprova.' : 'Failed to save post. Please try again.')
       );
     } finally {
@@ -107,4 +107,3 @@ export default function NewPostPage({ params }: NewPostPageProps) {
     </div>
   );
 }
-

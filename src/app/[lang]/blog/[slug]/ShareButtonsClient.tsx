@@ -1,15 +1,17 @@
 'use client';
 
 import toast from 'react-hot-toast';
+import { trackShare } from '@/lib/shareTracking';
 import type { Language } from '@/types/blog';
 
 interface ShareButtonsClientProps {
   title: string;
   url: string;
+  postId: string;
   lang: Language;
 }
 
-export default function ShareButtonsClient({ title, url, lang }: ShareButtonsClientProps) {
+export default function ShareButtonsClient({ title, url, postId, lang }: ShareButtonsClientProps) {
   const encodedTitle = encodeURIComponent(title);
   const encodedUrl = encodeURIComponent(url);
 
@@ -19,12 +21,17 @@ export default function ShareButtonsClient({ title, url, lang }: ShareButtonsCli
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
   };
 
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success(lang === 'it' ? 'Link copiato!' : 'Link copied!');
-    } catch {
-      toast.error(lang === 'it' ? 'Errore nella copia' : 'Failed to copy');
+  const handleShare = async (platform: 'twitter' | 'facebook' | 'linkedin' | 'copy') => {
+    // Track the share
+    trackShare(postId, platform).catch(err => console.error('Error tracking share:', err));
+
+    if (platform === 'copy') {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success(lang === 'it' ? 'Link copiato!' : 'Link copied!');
+      } catch {
+        toast.error(lang === 'it' ? 'Errore nella copia' : 'Failed to copy');
+      }
     }
   };
 
@@ -34,6 +41,7 @@ export default function ShareButtonsClient({ title, url, lang }: ShareButtonsCli
         href={shareLinks.twitter}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => handleShare('twitter')}
         className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-semibold"
         aria-label="Share on Twitter"
       >
@@ -46,6 +54,7 @@ export default function ShareButtonsClient({ title, url, lang }: ShareButtonsCli
         href={shareLinks.facebook}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => handleShare('facebook')}
         className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold"
         aria-label="Share on Facebook"
       >
@@ -58,6 +67,7 @@ export default function ShareButtonsClient({ title, url, lang }: ShareButtonsCli
         href={shareLinks.linkedin}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => handleShare('linkedin')}
         className="flex items-center gap-2 px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors text-sm font-semibold"
         aria-label="Share on LinkedIn"
       >
@@ -68,7 +78,7 @@ export default function ShareButtonsClient({ title, url, lang }: ShareButtonsCli
         LinkedIn
       </a>
       <button
-        onClick={handleCopyLink}
+        onClick={() => handleShare('copy')}
         className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-semibold"
         aria-label="Copy link"
       >

@@ -1,0 +1,111 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "StackMoneyUp" [ref=e5] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=e6]: StackMoneyUp
+        - generic [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /en
+          - link "Blog" [active] [ref=e9] [cursor=pointer]:
+            - /url: /en/blog
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /en/about
+          - link "Invest" [ref=e11] [cursor=pointer]:
+            - /url: /en/blog
+          - button "Toggle theme" [ref=e12] [cursor=pointer]: 🌓
+          - button "Change language" [ref=e14] [cursor=pointer]:
+            - generic [ref=e15]: 🌐
+            - generic [ref=e16]: en
+            - img [ref=e17]
+          - link "Login" [ref=e19] [cursor=pointer]:
+            - /url: /en/login
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /en#contact
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - heading "Blog" [level=1] [ref=e24]
+        - paragraph [ref=e25]: Explore our articles on personal finance, investing, and financial growth
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic:
+            - img
+          - textbox "Search articles..." [ref=e28]
+        - generic [ref=e29]:
+          - generic [ref=e30]: "Category:"
+          - button "All" [ref=e31] [cursor=pointer]
+        - generic [ref=e32]: Found 0 articles
+      - generic [ref=e34]:
+        - img [ref=e35]
+        - heading "No posts found" [level=3] [ref=e37]
+        - paragraph [ref=e38]: Try adjusting your search or filters
+  - contentinfo [ref=e39]:
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - heading "StackMoneyUp" [level=2] [ref=e43]
+          - paragraph [ref=e44]: © 2025 StackMoneyUp, Inc. All rights reserved.
+          - paragraph [ref=e45]: Real strategies for building wealth. No bullshit. No easy money promises.
+        - generic [ref=e46]:
+          - heading "Quick Links" [level=3] [ref=e47]
+          - list [ref=e48]:
+            - listitem [ref=e49]:
+              - link "Home" [ref=e50] [cursor=pointer]:
+                - /url: /en
+            - listitem [ref=e51]:
+              - link "About" [ref=e52] [cursor=pointer]:
+                - /url: /en/about
+            - listitem [ref=e53]:
+              - link "Invest" [ref=e54] [cursor=pointer]:
+                - /url: /en/blog
+            - listitem [ref=e55]:
+              - link "Blog" [ref=e56] [cursor=pointer]:
+                - /url: /en/blog
+        - generic [ref=e57]:
+          - heading "Explore More" [level=3] [ref=e58]
+          - list [ref=e59]:
+            - listitem [ref=e60]:
+              - link "Contact" [ref=e61] [cursor=pointer]:
+                - /url: /en#contact
+            - listitem [ref=e62]:
+              - link "Privacy" [ref=e63] [cursor=pointer]:
+                - /url: /en/privacy
+            - listitem [ref=e64]:
+              - link "Terms" [ref=e65] [cursor=pointer]:
+                - /url: /en/terms
+            - listitem [ref=e66]:
+              - link "Sitemap" [ref=e67] [cursor=pointer]:
+                - /url: /en/sitemap
+            - listitem [ref=e68]:
+              - link "RSS Feed" [ref=e69] [cursor=pointer]:
+                - /url: /en/rss?lang=en
+                - img [ref=e70]
+                - text: RSS Feed
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - heading "Newsletter" [level=3] [ref=e76]
+            - paragraph [ref=e77]: Get the latest financial strategies delivered to your inbox. Coming soon!
+          - generic [ref=e78]:
+            - textbox "Your email" [ref=e80]
+            - button "Notify Me" [ref=e81] [cursor=pointer]
+      - paragraph [ref=e83]: © 2025 StackMoneyUp, Inc. All rights reserved.
+  - generic [ref=e86]:
+    - generic [ref=e87]:
+      - heading "🍪 We value your privacy" [level=3] [ref=e88]
+      - paragraph [ref=e89]:
+        - text: We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+        - link "Learn more" [ref=e90] [cursor=pointer]:
+          - /url: /en/privacy
+    - generic [ref=e91]:
+      - button "Reject Non-Essential" [ref=e92] [cursor=pointer]
+      - button "Customize" [ref=e93] [cursor=pointer]
+      - button "Accept All" [ref=e94] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e100] [cursor=pointer]:
+    - img [ref=e101]
+  - alert [ref=e104]: Blog | StackMoneyUp
+```

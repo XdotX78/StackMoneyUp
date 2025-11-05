@@ -128,7 +128,10 @@ CREATE POLICY "Admins and editors can delete any comment"
 
 -- Function to update updated_at and mark as edited
 CREATE OR REPLACE FUNCTION public.update_comment_updated_at()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
 BEGIN
   NEW.updated_at = NOW();
   IF OLD.content IS DISTINCT FROM NEW.content THEN
@@ -136,7 +139,7 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Trigger to update updated_at
 DROP TRIGGER IF EXISTS update_comments_updated_at ON public.comments;

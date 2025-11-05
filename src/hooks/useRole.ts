@@ -3,23 +3,32 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useAuth } from './useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { getCurrentUser, hasRole, isAdmin, isEditor, type User, type UserRole } from '@/lib/auth';
 
 export function useRole() {
-  const { user: supabaseUser } = useAuth();
+  const { user: supabaseUser, loading: authLoading } = useAuthContext();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserWithRole = async () => {
+      // While auth is resolving, keep role loading true
+      if (authLoading) {
+        setLoading(true);
+        return;
+      }
+
+      // No authenticated user
       if (!supabaseUser) {
         setUser(null);
         setLoading(false);
         return;
       }
 
+      // Auth is ready and we have a user: fetch role
       try {
+        setLoading(true);
         const userWithRole = await getCurrentUser();
         setUser(userWithRole);
       } catch (error) {
@@ -31,7 +40,7 @@ export function useRole() {
     };
 
     fetchUserWithRole();
-  }, [supabaseUser]);
+  }, [supabaseUser, authLoading]);
 
   return {
     user,

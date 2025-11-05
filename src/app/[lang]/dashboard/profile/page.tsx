@@ -1,23 +1,14 @@
-// src/app/[lang]/dashboard/profile/page.tsx
-'use client';
+// ✅ percorso: src/app/[lang]/dashboard/profile/page.tsx
 
-import { useEffect, useState } from 'react';
 import ProfileLayout from '@/components/profile/ProfileLayout';
-import type { Language } from '@/types/blog';
 
 interface ProfilePageProps {
-    params: Promise<{ lang: string }>;
+  params: Promise<{ lang: string }>;
 }
 
-export default function ProfilePage({ params }: ProfilePageProps) {
-    const [lang, setLang] = useState<Language>('en');
+export default async function ProfilePage({ params }: ProfilePageProps) {
+  const { lang } = await params;
+  const validLang = lang === 'it' ? 'it' : 'en';
 
-    useEffect(() => {
-        params.then(({ lang: paramLang }) => {
-            const validLang = paramLang === 'it' ? 'it' : 'en';
-            setLang(validLang);
-        });
-    }, [params]);
-
-    return <ProfileLayout lang={lang} />;
+  return <ProfileLayout lang={validLang} />;
 }

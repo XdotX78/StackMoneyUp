@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
 import { LoadingSkeleton } from '@/components/ui';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 import { getPostBySlug, updatePost } from '@/lib/blog';
 import { isValidLanguage, getDefaultLanguage } from '@/lib/translations';
@@ -16,34 +16,37 @@ interface EditPostPageProps {
 }
 
 export default function EditPostPage({ params }: EditPostPageProps) {
-  const [lang, setLang] = useState<Language>('en');
+  const { lang: paramLang, slug } = use(params);
+  const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
+  const [lang, setLang] = useState<Language>(validLang);
   const [loading, setLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(true);
   const [post, setPost] = useState<BlogPost | null>(null);
-  const { user, loading: authLoading } = useAuth();
-  const { canManagePosts } = useRole();
+  const { user, loading: authLoading } = useAuthContext();
+  const { canManagePosts, loading: roleLoading } = useRole();
   const router = useRouter();
   // const t = getTranslations(lang); // Reserved for future use
 
   useEffect(() => {
-    const loadData = async () => {
-      const { lang: paramLang, slug } = await params;
-      const validLang = isValidLanguage(paramLang) ? (paramLang as Language) : getDefaultLanguage();
-      setLang(validLang);
+    setLang(validLang);
 
-      if (!authLoading && !user) {
-        router.push(`/${validLang}/login`);
-        return;
-      }
+    // Wait for both auth and role to finish loading
+    if (authLoading || roleLoading) return;
 
-      // Check if user has editor/admin role
-      if (!authLoading && user && !canManagePosts()) {
-        router.push(`/${validLang}/dashboard`);
-        return;
-      }
+    if (!user) {
+      router.push(`/${validLang}/login`);
+      return;
+    }
 
-      // Fetch post from Supabase
-      if (user && !authLoading) {
+    // Check if user has editor/admin role (only after role is loaded)
+    if (!canManagePosts()) {
+      router.push(`/${validLang}/dashboard`);
+      return;
+    }
+
+    // Fetch post from Supabase
+    if (user && !authLoading) {
+      const loadData = async () => {
         try {
           setPostLoading(true);
           const fetchedPost = await getPostBySlug(slug);
@@ -60,10 +63,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         } finally {
           setPostLoading(false);
         }
-      }
-    };
-    loadData();
-  }, [params, router, user, authLoading, canManagePosts]);
+      };
+      loadData();
+    }
+  }, [validLang, slug, router, user, authLoading, roleLoading, canManagePosts]);
 
   const handleSubmit = async (data: PostFormData) => {
     if (!post) return;
@@ -150,4 +153,3 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     </div>
   );
 }
-

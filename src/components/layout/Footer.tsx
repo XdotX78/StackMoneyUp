@@ -1,4 +1,5 @@
 import { getTranslations } from "@/lib/translations";
+import NewsletterSignup from "@/components/newsletter/NewsletterSignup";
 import type { Language } from "@/types/blog";
 
 interface FooterProps {
@@ -89,31 +90,9 @@ export default function Footer({ lang }: FooterProps) {
             </ul>
           </div>
 
-          {/* Column 4: Connect With Us */}
+          {/* Column 4: Newsletter */}
           <div>
-            <h3 className="text-xs font-bold mb-4 uppercase tracking-wider text-white">{t.footer.connectWithUs}</h3>
-            <ul className="space-y-3">
-              <li>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  {t.footer.twitter}
-                </a>
-              </li>
-              <li>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  {t.footer.facebook}
-                </a>
-              </li>
-              <li>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  {t.footer.instagram}
-                </a>
-              </li>
-              <li>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  {t.footer.linkedin}
-                </a>
-              </li>
-            </ul>
+            <NewsletterSignup lang={lang} variant="compact" />
           </div>
           
         </div>

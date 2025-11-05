@@ -1,0 +1,241 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "StackMoneyUp" [ref=e5] [cursor=pointer]:
+          - /url: /en
+          - generic [ref=e6]: StackMoneyUp
+        - generic [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /en
+          - link "Blog" [ref=e9] [cursor=pointer]:
+            - /url: /en/blog
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /en/about
+          - link "Invest" [ref=e11] [cursor=pointer]:
+            - /url: /en/blog
+          - button "Toggle theme" [ref=e12] [cursor=pointer]: 🌓
+          - button "Change language" [ref=e14] [cursor=pointer]:
+            - generic [ref=e15]: 🌐
+            - generic [ref=e16]: en
+            - img [ref=e17]
+          - link "Login" [ref=e19] [cursor=pointer]:
+            - /url: /en/login
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /en#contact
+  - main [ref=e21]:
+    - main [ref=e22]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: Welcome to StackMoneyUp
+          - heading "Personal Finance Growth" [level=1] [ref=e28]
+          - paragraph [ref=e29]: No bullshit. No easy money promises. Just real strategies for building wealth.
+          - generic [ref=e30]:
+            - link "Read Articles" [ref=e31] [cursor=pointer]:
+              - /url: /en/blog
+            - link "Learn More" [ref=e32] [cursor=pointer]:
+              - /url: "#about"
+        - img "Financial Growth" [ref=e35]
+      - generic [ref=e37]:
+        - paragraph [ref=e39]: Investing for the Future
+        - heading "Navigating the World of Personal Finance" [level=2] [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - heading "Start Your Financial Journey" [level=3] [ref=e43]
+            - paragraph [ref=e44]: Take control of your finances with practical strategies and expert advice.
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - img [ref=e48]
+                - generic [ref=e50]:
+                  - paragraph [ref=e51]: Budgeting Made Easy
+                  - paragraph [ref=e52]: "Budgeting Made Easy: Discover practical tips and tools to help you take control of your spending, reduce debt, and reach your savings targets. Learn how to create a budget that works for your unique financial situation and lifestyle"
+              - generic [ref=e53]:
+                - img [ref=e55]
+                - generic [ref=e57]:
+                  - paragraph [ref=e58]: Retirement Planning
+                  - paragraph [ref=e59]: "Retirement Planning: Get expert insights on planning for a secure and fulfilling retirement. Explore investment options, tax-saving strategies"
+            - link "Explore Now" [ref=e60] [cursor=pointer]:
+              - /url: /en/blog
+          - img "Financial Planning" [ref=e63]
+      - generic [ref=e65]:
+        - paragraph [ref=e67]: Your Financial Future
+        - heading "Mastering Personal Finance" [level=2] [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - img "Financial Mastery" [ref=e71]
+            - generic [ref=e73]:
+              - img [ref=e75]
+              - heading "Financial Insights" [level=3] [ref=e77]
+              - paragraph [ref=e78]: "Unleash Your Financial Potential: Our comprehensive blog covers a wide range of personal finance topics, from budgeting and saving to investing and retirement planning. Discover practical strategies and expert insights to help you achieve your financial goals and secure your future"
+              - link "Invest Wisely" [ref=e79] [cursor=pointer]:
+                - /url: /en/blog
+          - generic [ref=e80]:
+            - heading "Navigating the Complexities" [level=3] [ref=e81]
+            - paragraph [ref=e82]: Investing can be a powerful tool for building wealth, but it also carries risks. At StackMoneyUp, we're here to guide you through the complexities of the investment landscape. Our blog offers in-depth analyses, market insights
+            - link "Invest Wisely" [ref=e83] [cursor=pointer]:
+              - /url: /en/blog
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - heading "Achieve Financial" [level=2] [ref=e88]
+          - paragraph [ref=e89]: Take control of your financial future with the help of StackMoneyUp. Our blog is filled with practical tips, expert advice, and real-life stories to inspire you on your journey towards financial independence
+          - link "Get Started" [ref=e90] [cursor=pointer]:
+            - /url: /en/blog
+        - generic [ref=e93]:
+          - img "Financial Success" [ref=e94]
+          - generic [ref=e95]: S
+      - generic [ref=e97]:
+        - paragraph [ref=e99]: Stay Informed
+        - generic [ref=e101]:
+          - generic [ref=e102]:
+            - img [ref=e104]
+            - generic [ref=e106]:
+              - heading "Grow Your Wealth" [level=2] [ref=e107]
+              - paragraph [ref=e108]: "Invest in Your Future: Explore the latest investment trends, market insights"
+          - link "Invest Now" [ref=e109] [cursor=pointer]:
+            - /url: /en/blog
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - img "Explore the" [ref=e113]
+            - heading "Explore the" [level=3] [ref=e114]
+            - paragraph [ref=e115]: "Discover the Path to Financial Freedom: Our blog offers practical guidance and inspiring stories to help you take control of"
+          - generic [ref=e116]:
+            - img "Unlock Your" [ref=e118]
+            - heading "Unlock Your" [level=3] [ref=e119]
+            - paragraph [ref=e120]: "Achieve Financial Stability: Learn how to manage your money, reduce debt, and build wealth for a secure future"
+          - generic [ref=e121]:
+            - img "Embrace the Future" [ref=e123]
+            - heading "Embrace the Future" [level=3] [ref=e124]
+            - paragraph [ref=e125]: "Secure Your Financial Future: Explore the latest trends, strategies, and insights to help you make informed decisions and"
+      - generic [ref=e127]:
+        - paragraph [ref=e129]: Financial Wisdom
+        - heading "Financial Wisdom" [level=2] [ref=e130]
+        - generic [ref=e131]:
+          - generic [ref=e133]:
+            - generic [ref=e134]:
+              - generic [ref=e135]: Dec 2024
+              - generic [ref=e136]: •
+              - generic [ref=e137]: Investing
+            - heading "The Compound Effect of Consistent Investing" [level=3] [ref=e138]
+            - paragraph [ref=e139]: Why investing $100 monthly beats trying to time the market with $10,000 once.
+            - link "Read More →" [ref=e140] [cursor=pointer]:
+              - /url: /en/blog
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - generic [ref=e144]: Dec 2024
+              - generic [ref=e145]: •
+              - generic [ref=e146]: Budgeting
+            - heading "The 50/30/20 Rule Isn't Perfect" [level=3] [ref=e147]
+            - paragraph [ref=e148]: Why the popular budgeting rule fails for most people and what to do instead.
+            - link "Read More →" [ref=e149] [cursor=pointer]:
+              - /url: /en/blog
+          - generic [ref=e151]:
+            - generic [ref=e152]:
+              - generic [ref=e153]: Nov 2024
+              - generic [ref=e154]: •
+              - generic [ref=e155]: Mindset
+            - heading "Stop Chasing Quick Wins" [level=3] [ref=e156]
+            - paragraph [ref=e157]: The psychology behind get-rich-quick schemes and why they fail.
+            - link "Read More →" [ref=e158] [cursor=pointer]:
+              - /url: /en/blog
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - generic [ref=e162]: Nov 2024
+              - generic [ref=e163]: •
+              - generic [ref=e164]: Debt
+            - heading "Debt Snowball vs. Debt Avalanche" [level=3] [ref=e165]
+            - paragraph [ref=e166]: The psychological vs. mathematical approach to debt payoff.
+            - link "Read More →" [ref=e167] [cursor=pointer]:
+              - /url: /en/blog
+          - generic [ref=e169]:
+            - generic [ref=e170]:
+              - generic [ref=e171]: Oct 2024
+              - generic [ref=e172]: •
+              - generic [ref=e173]: Emergency Fund
+            - heading "Why 6 Months Isn't Enough" [level=3] [ref=e174]
+            - paragraph [ref=e175]: The case for building a larger emergency fund in uncertain times.
+            - link "Read More →" [ref=e176] [cursor=pointer]:
+              - /url: /en/blog
+          - generic [ref=e178]:
+            - generic [ref=e179]:
+              - generic [ref=e180]: Oct 2024
+              - generic [ref=e181]: •
+              - generic [ref=e182]: Income
+            - heading "Side Hustles That Actually Scale" [level=3] [ref=e183]
+            - paragraph [ref=e184]: Beyond Uber and DoorDash. Real side businesses that can grow.
+            - link "Read More →" [ref=e185] [cursor=pointer]:
+              - /url: /en/blog
+        - link "Explore Blog" [ref=e187] [cursor=pointer]:
+          - /url: /en/blog
+      - generic [ref=e190]:
+        - heading "About StackMoneyUp" [level=2] [ref=e191]
+        - generic [ref=e192]:
+          - paragraph [ref=e193]: This isn't another personal finance blog promising to make you rich overnight.
+          - paragraph [ref=e194]: No affiliate links. No sponsored content. Just honest advice about money.
+  - contentinfo [ref=e195]:
+    - generic [ref=e196]:
+      - generic [ref=e197]:
+        - generic [ref=e198]:
+          - heading "StackMoneyUp" [level=2] [ref=e199]
+          - paragraph [ref=e200]: © 2025 StackMoneyUp, Inc. All rights reserved.
+          - paragraph [ref=e201]: Real strategies for building wealth. No bullshit. No easy money promises.
+        - generic [ref=e202]:
+          - heading "Quick Links" [level=3] [ref=e203]
+          - list [ref=e204]:
+            - listitem [ref=e205]:
+              - link "Home" [ref=e206] [cursor=pointer]:
+                - /url: /en
+            - listitem [ref=e207]:
+              - link "About" [ref=e208] [cursor=pointer]:
+                - /url: /en/about
+            - listitem [ref=e209]:
+              - link "Invest" [ref=e210] [cursor=pointer]:
+                - /url: /en/blog
+            - listitem [ref=e211]:
+              - link "Blog" [ref=e212] [cursor=pointer]:
+                - /url: /en/blog
+        - generic [ref=e213]:
+          - heading "Explore More" [level=3] [ref=e214]
+          - list [ref=e215]:
+            - listitem [ref=e216]:
+              - link "Contact" [ref=e217] [cursor=pointer]:
+                - /url: /en#contact
+            - listitem [ref=e218]:
+              - link "Privacy" [ref=e219] [cursor=pointer]:
+                - /url: /en/privacy
+            - listitem [ref=e220]:
+              - link "Terms" [ref=e221] [cursor=pointer]:
+                - /url: /en/terms
+            - listitem [ref=e222]:
+              - link "Sitemap" [ref=e223] [cursor=pointer]:
+                - /url: /en/sitemap
+            - listitem [ref=e224]:
+              - link "RSS Feed" [ref=e225] [cursor=pointer]:
+                - /url: /en/rss?lang=en
+                - img [ref=e226]
+                - text: RSS Feed
+        - generic [ref=e230]:
+          - generic [ref=e231]:
+            - heading "Newsletter" [level=3] [ref=e232]
+            - paragraph [ref=e233]: Get the latest financial strategies delivered to your inbox. Coming soon!
+          - generic [ref=e234]:
+            - textbox "Your email" [ref=e236]
+            - button "Notify Me" [ref=e237] [cursor=pointer]
+      - paragraph [ref=e239]: © 2025 StackMoneyUp, Inc. All rights reserved.
+  - generic [ref=e242]:
+    - generic [ref=e243]:
+      - heading "🍪 We value your privacy" [level=3] [ref=e244]
+      - paragraph [ref=e245]:
+        - text: We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+        - link "Learn more" [ref=e246] [cursor=pointer]:
+          - /url: /en/privacy
+    - generic [ref=e247]:
+      - button "Reject Non-Essential" [ref=e248] [cursor=pointer]
+      - button "Customize" [ref=e249] [cursor=pointer]
+      - button "Accept All" [ref=e250] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e256] [cursor=pointer]:
+    - img [ref=e257]
+  - alert [ref=e260]
+```

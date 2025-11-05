@@ -3,6 +3,7 @@ import { isValidLanguage, getDefaultLanguage } from "@/lib/translations";
 import type { Language } from "@/types/blog";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import CookieConsent from "@/components/CookieConsent";
 import { Toaster } from "react-hot-toast";
 import AuthProviderWrapper from "@/components/providers/AuthProviderWrapper";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -75,6 +76,7 @@ export default async function LanguageLayout({
           {children}
         </main>
         <Footer lang={validLang} />
+        <CookieConsent lang={validLang} />
         <Toaster
         position="top-right"
         toastOptions={{

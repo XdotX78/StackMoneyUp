@@ -10,6 +10,7 @@ import BlogEditor from '@/components/blog/BlogEditor';
 import CommentsSection from '@/components/blog/CommentsSection';
 import { ReadingProgress } from '@/components/blog/ReadingProgress';
 import ShareButtonsClient from './ShareButtonsClient';
+import BookmarkButton from '@/components/blog/BookmarkButton';
 import type { Language } from '@/types/blog';
 
 interface BlogPostPageProps {
@@ -198,15 +199,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         />
       </div>
 
-      {/* Share Buttons */}
+      {/* Share Buttons & Bookmark */}
       <div className="mt-12 pt-8 border-t border-gray-200">
         <div className="flex flex-wrap items-center gap-4 mb-8">
+          <BookmarkButton postId={post.id} lang={validLang} />
           <span className="text-sm font-semibold text-gray-700">
             {validLang === 'it' ? 'Condividi:' : 'Share:'}
           </span>
           <ShareButtonsClient 
             title={title}
             url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com'}/${validLang}/blog/${slug}`}
+            postId={post.id}
             lang={validLang}
           />
         </div>
