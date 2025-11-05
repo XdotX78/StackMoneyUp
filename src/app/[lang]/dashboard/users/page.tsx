@@ -5,12 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 import { getAllUsersAction, updateUserRoleAction, getUserStatsAction, type UserProfile } from '@/app/actions/users';
-import { getTranslations } from '@/lib/translations';
-import type { Language, UserRole } from '@/types/blog';
-import { isValidLanguage, getDefaultLanguage } from '@/lib/i18n';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Button } from '@/components/ui/Button';
-import { toast } from 'react-hot-toast';
+import { getTranslations, isValidLanguage, getDefaultLanguage } from '@/lib/translations';
+import type { Language } from '@/types/blog';
+import type { UserRole } from '@/lib/auth';
+import toast from 'react-hot-toast';
 
 interface UsersPageProps {
   params: Promise<{ lang: string }>;
@@ -119,16 +117,16 @@ export default function UsersPage({ params }: UsersPageProps) {
 
   if (authLoading || roleLoading || loading) {
     return (
-      <DashboardLayout lang={validLang}>
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
         </div>
-      </DashboardLayout>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout lang={validLang}>
+    <div className="container mx-auto px-4 py-12 max-w-7xl">
       <div className="space-y-6">
         {/* Header */}
         <div>
@@ -287,7 +285,7 @@ export default function UsersPage({ params }: UsersPageProps) {
           )}
         </div>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
 

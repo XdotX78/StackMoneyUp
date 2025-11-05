@@ -6,7 +6,7 @@
 'use server';
 
 import { createClient } from '@supabase/supabase-js';
-import type { UserRole } from '@/types/blog';
+import type { UserRole } from '@/lib/auth';
 
 export interface UserProfile {
   id: string;

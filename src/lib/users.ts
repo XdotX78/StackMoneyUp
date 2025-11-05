@@ -3,8 +3,8 @@
  * Admin-only functions for managing users and roles
  */
 
-import { createClient } from '@/lib/supabase/client';
-import type { UserRole } from '@/types/blog';
+import { createClient } from '@supabase/supabase-js';
+import type { UserRole } from '@/lib/auth';
 
 export interface UserProfile {
   id: string;
@@ -21,7 +21,10 @@ export interface UserProfile {
  * Admin only
  */
 export async function getAllUsers(): Promise<UserProfile[]> {
-  const supabase = createClient();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   // First get all user profiles
   const { data: profiles, error: profilesError } = await supabase
@@ -64,7 +67,10 @@ export async function getAllUsers(): Promise<UserProfile[]> {
  * Admin only
  */
 export async function updateUserRole(userId: string, newRole: UserRole): Promise<void> {
-  const supabase = createClient();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   const { error } = await supabase
     .from('profiles')
@@ -87,7 +93,10 @@ export async function getUserStats(): Promise<{
   editors: number;
   users: number;
 }> {
-  const supabase = createClient();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   const { data, error } = await supabase
     .from('profiles')
