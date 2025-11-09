@@ -32,19 +32,19 @@ export default function ContactPageClient({ params }: ContactPageClientProps) {
     const newErrors: Record<string, string> = {};
 
     if (!name.trim()) {
-      newErrors.name = lang === 'it' ? 'Il nome è obbligatorio' : 'Name is required';
+      newErrors.name = lang === 'it' ? 'Il nome è obbligatorio' : lang === 'es' ? 'El nombre es obligatorio' : 'Name is required';
     }
 
     if (!email.trim()) {
-      newErrors.email = lang === 'it' ? 'L\'email è obbligatoria' : 'Email is required';
+      newErrors.email = lang === 'it' ? 'L\'email è obbligatoria' : lang === 'es' ? 'El correo es obligatorio' : 'Email is required';
     } else if (!isValidEmail(email)) {
-      newErrors.email = lang === 'it' ? 'Email non valida' : 'Invalid email address';
+      newErrors.email = lang === 'it' ? 'Email non valida' : lang === 'es' ? 'Correo electrónico inválido' : 'Invalid email address';
     }
 
     if (!message.trim()) {
-      newErrors.message = lang === 'it' ? 'Il messaggio è obbligatorio' : 'Message is required';
+      newErrors.message = lang === 'it' ? 'Il messaggio è obbligatorio' : lang === 'es' ? 'El mensaje es obligatorio' : 'Message is required';
     } else if (message.trim().length < 10) {
-      newErrors.message = lang === 'it' ? 'Il messaggio deve contenere almeno 10 caratteri' : 'Message must be at least 10 characters';
+      newErrors.message = lang === 'it' ? 'Il messaggio deve contenere almeno 10 caratteri' : lang === 'es' ? 'El mensaje debe tener al menos 10 caracteres' : 'Message must be at least 10 characters';
     }
 
     setErrors(newErrors);
@@ -83,6 +83,8 @@ export default function ContactPageClient({ params }: ContactPageClientProps) {
       setErrors({
         submit: lang === 'it' 
           ? 'Errore nell\'invio del messaggio. Per favore riprova.'
+          : lang === 'es'
+          ? 'Error al enviar el mensaje. Por favor intenta de nuevo.'
           : 'Failed to send message. Please try again.'
       });
     } finally {
@@ -95,136 +97,135 @@ export default function ContactPageClient({ params }: ContactPageClientProps) {
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-5xl lg:text-6xl font-black mb-4">
-          {lang === 'it' ? 'Contatti' : 'Contact'}
+          {lang === 'it' ? 'Contatti' : lang === 'es' ? 'Contacto' : 'Contact'}
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           {lang === 'it'
             ? 'Hai domande o suggerimenti? Saremmo felici di sentirti.'
+            : lang === 'es'
+            ? '¿Tienes preguntas o sugerencias? Nos encantaría saber de ti.'
             : 'Have questions or suggestions? We\'d love to hear from you.'
           }
         </p>
       </div>
 
-      {/* Contact Form */}
-      <div className="bg-white rounded-lg shadow-lg p-8 md:p-12">
-        {success && (
-          <div className="mb-6 p-4 bg-green-50 border-2 border-green-300 text-green-700 rounded-lg flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <span>
-              {lang === 'it' 
-                ? 'Messaggio inviato con successo! Ti risponderemo presto.'
-                : 'Message sent successfully! We\'ll get back to you soon.'
-              }
-            </span>
-          </div>
-        )}
+      {/* Success Message */}
+      {success && (
+        <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+          <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span>
+            {lang === 'it' 
+              ? 'Messaggio inviato con successo! Ti risponderemo presto.'
+              : lang === 'es'
+              ? '¡Mensaje enviado con éxito! Te responderemos pronto.'
+              : 'Message sent successfully! We\'ll get back to you soon.'
+            }
+          </span>
+        </div>
+      )}
 
+      {/* Contact Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Name */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            {lang === 'it' ? 'Nome' : lang === 'es' ? 'Nombre' : 'Name'}
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className={`w-full px-4 py-3 border rounded-lg transition-colors focus:outline-none focus:ring-2 ${
+              errors.name
+                ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                : 'border-gray-200 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+            placeholder={lang === 'it' ? 'Il tuo nome' : lang === 'es' ? 'Tu nombre' : 'Your name'}
+            disabled={loading}
+          />
+          {errors.name && (
+            <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            {lang === 'it' ? 'Email' : lang === 'es' ? 'Correo Electrónico' : 'Email'}
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={`w-full px-4 py-3 border rounded-lg transition-colors focus:outline-none focus:ring-2 ${
+              errors.email
+                ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                : 'border-gray-200 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+            placeholder={lang === 'it' ? 'tua@email.com' : lang === 'es' ? 'tu@email.com' : 'your@email.com'}
+            disabled={loading}
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+          )}
+        </div>
+
+        {/* Message */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            {lang === 'it' ? 'Messaggio' : lang === 'es' ? 'Mensaje' : 'Message'}
+          </label>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={6}
+            className={`w-full px-4 py-3 border rounded-lg transition-colors focus:outline-none focus:ring-2 resize-none ${
+              errors.message
+                ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                : 'border-gray-200 focus:ring-emerald-500 focus:border-emerald-500'
+            }`}
+            placeholder={lang === 'it' ? 'Scrivi il tuo messaggio qui...' : lang === 'es' ? 'Escribe tu mensaje aquí...' : 'Write your message here...'}
+            disabled={loading}
+          />
+          {errors.message && (
+            <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+          )}
+        </div>
+
+        {/* Submit Error */}
         {errors.submit && (
-          <div className="mb-6 p-4 bg-red-50 border-2 border-red-300 text-red-700 rounded-lg">
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
             {errors.submit}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              {lang === 'it' ? 'Nome' : 'Name'}
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
-              }}
-              className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
-                errors.name 
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                  : 'border-gray-200 focus:ring-emerald-500 focus:border-emerald-500'
-              }`}
-              placeholder={lang === 'it' ? 'Il tuo nome' : 'Your name'}
-              disabled={loading}
-            />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              {lang === 'it' ? 'Email' : 'Email'}
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
-              }}
-              className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
-                errors.email 
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                  : 'border-gray-200 focus:ring-emerald-500 focus:border-emerald-500'
-              }`}
-              placeholder={lang === 'it' ? 'tua@email.com' : 'your@email.com'}
-              disabled={loading}
-            />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              {lang === 'it' ? 'Messaggio' : 'Message'}
-            </label>
-            <textarea
-              rows={6}
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                if (errors.message) setErrors(prev => ({ ...prev, message: '' }));
-              }}
-              className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all resize-none ${
-                errors.message 
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                  : 'border-gray-200 focus:ring-emerald-500 focus:border-emerald-500'
-              }`}
-              placeholder={lang === 'it' ? 'Scrivi il tuo messaggio qui...' : 'Write your message here...'}
-              disabled={loading}
-            />
-            {errors.message && (
-              <p className="mt-1 text-sm text-red-600">{errors.message}</p>
-            )}
-          </div>
-
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            className="w-full"
-            isLoading={loading}
-            disabled={loading}
-          >
-            {loading 
-              ? (lang === 'it' ? 'Invio in corso...' : 'Sending...')
-              : (lang === 'it' ? 'Invia Messaggio' : 'Send Message')
-            }
-          </Button>
-        </form>
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          disabled={loading}
+        >
+          {loading 
+            ? (lang === 'it' ? 'Invio in corso...' : lang === 'es' ? 'Enviando...' : 'Sending...')
+            : (lang === 'it' ? 'Invia Messaggio' : lang === 'es' ? 'Enviar Mensaje' : 'Send Message')
+          }
+        </Button>
 
         <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
           <p>
             {lang === 'it' 
               ? 'Ti risponderemo entro 24-48 ore.'
+              : lang === 'es'
+              ? 'Te responderemos dentro de 24-48 horas.'
               : 'We\'ll get back to you within 24-48 hours.'
             }
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
-

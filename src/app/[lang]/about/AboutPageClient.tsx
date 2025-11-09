@@ -33,11 +33,13 @@ export default async function AboutPageClient({ params }: AboutPageClientProps) 
         {/* Mission Section */}
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
           <h2 className="text-3xl font-bold mb-4">
-            {validLang === 'it' ? 'La Nostra Missione' : 'Our Mission'}
+            {validLang === 'it' ? 'La Nostra Missione' : validLang === 'es' ? 'Nuestra Misión' : 'Our Mission'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             {validLang === 'it' 
               ? 'Fornire informazioni oneste e pratiche sulla finanza personale, senza promesse irrealistiche o contenuti sponsorizzati. Crediamo nella trasparenza e nell\'educazione finanziaria reale.'
+              : validLang === 'es'
+              ? 'Proporcionar información honesta y práctica sobre finanzas personales, sin promesas irrealistas o contenido patrocinado. Creemos en la transparencia y la educación financiera real.'
               : 'To provide honest, practical personal finance information without unrealistic promises or sponsored content. We believe in transparency and real financial education.'
             }
           </p>
@@ -46,24 +48,24 @@ export default async function AboutPageClient({ params }: AboutPageClientProps) 
         {/* Values Section */}
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
           <h2 className="text-3xl font-bold mb-4">
-            {validLang === 'it' ? 'I Nostri Valori' : 'Our Values'}
+            {validLang === 'it' ? 'I Nostri Valori' : validLang === 'es' ? 'Nuestros Valores' : 'Our Values'}
           </h2>
           <ul className="space-y-3 text-gray-600 dark:text-gray-400">
             <li className="flex items-start gap-3">
               <span className="text-emerald-600 font-bold">•</span>
-              <span>{validLang === 'it' ? 'Trasparenza totale' : 'Complete transparency'}</span>
+              <span>{validLang === 'it' ? 'Trasparenza totale' : validLang === 'es' ? 'Transparencia total' : 'Complete transparency'}</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-emerald-600 font-bold">•</span>
-              <span>{validLang === 'it' ? 'Nessun link di affiliazione' : 'No affiliate links'}</span>
+              <span>{validLang === 'it' ? 'Nessun link di affiliazione' : validLang === 'es' ? 'Sin enlaces de afiliados' : 'No affiliate links'}</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-emerald-600 font-bold">•</span>
-              <span>{validLang === 'it' ? 'Consigli pratici e reali' : 'Practical, real advice'}</span>
+              <span>{validLang === 'it' ? 'Consigli pratici e reali' : validLang === 'es' ? 'Consejos prácticos y reales' : 'Practical, real advice'}</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-emerald-600 font-bold">•</span>
-              <span>{validLang === 'it' ? 'Educazione finanziaria accessibile' : 'Accessible financial education'}</span>
+              <span>{validLang === 'it' ? 'Educazione finanziaria accessibile' : validLang === 'es' ? 'Educación financiera accesible' : 'Accessible financial education'}</span>
             </li>
           </ul>
         </div>

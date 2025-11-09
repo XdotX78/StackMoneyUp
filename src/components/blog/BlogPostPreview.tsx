@@ -62,14 +62,14 @@ export default function BlogPostPreview({
           <Badge variant="success" size="sm">
             {getCategoryTranslation(category, lang)}
           </Badge>
-          <span>{formatDate(new Date().toISOString(), lang === 'it' ? 'it-IT' : 'en-US')}</span>
+          <span>{formatDate(new Date().toISOString(), lang === 'it' ? 'it-IT' : lang === 'es' ? 'es-ES' : 'en-US')}</span>
           <span>•</span>
-          <span>{readTime} {lang === 'it' ? 'min lettura' : 'min read'}</span>
+          <span>{readTime} {lang === 'it' ? 'min lettura' : lang === 'es' ? 'min lectura' : 'min read'}</span>
         </div>
 
         {/* Title */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
-          {title || (lang === 'it' ? 'Titolo non impostato' : 'Title not set')}
+          {title || (lang === 'it' ? 'Titolo non impostato' : lang === 'es' ? 'Título no establecido' : 'Title not set')}
         </h1>
 
         {/* Excerpt */}

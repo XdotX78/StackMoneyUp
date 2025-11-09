@@ -35,7 +35,7 @@ export default function SEOPreview({
       <Card>
         <CardHeader>
           <h3 className="text-lg font-semibold">
-            {lang === 'it' ? 'Metriche SEO' : 'SEO Metrics'}
+            {lang === 'it' ? 'Metriche SEO' : lang === 'es' ? 'Métricas SEO' : 'SEO Metrics'}
           </h3>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -43,19 +43,19 @@ export default function SEOPreview({
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">
-                {lang === 'it' ? 'Titolo' : 'Title'}
+                {lang === 'it' ? 'Titolo' : lang === 'es' ? 'Título' : 'Title'}
               </span>
               <span className={`text-sm font-medium ${
                 titleOptimal ? 'text-green-600' : 'text-orange-600'
               }`}>
-                {titleLength} / 30-60 {lang === 'it' ? 'caratteri' : 'characters'}
+                {titleLength} / 30-60 {lang === 'it' ? 'caratteri' : lang === 'es' ? 'caracteres' : 'characters'}
               </span>
             </div>
             {!titleOptimal && (
               <p className="text-xs text-orange-600 mt-1">
                 {titleLength < 30
-                  ? (lang === 'it' ? 'Il titolo è troppo corto' : 'Title is too short')
-                  : (lang === 'it' ? 'Il titolo è troppo lungo' : 'Title is too long')
+                  ? (lang === 'it' ? 'Il titolo è troppo corto' : lang === 'es' ? 'El título es demasiado corto' : 'Title is too short')
+                  : (lang === 'it' ? 'Il titolo è troppo lungo' : lang === 'es' ? 'El título es demasiado largo' : 'Title is too long')
                 }
               </p>
             )}
@@ -65,19 +65,19 @@ export default function SEOPreview({
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">
-                {lang === 'it' ? 'Descrizione' : 'Description'}
+                {lang === 'it' ? 'Descrizione' : lang === 'es' ? 'Descripción' : 'Description'}
               </span>
               <span className={`text-sm font-medium ${
                 excerptOptimal ? 'text-green-600' : 'text-orange-600'
               }`}>
-                {excerptLength} / 120-160 {lang === 'it' ? 'caratteri' : 'characters'}
+                {excerptLength} / 120-160 {lang === 'it' ? 'caratteri' : lang === 'es' ? 'caracteres' : 'characters'}
               </span>
             </div>
             {!excerptOptimal && (
               <p className="text-xs text-orange-600 mt-1">
                 {excerptLength < 120
-                  ? (lang === 'it' ? 'La descrizione è troppo corta' : 'Description is too short')
-                  : (lang === 'it' ? 'La descrizione è troppo lunga' : 'Description is too long')
+                  ? (lang === 'it' ? 'La descrizione è troppo corta' : lang === 'es' ? 'La descripción es demasiado corta' : 'Description is too short')
+                  : (lang === 'it' ? 'La descrizione è troppo lunga' : lang === 'es' ? 'La descripción es demasiado larga' : 'Description is too long')
                 }
               </p>
             )}
@@ -99,7 +99,7 @@ export default function SEOPreview({
       <Card>
         <CardHeader>
           <h3 className="text-lg font-semibold">
-            {lang === 'it' ? 'Anteprima Ricerca Google' : 'Google Search Preview'}
+            {lang === 'it' ? 'Anteprima Ricerca Google' : lang === 'es' ? 'Vista Previa de Búsqueda Google' : 'Google Search Preview'}
           </h3>
         </CardHeader>
         <CardContent>
@@ -109,10 +109,10 @@ export default function SEOPreview({
               <span className="text-xs text-gray-500">{siteUrl}</span>
             </div>
             <h3 className="text-xl text-blue-600 hover:underline mb-1 line-clamp-1">
-              {title || (lang === 'it' ? '[Titolo del post]' : '[Post title]')}
+              {title || (lang === 'it' ? '[Titolo del post]' : lang === 'es' ? '[Título del post]' : '[Post title]')}
             </h3>
             <p className="text-sm text-gray-600 line-clamp-2">
-              {excerpt || (lang === 'it' ? '[Descrizione del post]' : '[Post description]')}
+              {excerpt || (lang === 'it' ? '[Descrizione del post]' : lang === 'es' ? '[Descripción del post]' : '[Post description]')}
             </p>
           </div>
         </CardContent>
@@ -122,7 +122,7 @@ export default function SEOPreview({
       <Card>
         <CardHeader>
           <h3 className="text-lg font-semibold">
-            {lang === 'it' ? 'Anteprima Facebook / OpenGraph' : 'Facebook / OpenGraph Preview'}
+            {lang === 'it' ? 'Anteprima Facebook / OpenGraph' : lang === 'es' ? 'Vista Previa Facebook / OpenGraph' : 'Facebook / OpenGraph Preview'}
           </h3>
         </CardHeader>
         <CardContent>
@@ -140,17 +140,17 @@ export default function SEOPreview({
             ) : (
               <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-400 text-sm">
-                  {lang === 'it' ? 'Immagine di copertina' : 'Cover image'}
+                  {lang === 'it' ? 'Immagine di copertina' : lang === 'es' ? 'Imagen de portada' : 'Cover image'}
                 </span>
               </div>
             )}
             <div className="p-3">
               <div className="text-xs text-gray-500 uppercase mb-1">{siteUrl}</div>
               <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">
-                {title || (lang === 'it' ? '[Titolo del post]' : '[Post title]')}
+                {title || (lang === 'it' ? '[Titolo del post]' : lang === 'es' ? '[Título del post]' : '[Post title]')}
               </h3>
               <p className="text-sm text-gray-600 line-clamp-2">
-                {excerpt || (lang === 'it' ? '[Descrizione del post]' : '[Post description]')}
+                {excerpt || (lang === 'it' ? '[Descrizione del post]' : lang === 'es' ? '[Descripción del post]' : '[Post description]')}
               </p>
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function SEOPreview({
       <Card>
         <CardHeader>
           <h3 className="text-lg font-semibold">
-            {lang === 'it' ? 'Anteprima Twitter Card' : 'Twitter Card Preview'}
+            {lang === 'it' ? 'Anteprima Twitter Card' : lang === 'es' ? 'Vista Previa Twitter Card' : 'Twitter Card Preview'}
           </h3>
         </CardHeader>
         <CardContent>
@@ -179,7 +179,7 @@ export default function SEOPreview({
             ) : (
               <div className="w-full h-56 bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-400 text-sm">
-                  {lang === 'it' ? 'Immagine di copertina' : 'Cover image'}
+                  {lang === 'it' ? 'Immagine di copertina' : lang === 'es' ? 'Imagen de portada' : 'Cover image'}
                 </span>
               </div>
             )}
@@ -192,10 +192,10 @@ export default function SEOPreview({
                 </div>
               </div>
               <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">
-                {title || (lang === 'it' ? '[Titolo del post]' : '[Post title]')}
+                {title || (lang === 'it' ? '[Titolo del post]' : lang === 'es' ? '[Título del post]' : '[Post title]')}
               </h3>
               <p className="text-sm text-gray-600 line-clamp-2 mb-2">
-                {excerpt || (lang === 'it' ? '[Descrizione del post]' : '[Post description]')}
+                {excerpt || (lang === 'it' ? '[Descrizione del post]' : lang === 'es' ? '[Descripción del post]' : '[Post description]')}
               </p>
               <div className="text-xs text-gray-500">{siteUrl}</div>
             </div>
@@ -205,4 +205,3 @@ export default function SEOPreview({
     </div>
   );
 }
-
