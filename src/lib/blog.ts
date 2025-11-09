@@ -540,9 +540,9 @@ export async function updateTag(
   return {
     id: data.id,
     slug: data.slug,
-    name: { en: data.name_en, it: data.name_it },
-    description: data.description_en || data.description_it
-      ? { en: data.description_en || '', it: data.description_it || '' }
+    name: { en: data.name_en, it: data.name_it, es: data.name_es },
+    description: data.description_en || data.description_it || data.description_es
+      ? { en: data.description_en || '', it: data.description_it || '', es: data.description_es || '' }
       : undefined,
     post_count: data.post_count,
     created_at: data.created_at,
