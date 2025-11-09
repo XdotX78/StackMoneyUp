@@ -167,10 +167,12 @@ export async function getUserBookmarks(): Promise<BlogPostSummary[]> {
           title: {
             en: post.title_en,
             it: post.title_it,
+            es: post.title_es,
           },
           excerpt: {
             en: post.excerpt_en,
             it: post.excerpt_it,
+            es: post.excerpt_es,
           },
           cover_image: post.cover_image || undefined,
           category: post.category,
