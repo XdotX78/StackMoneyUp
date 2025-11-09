@@ -14,25 +14,26 @@ interface NavItem {
   label: {
     en: string;
     it: string;
+    es: string;
   };
   href: string;
 }
 
 const navItems: NavItem[] = [
   {
-    label: { en: 'Home', it: 'Home' },
+    label: { en: 'Home', it: 'Home', es: 'Inicio' },
     href: '/',
   },
   {
-    label: { en: 'Blog', it: 'Blog' },
+    label: { en: 'Blog', it: 'Blog', es: 'Blog' },
     href: '/blog',
   },
   {
-    label: { en: 'About', it: 'Chi Siamo' },
+    label: { en: 'About', it: 'Chi Siamo', es: 'Acerca de' },
     href: '/about',
   },
   {
-    label: { en: 'Invest', it: 'Investire' },
+    label: { en: 'Invest', it: 'Investire', es: 'Invertir' },
     href: '/blog',
   },
 ];
