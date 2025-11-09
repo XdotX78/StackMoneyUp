@@ -32,8 +32,11 @@ export default function MaintenancePage() {
       await response.json();
 
       // Success - redirect to home page
+      // Get current origin to ensure we redirect to the same domain (production/localhost)
+      const currentOrigin = window.location.origin;
+      const currentLang = window.location.pathname.split('/')[1] || 'en';
       router.refresh();
-      window.location.href = '/en';
+      window.location.href = `${currentOrigin}/${currentLang}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid password. Please try again.');
       setLoading(false);
