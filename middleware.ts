@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const locales = ['en', 'it'];
+const locales = ['en', 'it', 'es'];
 const defaultLocale = 'en';
 
 const MAINTENANCE_COOKIE = 'maintenance-auth';
@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
 
   // 2. Se maintenance è attivo
   if (isMaintenanceEnabled) {
-    const isOnMaintenancePage = pathname.match(/^\/(en|it)\/maintenance\/?$/);
+    const isOnMaintenancePage = pathname.match(/^\/(en|it|es)\/maintenance\/?$/);
     const hasAuthCookie = request.cookies.get(MAINTENANCE_COOKIE)?.value === 'authenticated';
 
     // 2.1 – Se l’utente NON è autenticato e NON è sulla pagina /maintenance

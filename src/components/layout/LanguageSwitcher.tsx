@@ -14,7 +14,7 @@ export default function LanguageSwitcher({ currentLang }: LanguageSwitcherProps)
   const [isOpen, setIsOpen] = useState(false);
 
   // Get the path without the language prefix
-  const pathWithoutLang = pathname?.replace(/^\/(en|it)/, '') || '';
+  const pathWithoutLang = pathname?.replace(/^\/(en|it|es)/, '') || '';
 
   const toggleLanguage = () => {
     setIsOpen(false);
@@ -68,6 +68,16 @@ export default function LanguageSwitcher({ currentLang }: LanguageSwitcherProps)
             >
               <span className="text-2xl">🇮🇹</span>
               <span className="font-medium">Italiano</span>
+            </Link>
+            <Link
+              href={`/es${pathWithoutLang}`}
+              onClick={toggleLanguage}
+              className={`flex items-center gap-3 px-4 py-3 hover:bg-gray-800 transition-colors ${
+                currentLang === 'es' ? 'bg-gray-800 text-emerald-500' : 'text-gray-300'
+              }`}
+            >
+              <span className="text-2xl">🇪🇸</span>
+              <span className="font-medium">Español</span>
             </Link>
           </div>
         </>

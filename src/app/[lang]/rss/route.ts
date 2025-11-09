@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    const validLang = lang === 'it' ? 'it' : 'en';
+    const validLang = (lang === 'it' || lang === 'es') ? lang : 'en';
 
     const posts = await getPublishedPosts();
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com';
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
     <title>StackMoneyUp - Personal Finance Growth</title>
     <link>${siteUrl}</link>
     <description>No bullshit. No easy money promises. Just real strategies for building wealth.</description>
-    <language>${validLang === 'it' ? 'it-IT' : 'en-US'}</language>
+    <language>${validLang === 'it' ? 'it-IT' : validLang === 'es' ? 'es-ES' : 'en-US'}</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <generator>StackMoneyUp RSS Generator</generator>
 ${rssItems}

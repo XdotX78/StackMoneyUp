@@ -17,6 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${siteUrl}/es`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 1,
+    },
+    {
       url: `${siteUrl}/en/blog`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
@@ -24,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/it/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/es/blog`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.9,
@@ -41,6 +53,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${siteUrl}/es/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
       url: `${siteUrl}/en/contact`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
@@ -48,6 +66,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/it/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/es/contact`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
@@ -65,6 +89,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: `${siteUrl}/es/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
+    },
+    {
       url: `${siteUrl}/en/terms`,
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
@@ -72,6 +102,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/it/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/es/terms`,
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
       priority: 0.5,
@@ -99,6 +135,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/it/blog/${post.slug}`,
+      lastModified: new Date(post.published_at),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${siteUrl}/es/blog/${post.slug}`,
       lastModified: new Date(post.published_at),
       changeFrequency: 'weekly' as const,
       priority: 0.8,

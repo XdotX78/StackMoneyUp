@@ -67,6 +67,22 @@ Sets up PostgreSQL full-text search for blog posts:
 -- After 001_initial_schema.sql has been run
 ```
 
+### `005_add_spanish_language.sql`
+
+Adds Spanish (ES) language support:
+- Adds `title_es`, `excerpt_es`, `content_es` to `blog_posts` table
+- Adds `name_es`, `description_es` to `tags` table
+- Sets English content as default for existing posts
+- Makes Spanish fields required (NOT NULL)
+
+**Usage:**
+```sql
+-- Run in Supabase SQL Editor
+-- After 001_initial_schema.sql has been run
+```
+
+**📖 See:** `SPANISH_LANGUAGE_SETUP.md` for complete setup guide
+
 ---
 
 ## Running Migrations
@@ -111,6 +127,7 @@ psql -h your-db-host -U postgres -d postgres -f migrations/001_initial_schema.sq
 2. ✅ `002_seed_data.sql` - Optional, run after schema
 3. ✅ `003_comments_schema.sql` - Comments system, run after initial schema
 4. ✅ `004_fulltext_search.sql` - Full-text search setup, run after initial schema
+5. ✅ `005_add_spanish_language.sql` - Spanish language support, run after initial schema
 
 ---
 

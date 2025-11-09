@@ -8,14 +8,17 @@ export interface BlogPost {
   title: {
     en: string;
     it: string;
+    es: string;
   };
   excerpt: {
     en: string;
     it: string;
+    es: string;
   };
   content: {
     en: string;
     it: string;
+    es: string;
   };
   cover_image?: string;
   category: string;
@@ -35,10 +38,12 @@ export interface BlogPostSummary {
   title: {
     en: string;
     it: string;
+    es: string;
   };
   excerpt: {
     en: string;
     it: string;
+    es: string;
   };
   cover_image?: string;
   category: string;
@@ -57,10 +62,12 @@ export interface Tag {
   name: {
     en: string;
     it: string;
+    es: string;
   };
   description?: {
     en: string;
     it: string;
+    es: string;
   };
   post_count: number;
   created_at: string;
@@ -78,6 +85,7 @@ export interface Author {
   bio?: {
     en: string;
     it: string;
+    es: string;
   };
   created_at: string;
 }
@@ -115,9 +123,10 @@ export interface CommentFormData {
  * Language Types
  */
 
-export type Language = 'en' | 'it';
+export type Language = 'en' | 'it' | 'es';
 
 export type LocalizedContent = {
   en: string;
   it: string;
+  es: string;
 };

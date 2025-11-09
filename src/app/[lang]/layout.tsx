@@ -24,12 +24,14 @@ export async function generateMetadata({
   
   const titles = {
     en: "StackMoneyUp - Personal Finance Growth",
-    it: "StackMoneyUp - Crescita Finanziaria Personale"
+    it: "StackMoneyUp - Crescita Finanziaria Personale",
+    es: "StackMoneyUp - Crecimiento Financiero Personal"
   };
   
   const descriptions = {
     en: "No bullshit. No easy money promises. Just real strategies for building wealth.",
-    it: "Niente cazzate. Niente promesse di soldi facili. Solo strategie reali per costruire ricchezza."
+    it: "Niente cazzate. Niente promesse di soldi facili. Solo strategie reali per costruire ricchezza.",
+    es: "Sin tonterías. Sin promesas de dinero fácil. Solo estrategias reales para construir riqueza."
   };
   
   const validLang = isValidLanguage(lang) ? lang as Language : getDefaultLanguage();
@@ -45,8 +47,11 @@ export async function generateMetadata({
       url: `${siteUrl}/${validLang}`,
       siteName: 'StackMoneyUp',
       type: 'website',
-      locale: validLang === 'it' ? 'it_IT' : 'en_US',
-      alternateLocale: validLang === 'it' ? 'en_US' : 'it_IT',
+      locale: validLang === 'it' ? 'it_IT' : validLang === 'es' ? 'es_ES' : 'en_US',
+      alternateLocale: ['en_US', 'it_IT', 'es_ES'].filter(l => {
+        const currentLocale = validLang === 'it' ? 'it_IT' : validLang === 'es' ? 'es_ES' : 'en_US';
+        return l !== currentLocale;
+      }),
     },
     twitter: {
       card: 'summary_large_image',
@@ -58,6 +63,7 @@ export async function generateMetadata({
       languages: {
         en: `${siteUrl}/en`,
         it: `${siteUrl}/it`,
+        es: `${siteUrl}/es`,
       },
     },
   };

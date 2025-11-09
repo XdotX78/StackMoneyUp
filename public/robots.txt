@@ -40,3 +40,4 @@ Disallow: /
 Sitemap: https://stackmoneyup.com/sitemap.xml
 Sitemap: https://stackmoneyup.com/en/rss?lang=en
 Sitemap: https://stackmoneyup.com/it/rss?lang=it
+Sitemap: https://stackmoneyup.com/es/rss?lang=es

@@ -811,6 +811,279 @@ export const translations: Record<Language, LanguageTranslations> = {
       invalidToken: "Link non valido o scaduto",
       invalidTokenMessage: "Questo link di reset password non è valido o è scaduto. Per favore richiedine uno nuovo."
     }
+  },
+  es: {
+    nav: {
+      home: "Inicio",
+      blog: "Blog",
+      about: "Acerca de",
+      invest: "Invertir",
+      contact: "Contacto"
+    },
+    hero: {
+      title: "Descubre Tu",
+      subtitle: "Bienvenido a StackMoneyUp, tu guía de finanzas personales, inversiones e información útil. Explora nuestro blog para aprender a administrar tu dinero, hacer crecer tu riqueza y lograr estabilidad financiera",
+      cta: "Aprende Más"
+    },
+    navigating: {
+      tagline: "Invirtiendo para el Futuro",
+      title: "Navegando el Mundo de las Finanzas Personales",
+      budgeting: "Presupuesto Simplificado: Descubre consejos prácticos y herramientas para ayudarte a controlar tus gastos, reducir deudas y alcanzar tus objetivos de ahorro. Aprende a crear un presupuesto que funcione para tu situación financiera y estilo de vida únicos",
+      retirement: "Planificación de Jubilación: Obtén perspectivas expertas sobre la planificación de una jubilación segura y satisfactoria. Explora opciones de inversión, estrategias de ahorro fiscal",
+      cta: "Explorar Ahora"
+    },
+    mastering: {
+      tagline: "Tu Futuro Financiero",
+      title: "Dominando las Finanzas Personales",
+      cardTitle: "Perspectivas Financieras",
+      cardText: "Libera Tu Potencial Financiero: Nuestro blog completo cubre una amplia gama de temas de finanzas personales, desde presupuestos y ahorros hasta inversiones y planificación de jubilación. Descubre estrategias prácticas y perspectivas expertas para ayudarte a alcanzar tus objetivos financieros y asegurar tu futuro",
+      rightTitle: "Navegando las Complejidades",
+      rightText: "Invertir puede ser una herramienta poderosa para construir riqueza, pero también conlleva riesgos. En StackMoneyUp, estamos aquí para guiarte a través de las complejidades del panorama de inversión. Nuestro blog ofrece análisis en profundidad, perspectivas del mercado",
+      cta: "Invierte Sabiamente"
+    },
+    achieve: {
+      title: "Logra la Libertad Financiera",
+      text: "Toma el control de tu futuro financiero con la ayuda de StackMoneyUp. Nuestro blog está lleno de consejos prácticos, asesoramiento experto e historias de la vida real para inspirarte en tu viaje hacia la independencia financiera",
+      cta: "Comienza Ahora"
+    },
+    growWealth: {
+      tagline: "Mantente Informado",
+      title: "Haz Crecer Tu Riqueza",
+      subtitle: "Invierte en Tu Futuro: Explora las últimas tendencias de inversión, perspectivas del mercado",
+      cta: "Invierte Ahora",
+      cards: [
+        {
+          image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+          title: "Explora el",
+          text: "Descubre el Camino hacia la Libertad Financiera: Nuestro blog ofrece guía práctica e historias inspiradoras para ayudarte a tomar el control"
+        },
+        {
+          image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80",
+          title: "Desbloquea Tu",
+          text: "Alcanza la Estabilidad Financiera: Aprende a administrar tu dinero, reducir deudas y construir riqueza para un futuro seguro"
+        },
+        {
+          image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80",
+          title: "Abraza el Futuro",
+          text: "Asegura Tu Futuro Financiero: Explora las últimas tendencias, estrategias y perspectivas para ayudarte a tomar decisiones informadas y"
+        }
+      ]
+    },
+    blog: {
+      title: "Sabiduría Financiera",
+      readMore: "Leer Más →",
+      tagline: "Sabiduría Financiera"
+    },
+    posts: [
+      {
+        date: "Dic 2024",
+        category: "Inversiones",
+        title: "El Efecto Compuesto de las Inversiones Constantes",
+        excerpt: "Por qué invertir €100 mensuales supera intentar cronometrar el mercado."
+      },
+      {
+        date: "Dic 2024",
+        category: "Presupuesto",
+        title: "La Regla 50/30/20 No Es Perfecta",
+        excerpt: "Por qué la popular regla de presupuesto falla para la mayoría de las personas."
+      },
+      {
+        date: "Nov 2024",
+        category: "Mentalidad",
+        title: "Deja de Buscar Victorias Rápidas",
+        excerpt: "La psicología detrás de los esquemas de enriquecimiento rápido y por qué fallan."
+      },
+      {
+        date: "Nov 2024",
+        category: "Deudas",
+        title: "Bola de Nieve vs. Avalancha de Deudas",
+        excerpt: "El enfoque psicológico vs. matemático para eliminar deudas."
+      },
+      {
+        date: "Oct 2024",
+        category: "Fondo Emergencia",
+        title: "Por Qué 6 Meses No Son Suficientes",
+        excerpt: "El caso para construir un fondo de emergencia más grande en tiempos inciertos."
+      },
+      {
+        date: "Oct 2024",
+        category: "Ingresos",
+        title: "Negocios Paralelos que Realmente Escalan",
+        excerpt: "Más allá de Uber y DoorDash. Negocios paralelos reales que pueden crecer."
+      }
+    ],
+    about: {
+      title: "Acerca de - StackMoneyUp",
+      text1: "Este no es otro blog de finanzas personales que promete hacerte rico.",
+      text2: "Sin enlaces de afiliados. Sin contenido patrocinado."
+    },
+    footer: {
+      copyright: "© 2025 StackMoneyUp. Todos los derechos reservados.",
+      quickLinks: "Enlaces Rápidos",
+      exploreMore: "Explora Más",
+      connectWithUs: "Conéctate Con Nosotros",
+      home: "Inicio",
+      about: "Acerca de",
+      invest: "Invertir",
+      blog: "Blog",
+      contact: "Contacto",
+      privacy: "Privacidad",
+      terms: "Términos",
+      sitemap: "Mapa del Sitio",
+      twitter: "Twitter",
+      facebook: "Facebook",
+      instagram: "Instagram",
+      linkedin: "LinkedIn"
+    },
+    blogPage: {
+      title: "Blog",
+      subtitle: "Explora nuestros artículos sobre finanzas personales, inversiones y crecimiento financiero",
+      searchPlaceholder: "Buscar artículos...",
+      categoryLabel: "Categoría:",
+      all: "Todas",
+      activeFilters: "Filtros activos:",
+      clearFilters: "Limpiar filtros",
+      foundArticles: "Se encontraron {count} artículos",
+      foundArticle: "Se encontró {count} artículo",
+      noPostsFound: "No se encontraron posts",
+      noPostsFoundSubtitle: "Intenta ajustar tu búsqueda o filtros"
+    },
+    login: {
+      title: "StackMoneyUp",
+      subtitle: "Inicia sesión para acceder al panel de control",
+      emailLabel: "Email",
+      passwordLabel: "Contraseña",
+      confirmPasswordLabel: "Confirmar Contraseña",
+      emailPlaceholder: "tu@email.com",
+      passwordPlaceholder: "Ingresa tu contraseña",
+      confirmPasswordPlaceholder: "Reingresa tu contraseña",
+      passwordsDontMatch: "Las contraseñas no coinciden",
+      signIn: "Iniciar Sesión",
+      signingIn: "Iniciando sesión...",
+      signInWithGoogle: "Iniciar sesión con Google",
+      signUp: "Registrarse",
+      signUpWithGoogle: "Registrarse con Google",
+      alreadyHaveAccount: "¿Ya tienes cuenta? Inicia sesión",
+      dontHaveAccount: "¿No tienes cuenta? Regístrate",
+      forgotPassword: "¿Olvidaste tu contraseña?",
+      mockAuthNote: "Autenticación Supabase real",
+      loginFailed: "Inicio de sesión fallido. Por favor intenta de nuevo.",
+      emailNotConfirmed: "Por favor revisa tu email para confirmar tu cuenta. Te hemos enviado un enlace de confirmación.",
+      checkEmailForConfirmation: "¡Registro completado! Revisa tu email para confirmar tu cuenta."
+    },
+    dashboard: {
+      title: "Panel de Control",
+      welcomeBack: "Bienvenido de nuevo",
+      totalPosts: "Total de Posts",
+      postsCreated: "Posts creados",
+      published: "Publicados",
+      livePosts: "Posts en vivo",
+      drafts: "Borradores",
+      unpublishedPosts: "Posts no publicados",
+      quickActions: "Acciones Rápidas",
+      newPost: "+ Nuevo Post",
+      manageTags: "Gestionar Etiquetas",
+      recentPosts: "Posts Recientes",
+      noPostsYet: "Aún no hay posts",
+      createFirstPost: "Crea Tu Primer Post",
+      logout: "Cerrar Sesión",
+      loading: "Cargando...",
+      deleteConfirm: "¿Estás seguro de que quieres eliminar este post?"
+    },
+    profile: {
+      title: "Perfil",
+      subtitle: "Administra la configuración de tu cuenta y preferencias",
+      personalInfo: "Información Personal",
+      accountSettings: "Configuración de Cuenta",
+      displayName: "Nombre para Mostrar",
+      email: "Email",
+      emailVerified: "Email Verificado",
+      emailNotVerified: "Email No Verificado",
+      changePassword: "Cambiar Contraseña",
+      currentPassword: "Contraseña Actual",
+      newPassword: "Nueva Contraseña",
+      confirmNewPassword: "Confirmar Nueva Contraseña",
+      updateProfile: "Actualizar Perfil",
+      updating: "Actualizando...",
+      profileUpdated: "¡Perfil actualizado con éxito!",
+      updateFailed: "No se pudo actualizar el perfil. Por favor intenta de nuevo.",
+      passwordChanged: "¡Contraseña cambiada con éxito!",
+      passwordChangeFailed: "No se pudo cambiar la contraseña. Por favor intenta de nuevo.",
+      saveChanges: "Guardar Cambios",
+      cancel: "Cancelar",
+      memberSince: "Miembro desde",
+      userId: "ID de Usuario",
+      language: "Idioma",
+      avatar: "Avatar",
+      uploadAvatar: "Subir Avatar",
+      uploading: "Subiendo...",
+      removeAvatar: "Eliminar Avatar",
+      avatarUploaded: "¡Avatar subido con éxito!",
+      avatarUploadFailed: "No se pudo subir el avatar. Por favor intenta de nuevo.",
+      passwordsDontMatch: "Las nuevas contraseñas no coinciden",
+      passwordTooShort: "La contraseña debe tener al menos 6 caracteres"
+    },
+    newPost: {
+      title: "Crear Nuevo Post",
+      subtitle: "Escribe tu post del blog en inglés, italiano y español"
+    },
+    postForm: {
+      slug: "Slug",
+      slugHelper: "Generado automáticamente desde el título, pero puedes modificarlo",
+      category: "Categoría",
+      categoryPlaceholder: "ej. Inversiones, Ahorro & Fondo Emergencia, Presupuesto & Gastos",
+      coverImage: "URL de Imagen de Portada",
+      coverImageHelper: "URL para la imagen de portada del post",
+      tags: "Etiquetas (separadas por coma)",
+      tagsHelper: "Separa las etiquetas con comas",
+      tagsPlaceholder: "inversiones, presupuesto, mentalidad",
+      content: "Contenido",
+      published: "Publicado",
+      featured: "Destacado",
+      cancel: "Cancelar",
+      createPost: "Crear Post",
+      updatePost: "Actualizar Post",
+      english: "Inglés",
+      italian: "Italiano",
+      englishPlaceholder: "Comienza a escribir tu post del blog en inglés...",
+      italianPlaceholder: "Comienza a escribir tu post en italiano...",
+      preview: "Vista Previa",
+      previewTitle: "Vista Previa del Post",
+      previewEnglish: "Vista Previa en Inglés",
+      previewItalian: "Vista Previa en Italiano",
+      closePreview: "Cerrar Vista Previa"
+    },
+    categories: {
+      'Investing': { en: 'Investing', it: 'Investimenti', es: 'Inversiones' },
+      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza', es: 'Ahorro & Fondo Emergencia' },
+      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese', es: 'Presupuesto & Gastos' },
+      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti', es: 'Deudas & Préstamos' },
+      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più', es: 'Ingresos & Ganar Más' },
+      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro', es: 'Mentalidad del Dinero' },
+    },
+    passwordReset: {
+      forgotPasswordTitle: "Restablecer Contraseña",
+      forgotPasswordSubtitle: "Ingresa tu dirección de email y te enviaremos un enlace para restablecer tu contraseña",
+      emailLabel: "Email",
+      emailPlaceholder: "tu@email.com",
+      sendResetLink: "Enviar Enlace de Restablecimiento",
+      sendingResetLink: "Enviando...",
+      resetLinkSent: "¡Enlace de restablecimiento enviado!",
+      resetLinkSentMessage: "Revisa tu email para el enlace de restablecimiento de contraseña. Si no lo ves, revisa la carpeta de spam.",
+      backToLogin: "Volver al Inicio de Sesión",
+      resetPasswordTitle: "Establecer Nueva Contraseña",
+      resetPasswordSubtitle: "Ingresa tu nueva contraseña a continuación",
+      newPasswordLabel: "Nueva Contraseña",
+      confirmPasswordLabel: "Confirmar Contraseña",
+      newPasswordPlaceholder: "Ingresa nueva contraseña",
+      confirmPasswordPlaceholder: "Confirma nueva contraseña",
+      updatePassword: "Actualizar Contraseña",
+      updatingPassword: "Actualizando...",
+      passwordUpdated: "¡Contraseña actualizada!",
+      passwordUpdatedMessage: "Tu contraseña ha sido actualizada con éxito. Ahora puedes iniciar sesión con tu nueva contraseña.",
+      invalidToken: "Enlace inválido o expirado",
+      invalidTokenMessage: "Este enlace de restablecimiento de contraseña no es válido o ha expirado. Por favor solicita uno nuevo."
+    }
   }
 };
 
@@ -846,7 +1119,7 @@ export function getLocalizedContent<T extends Record<Language, string>>(
  * Validate if language is supported
  */
 export function isValidLanguage(lang: string): lang is Language {
-  return lang === 'en' || lang === 'it';
+  return lang === 'en' || lang === 'it' || lang === 'es';
 }
 
 /**
