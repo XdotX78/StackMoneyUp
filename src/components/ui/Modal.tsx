@@ -55,7 +55,7 @@ export const Modal: React.FC<ModalProps> = ({
       <div 
         ref={modalRef}
         className={clsx(
-          'relative bg-white rounded-lg shadow-xl w-full animate-in fade-in duration-200',
+          'relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-h-[90vh] flex flex-col animate-in fade-in duration-200',
           sizes[size]
         )}
       >
@@ -82,8 +82,8 @@ interface ModalHeaderProps {
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({ children, className }) => {
   return (
-    <div className={clsx('px-6 py-4 border-b border-gray-200', className)}>
-      <h3 className="text-xl font-bold text-gray-900">{children}</h3>
+    <div className={clsx('px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0', className)}>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white">{children}</h3>
     </div>
   );
 };
@@ -95,7 +95,7 @@ interface ModalBodyProps {
 
 export const ModalBody: React.FC<ModalBodyProps> = ({ children, className }) => {
   return (
-    <div className={clsx('px-6 py-4', className)}>
+    <div className={clsx('px-6 py-4 overflow-y-auto flex-1', className)}>
       {children}
     </div>
   );
@@ -108,7 +108,7 @@ interface ModalFooterProps {
 
 export const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => {
   return (
-    <div className={clsx('px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg flex justify-end gap-2', className)}>
+    <div className={clsx('px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-b-lg flex justify-end gap-2 flex-shrink-0', className)}>
       {children}
     </div>
   );
