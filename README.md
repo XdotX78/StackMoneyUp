@@ -11,10 +11,12 @@ A modern, multi-language blog platform built with Next.js 16, React 19, and Supa
 
 ## ✨ Features
 
-- 🌍 **Multi-language** support (English/Italian)
+- 🌍 **Multi-language** support (English/Italian/Spanish)
 - ✍️ **Rich text editor** with TipTap
+- 📊 **Interactive charts** with Chart.js (line, bar, pie)
+- 🤖 **AI Agent API** for automated content creation
 - 🔐 **Role-based access** (admin/editor/user)
-- 📊 **Analytics dashboard** (views, reads, shares)
+- 📈 **Analytics dashboard** (views, reads, shares)
 - 🔍 **Full-text search** with PostgreSQL
 - 💬 **Comments system** with nested replies
 - 🔖 **Bookmarking** for favorite posts
@@ -22,7 +24,7 @@ A modern, multi-language blog platform built with Next.js 16, React 19, and Supa
 - 🌓 **Dark mode** support
 - 🍪 **GDPR/CCPA compliant** cookie consent
 - 💰 **Google AdSense** integration (ready to enable)
-- 📈 **SEO optimized** with schema.org markup
+- 🎨 **SEO optimized** with schema.org markup
 - 🔒 **Row Level Security** (RLS) with Supabase
 - 🚀 **Production-ready** with CI/CD
 
@@ -78,6 +80,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - **[SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md)** - Security audit checklist
 - **[MANUAL_TESTING_CHECKLIST.md](MANUAL_TESTING_CHECKLIST.md)** - Testing checklist
 - **[ANALYTICS_SETUP.md](ANALYTICS_SETUP.md)** - Analytics configuration
+
+### AI Agent & Charts
+
+- **[AI_AGENT_API_DOCUMENTATION.md](AI_AGENT_API_DOCUMENTATION.md)** - API for AI content creation
+- **[HOW_TO_GET_API_TOKEN.md](HOW_TO_GET_API_TOKEN.md)** - Authentication guide
+- **[CHART_SHORTCODES_GUIDE.md](CHART_SHORTCODES_GUIDE.md)** - Interactive chart documentation
+- **[scripts/](scripts/)** - Python examples for AI agents
 - **[ADSENSE_SETUP_GUIDE.md](ADSENSE_SETUP_GUIDE.md)** 💰 - Google AdSense monetization (ready to enable)
 
 ---
