@@ -505,8 +505,10 @@ export async function updateTag(
     slug: string
     name_en: string
     name_it: string
+    name_es: string
     description_en: string
     description_it: string
+    description_es: string
   }>
 ): Promise<Tag> {
   const user = await getCurrentUser()
@@ -517,12 +519,14 @@ export async function updateTag(
     throw new Error('You must be an editor or admin to update tags')
   }
 
-  const dbUpdates: Partial<{ slug: string; name_en: string; name_it: string; description_en: string; description_it: string }> = {}
+  const dbUpdates: Partial<{ slug: string; name_en: string; name_it: string; name_es: string; description_en: string; description_it: string; description_es: string }> = {}
   if (updates.slug !== undefined) dbUpdates.slug = updates.slug
   if (updates.name_en !== undefined) dbUpdates.name_en = updates.name_en
   if (updates.name_it !== undefined) dbUpdates.name_it = updates.name_it
+  if (updates.name_es !== undefined) dbUpdates.name_es = updates.name_es
   if (updates.description_en !== undefined) dbUpdates.description_en = updates.description_en
   if (updates.description_it !== undefined) dbUpdates.description_it = updates.description_it
+  if (updates.description_es !== undefined) dbUpdates.description_es = updates.description_es
 
   const { data, error } = await supabase
     .from('tags')
