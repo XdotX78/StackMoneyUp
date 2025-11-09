@@ -6,6 +6,8 @@ Scripts for AI agents to interact with the StackMoneyUp blog API.
 
 - `ai-agent-example.py` - Python script to create blog posts (requires manual token)
 - `ai-agent-with-login.py` - **✨ RECOMMENDED** - Auto-login script (no manual token needed!)
+- `crewai_blog_tool.py` - **🤖 CREWAI** - Tool for CrewAI agents to create posts
+- `crewai_example.py` - Complete CrewAI example with agent and task
 
 ## 🚀 Quick Start
 
@@ -127,9 +129,36 @@ Created: 2025-01-09T21:30:00Z
 - Include cover images for better SEO
 - Add relevant tags for discoverability
 
+## 🤖 CrewAI Integration
+
+If you're using CrewAI, use the dedicated tool:
+
+```python
+from crewai_tools import tool
+from scripts.crewai_blog_tool import create_blog_post
+
+agent = Agent(
+    role='Blog Writer',
+    tools=[create_blog_post],
+    ...
+)
+```
+
+**Full documentation:** See `CREWAI_INTEGRATION_GUIDE.md` in the root directory.
+
+**Quick test:**
+```bash
+export STACKMONEYUP_API_TOKEN="your-token-here"
+python scripts/crewai_example.py
+```
+
+---
+
 ## 🔗 Useful Links
 
 - API Endpoint: `https://stackmoneyup.com/api/blog/create`
 - Dashboard: `https://stackmoneyup.com/dashboard`
 - Edit Posts: `https://stackmoneyup.com/dashboard/posts`
+- CrewAI Guide: `../CREWAI_INTEGRATION_GUIDE.md`
+- Chart Shortcodes: `../CHART_SHORTCODES_GUIDE.md`
 
