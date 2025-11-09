@@ -101,7 +101,35 @@ export default function CookieConsent({ lang }: CookieConsentProps) {
     setPreferences(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const texts = {
+  const texts: Record<Language, {
+    banner: {
+      title: string;
+      description: string;
+      acceptAll: string;
+      rejectAll: string;
+      customize: string;
+      learnMore: string;
+    };
+    preferences: {
+      title: string;
+      description: string;
+      essential: {
+        title: string;
+        description: string;
+        required: string;
+      };
+      analytics: {
+        title: string;
+        description: string;
+      };
+      marketing: {
+        title: string;
+        description: string;
+      };
+      savePreferences: string;
+      acceptAll: string;
+    };
+  }> = {
     en: {
       banner: {
         title: '🍪 We value your privacy',
