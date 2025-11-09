@@ -160,9 +160,38 @@ export default function CookieConsent({ lang }: CookieConsentProps) {
         acceptAll: 'Accetta Tutti',
       },
     },
+    es: {
+      banner: {
+        title: '🍪 Valoramos tu privacidad',
+        description: 'Utilizamos cookies para mejorar tu experiencia de navegación, ofrecer contenido personalizado y analizar nuestro tráfico. Al hacer clic en "Aceptar Todas", consientes el uso de cookies.',
+        acceptAll: 'Aceptar Todas',
+        rejectAll: 'Rechazar No Esenciales',
+        customize: 'Personalizar',
+        learnMore: 'Más información',
+      },
+      preferences: {
+        title: 'Preferencias de Cookies',
+        description: 'Utilizamos cookies para mejorar tu experiencia en nuestro sitio. Puedes personalizar tus preferencias a continuación.',
+        essential: {
+          title: 'Cookies Esenciales',
+          description: 'Necesarias para el correcto funcionamiento del sitio. Estas cookies habilitan funcionalidades básicas como autenticación y seguridad. No se pueden desactivar.',
+          required: 'Siempre Activas',
+        },
+        analytics: {
+          title: 'Cookies Analíticas',
+          description: 'Nos ayudan a entender cómo los visitantes interactúan con nuestro sitio recopilando e informando información de forma anónima.',
+        },
+        marketing: {
+          title: 'Cookies de Marketing',
+          description: 'Se utilizan para rastrear visitantes en diferentes sitios web para mostrar anuncios relevantes y fomentar la interacción.',
+        },
+        savePreferences: 'Guardar Preferencias',
+        acceptAll: 'Aceptar Todas',
+      },
+    },
   };
 
-  const t = texts[lang];
+  const t = texts[lang] || texts.en;
 
   if (!showBanner) return null;
 
