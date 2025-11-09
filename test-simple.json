@@ -1,0 +1,14 @@
+{
+  "title_en": "Test Post from cURL",
+  "title_it": "Post di Test da cURL",
+  "title_es": "Post de Prueba de cURL",
+  "excerpt_en": "This is a simple test post created using cURL command.",
+  "excerpt_it": "Questo è un semplice post di test creato usando il comando cURL.",
+  "excerpt_es": "Esta es una publicación de prueba simple creada usando el comando cURL.",
+  "content_en": "# Test Post\n\nThis is a test post created via API.\n\n## What is this?\n\nThis post was created automatically using cURL!\n\n## Next Steps\n\n1. Review the post\n2. Edit if needed\n3. Publish when ready",
+  "content_it": "# Post di Test\n\nQuesto è un post di test creato via API.\n\n## Cos'è questo?\n\nQuesto post è stato creato automaticamente usando cURL!\n\n## Prossimi Passi\n\n1. Rivedi il post\n2. Modifica se necessario\n3. Pubblica quando pronto",
+  "content_es": "# Post de Prueba\n\nEsta es una publicación de prueba creada vía API.\n\n## ¿Qué es esto?\n\n¡Esta publicación fue creada automáticamente usando cURL!\n\n## Próximos Pasos\n\n1. Revisa la publicación\n2. Edita si es necesario\n3. Publica cuando esté lista",
+  "category": "Investing",
+  "tags": ["test", "api", "curl"]
+}
+
