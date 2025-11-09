@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createPost } from '@/lib/blog';
 import { getCurrentUser } from '@/lib/auth';
+import { generateSlug } from '@/lib/utils';
 
 /**
  * API Endpoint for AI Agent to Create Blog Posts
@@ -157,8 +158,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 7. Create Post (ALWAYS as DRAFT)
+    // 7. Generate slug from English title
+    const slug = generateSlug(body.title_en.trim());
+
+    // 8. Create Post (ALWAYS as DRAFT)
     const newPost = await createPost({
+      slug: slug,
       title_en: body.title_en.trim(),
       title_it: body.title_it.trim(),
       title_es: body.title_es.trim(),
@@ -175,7 +180,7 @@ export async function POST(request: NextRequest) {
       featured: false,
     });
 
-    // 8. Return Success Response
+    // 9. Return Success Response
     return NextResponse.json(
       {
         success: true,
