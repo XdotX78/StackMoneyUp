@@ -484,11 +484,13 @@ export async function getAllTags(): Promise<Tag[]> {
     name: {
       en: row.name_en,
       it: row.name_it,
+      es: row.name_es,
     },
-    description: row.description_en || row.description_it
+    description: row.description_en || row.description_it || row.description_es
       ? {
           en: row.description_en || '',
           it: row.description_it || '',
+          es: row.description_es || '',
         }
       : undefined,
     post_count: row.post_count,
