@@ -109,6 +109,7 @@ export async function getAllPostsAnalytics(): Promise<PostAnalytics[]> {
         title: {
           en: post.title_en,
           it: post.title_it,
+          es: post.title_es,
         },
         category: post.category,
         published: post.published,
