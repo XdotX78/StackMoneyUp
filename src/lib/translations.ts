@@ -218,6 +218,7 @@ interface CategoryTranslations {
   [key: string]: {
     en: string;
     it: string;
+    es: string;
   };
 }
 
