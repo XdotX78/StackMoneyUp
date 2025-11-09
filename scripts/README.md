@@ -11,7 +11,23 @@ Scripts for AI agents to interact with the StackMoneyUp blog API.
 
 ## 🚀 Quick Start
 
-### ⚡ Method A: Auto-Login (FASTEST - RECOMMENDED)
+### ⚡⚡ Method A: SUPER SIMPLE (NO TOKEN NEEDED!) ⚡⚡
+
+**Nessun token da copiare! Basta email e password!**
+
+```bash
+# 1. Modifica create-post-simple.py con la tua email/password
+# 2. Esegui:
+python scripts/create-post-simple.py
+```
+
+**FATTO!** Il post viene creato automaticamente! 🎉
+
+Vedi `METODO_SEMPLICE.md` nella root per la guida completa.
+
+---
+
+### ⚡ Method B: Auto-Login (FASTEST - RECOMMENDED)
 
 No need to copy tokens manually!
 
