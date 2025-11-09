@@ -31,7 +31,8 @@ export function extractCharts(content: string): ChartData[] {
   const charts: ChartData[] = [];
   
   // Regex to match [chart:type ...attributes... /]
-  const chartRegex = /\[chart:(line|bar|pie)\s+(.*?)\s*\/\]/gs;
+  // Note: Using [\s\S] instead of . with 's' flag for compatibility
+  const chartRegex = /\[chart:(line|bar|pie)\s+([\s\S]*?)\s*\/\]/g;
   
   let match;
   let chartIndex = 0;
@@ -118,7 +119,7 @@ export function replaceChartsWithPlaceholders(content: string): string {
   let chartIndex = 0;
   
   return content.replace(
-    /\[chart:(line|bar|pie)\s+(.*?)\s*\/\]/gs,
+    /\[chart:(line|bar|pie)\s+([\s\S]*?)\s*\/\]/g,
     () => {
       const placeholder = `<div data-chart-placeholder="${chartIndex}"></div>`;
       chartIndex++;
