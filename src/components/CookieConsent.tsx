@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from './ui/Button';
 import { Modal, ModalHeader, ModalBody } from './ui/Modal';
+import type { Language } from '@/types/blog';
 
 interface CookiePreferences {
   essential: boolean; // Always true, can't be disabled
@@ -12,7 +13,7 @@ interface CookiePreferences {
 }
 
 interface CookieConsentProps {
-  lang: 'en' | 'it';
+  lang: Language;
 }
 
 const COOKIE_CONSENT_KEY = 'cookie-consent';
