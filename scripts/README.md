@@ -4,9 +4,38 @@ Scripts for AI agents to interact with the StackMoneyUp blog API.
 
 ## 📁 Files
 
-- `ai-agent-example.py` - Python script to create blog posts via API
+- `ai-agent-example.py` - Python script to create blog posts (requires manual token)
+- `ai-agent-with-login.py` - **✨ RECOMMENDED** - Auto-login script (no manual token needed!)
 
 ## 🚀 Quick Start
+
+### ⚡ Method A: Auto-Login (FASTEST - RECOMMENDED)
+
+No need to copy tokens manually!
+
+```bash
+# 1. Install dependencies
+pip install requests
+
+# 2. Set your credentials
+export STACKMONEYUP_EMAIL="your@email.com"
+export STACKMONEYUP_PASSWORD="your-password"
+
+# Or on Windows PowerShell:
+$env:STACKMONEYUP_EMAIL="your@email.com"
+$env:STACKMONEYUP_PASSWORD="your-password"
+
+# 3. Run the script
+python ai-agent-with-login.py
+```
+
+**Done!** The script will login automatically and create a test post.
+
+---
+
+### 🔧 Method B: Manual Token (Alternative)
+
+If you prefer to use a token manually:
 
 ### 1. Install Dependencies
 ```bash
