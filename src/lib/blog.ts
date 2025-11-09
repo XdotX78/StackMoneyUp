@@ -16,10 +16,13 @@ interface BlogPostRow {
   slug: string
   title_en: string
   title_it: string
+  title_es: string
   excerpt_en: string
   excerpt_it: string
+  excerpt_es: string
   content_en: string
   content_it: string
+  content_es: string
   cover_image: string | null
   category: string
   tags: string[]
@@ -43,14 +46,17 @@ function transformBlogPost(row: BlogPostRow): BlogPost {
     title: {
       en: row.title_en,
       it: row.title_it,
+      es: row.title_es,
     },
     excerpt: {
       en: row.excerpt_en,
       it: row.excerpt_it,
+      es: row.excerpt_es,
     },
     content: {
       en: row.content_en,
       it: row.content_it,
+      es: row.content_es,
     },
     cover_image: row.cover_image || undefined,
     category: row.category,
@@ -75,10 +81,12 @@ function transformBlogPostSummary(row: BlogPostRow): BlogPostSummary {
     title: {
       en: row.title_en,
       it: row.title_it,
+      es: row.title_es,
     },
     excerpt: {
       en: row.excerpt_en,
       it: row.excerpt_it,
+      es: row.excerpt_es,
     },
     cover_image: row.cover_image || undefined,
     category: row.category,
@@ -307,10 +315,13 @@ export async function createPost(postData: {
   slug: string
   title_en: string
   title_it: string
+  title_es: string
   excerpt_en: string
   excerpt_it: string
+  excerpt_es: string
   content_en: string
   content_it: string
+  content_es: string
   category: string
   tags: string[]
   cover_image?: string
@@ -330,10 +341,13 @@ export async function createPost(postData: {
     slug: postData.slug,
     title_en: postData.title_en,
     title_it: postData.title_it,
+    title_es: postData.title_es,
     excerpt_en: postData.excerpt_en,
     excerpt_it: postData.excerpt_it,
+    excerpt_es: postData.excerpt_es,
     content_en: postData.content_en,
     content_it: postData.content_it,
+    content_es: postData.content_es,
     category: postData.category,
     tags: postData.tags,
     author_id: user.id,
@@ -365,10 +379,13 @@ export async function updatePost(
     slug: string
     title_en: string
     title_it: string
+    title_es: string
     excerpt_en: string
     excerpt_it: string
+    excerpt_es: string
     content_en: string
     content_it: string
+    content_es: string
     category: string
     tags: string[]
     cover_image: string

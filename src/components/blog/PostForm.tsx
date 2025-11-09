@@ -21,11 +21,14 @@ interface PostFormProps {
 export interface PostFormData {
   title_en: string;
   title_it: string;
+  title_es: string;
   slug: string;
   excerpt_en: string;
   excerpt_it: string;
+  excerpt_es: string;
   content_en: string; // JSON string
   content_it: string; // JSON string
+  content_es: string; // JSON string
   category: string;
   tags: string[];
   cover_image?: string;
@@ -46,11 +49,14 @@ export default function PostForm({
   const [formData, setFormData] = useState<PostFormData>({
     title_en: initialData?.title?.en || '',
     title_it: initialData?.title?.it || '',
+    title_es: initialData?.title?.es || '',
     slug: initialData?.slug || '',
     excerpt_en: initialData?.excerpt?.en || '',
     excerpt_it: initialData?.excerpt?.it || '',
+    excerpt_es: initialData?.excerpt?.es || '',
     content_en: initialData?.content?.en || '',
     content_it: initialData?.content?.it || '',
+    content_es: initialData?.content?.es || '',
     category: initialData?.category || '',
     tags: initialData?.tags || [],
     cover_image: initialData?.cover_image || '',
@@ -65,7 +71,7 @@ export default function PostForm({
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
   const [showPreview, setShowPreview] = useState(false);
   const [showSEOPreview, setShowSEOPreview] = useState(false);
-  const [previewLang, setPreviewLang] = useState<'en' | 'it'>('en');
+  const [previewLang, setPreviewLang] = useState<'en' | 'it' | 'es'>('en');
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasAutoSavedRef = useRef(false);
 
@@ -83,7 +89,7 @@ export default function PostForm({
   // Auto-save functionality (saves to localStorage)
   useEffect(() => {
     // Skip auto-save if form is empty or just initialized
-    const isEmpty = !formData.title_en && !formData.title_it && !formData.content_en && !formData.content_it;
+    const isEmpty = !formData.title_en && !formData.title_it && !formData.title_es && !formData.content_en && !formData.content_it && !formData.content_es;
     if (isEmpty && !hasAutoSavedRef.current) return;
 
     // Clear existing timeout
@@ -201,11 +207,13 @@ export default function PostForm({
     }
   };
 
-  const handleContentChange = (lang: 'en' | 'it', content: string) => {
+  const handleContentChange = (lang: 'en' | 'it' | 'es', content: string) => {
     if (lang === 'en') {
       handleInputChange('content_en', content);
-    } else {
+    } else if (lang === 'it') {
       handleInputChange('content_it', content);
+    } else {
+      handleInputChange('content_es', content);
     }
   };
 
@@ -218,6 +226,9 @@ export default function PostForm({
     if (!formData.title_it.trim()) {
       newErrors.title_it = 'Italian title is required';
     }
+    if (!formData.title_es.trim()) {
+      newErrors.title_es = 'Spanish title is required';
+    }
     if (!formData.slug.trim()) {
       newErrors.slug = 'Slug is required';
     }
@@ -227,11 +238,17 @@ export default function PostForm({
     if (!formData.excerpt_it.trim()) {
       newErrors.excerpt_it = 'Italian excerpt is required';
     }
+    if (!formData.excerpt_es.trim()) {
+      newErrors.excerpt_es = 'Spanish excerpt is required';
+    }
     if (!formData.content_en) {
       newErrors.content_en = 'English content is required';
     }
     if (!formData.content_it) {
       newErrors.content_it = 'Italian content is required';
+    }
+    if (!formData.content_es) {
+      newErrors.content_es = 'Spanish content is required';
     }
     if (!formData.category.trim()) {
       newErrors.category = 'Category is required';
@@ -250,7 +267,7 @@ export default function PostForm({
   const tabs = [
     {
       id: 'english',
-      label: lang === 'it' ? `${t.postForm.english} (EN)` : `${t.postForm.english} (EN)`,
+      label: `${t.postForm.english} (EN)`,
       content: (
         <div className="space-y-6">
           <Input
@@ -287,7 +304,7 @@ export default function PostForm({
     },
     {
       id: 'italian',
-      label: lang === 'it' ? `${t.postForm.italian} (IT)` : `${t.postForm.italian} (IT)`,
+      label: `${t.postForm.italian} (IT)`,
       content: (
         <div className="space-y-6">
           <Input
@@ -317,6 +334,43 @@ export default function PostForm({
               content={formData.content_it}
               placeholder={t.postForm.italianPlaceholder}
               onChange={(content) => handleContentChange('it', content)}
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'spanish',
+      label: `Español (ES)`,
+      content: (
+        <div className="space-y-6">
+          <Input
+            label="Title (Spanish)"
+            value={formData.title_es}
+            onChange={(e) => handleInputChange('title_es', e.target.value)}
+            error={errors.title_es}
+            placeholder="Ingresa el título en español"
+          />
+          <Textarea
+            label="Excerpt (Spanish)"
+            value={formData.excerpt_es}
+            onChange={(e) => handleInputChange('excerpt_es', e.target.value)}
+            error={errors.excerpt_es}
+            placeholder="Un breve resumen del artículo"
+            showCharCount
+            maxLength={200}
+          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Content (Spanish)
+            </label>
+            {errors.content_es && (
+              <p className="text-sm text-red-600 mb-2">{errors.content_es}</p>
+            )}
+            <BlogEditor
+              content={formData.content_es}
+              placeholder="Comienza a escribir tu artículo en español..."
+              onChange={(content) => handleContentChange('es', content)}
             />
           </div>
         </div>
@@ -558,14 +612,24 @@ export default function PostForm({
               >
                 {t.postForm.previewItalian}
               </button>
+              <button
+                onClick={() => setPreviewLang('es')}
+                className={`px-4 py-2 font-medium text-sm transition-colors ${
+                  previewLang === 'es'
+                    ? 'border-b-2 border-emerald-600 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Español
+              </button>
             </div>
 
             {/* Preview Content */}
             <div className="bg-gray-50 rounded-lg p-6">
               <BlogPostPreview
-                title={previewLang === 'en' ? formData.title_en : formData.title_it}
-                excerpt={previewLang === 'en' ? formData.excerpt_en : formData.excerpt_it}
-                content={previewLang === 'en' ? formData.content_en : formData.content_it}
+                title={previewLang === 'en' ? formData.title_en : previewLang === 'it' ? formData.title_it : formData.title_es}
+                excerpt={previewLang === 'en' ? formData.excerpt_en : previewLang === 'it' ? formData.excerpt_it : formData.excerpt_es}
+                content={previewLang === 'en' ? formData.content_en : previewLang === 'it' ? formData.content_it : formData.content_es}
                 category={formData.category}
                 tags={formData.tags}
                 cover_image={formData.cover_image}
@@ -610,12 +674,22 @@ export default function PostForm({
               >
                 Italiano
               </button>
+              <button
+                onClick={() => setPreviewLang('es')}
+                className={`px-4 py-2 font-medium text-sm transition-colors ${
+                  previewLang === 'es'
+                    ? 'border-b-2 border-emerald-600 text-emerald-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Español
+              </button>
             </div>
 
             {/* SEO Preview Content */}
             <SEOPreview
-              title={previewLang === 'en' ? formData.title_en : formData.title_it}
-              excerpt={previewLang === 'en' ? formData.excerpt_en : formData.excerpt_it}
+              title={previewLang === 'en' ? formData.title_en : previewLang === 'it' ? formData.title_it : formData.title_es}
+              excerpt={previewLang === 'en' ? formData.excerpt_en : previewLang === 'it' ? formData.excerpt_it : formData.excerpt_es}
               slug={formData.slug}
               cover_image={formData.cover_image}
               lang={previewLang}

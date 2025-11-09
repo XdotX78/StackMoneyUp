@@ -16,7 +16,7 @@ interface NewPostPageProps {
 
 export default function NewPostPage({ params }: NewPostPageProps) {
   const { lang: paramLang } = use(params);
-  const validLang = paramLang === 'it' ? 'it' : 'en';
+  const validLang = (paramLang === 'it' || paramLang === 'es') ? paramLang as Language : 'en';
   const [lang, setLang] = useState<Language>(validLang);
   const [loading, setLoading] = useState(false);
   const { user, loading: authLoading } = useAuthContext();
@@ -55,10 +55,13 @@ export default function NewPostPage({ params }: NewPostPageProps) {
         slug: data.slug,
         title_en: data.title_en,
         title_it: data.title_it,
+        title_es: data.title_es,
         excerpt_en: data.excerpt_en,
         excerpt_it: data.excerpt_it,
+        excerpt_es: data.excerpt_es,
         content_en: data.content_en,
         content_it: data.content_it,
+        content_es: data.content_es,
         category: data.category,
         tags: data.tags,
         cover_image: data.cover_image,
