@@ -11,6 +11,7 @@ interface NavItem {
   label: {
     en: string;
     it: string;
+    es: string;
   };
   href: string;
 }
