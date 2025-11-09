@@ -194,6 +194,14 @@ When you invest €100 every month at an average 7% return:
 2. Stay consistent
 3. Don't try to time the market
 4. Focus on the long term
+
+## Visualizing Growth
+
+Here's how €100/month grows over time:
+
+[chart:line title="Investment Growth (7% annual return)" labels="10 years,20 years,30 years" datasets='[{"label":"€100/month","data":[17308,52093,122709]},{"label":"€200/month","data":[34616,104186,245418]}]' height="400" currency="€" /]
+
+Amazing, right?
 """,
     
     "content_it": """# Il Potere della Costanza
@@ -213,6 +221,14 @@ Quando investi €100 ogni mese con un rendimento medio del 7%:
 2. Mantieni la costanza
 3. Non cercare di cronometrare il mercato
 4. Concentrati sul lungo termine
+
+## Visualizzare la Crescita
+
+Ecco come crescono €100/mese nel tempo:
+
+[chart:line title="Crescita Investimento (7% rendimento annuo)" labels="10 anni,20 anni,30 anni" datasets='[{"label":"€100/mese","data":[17308,52093,122709]},{"label":"€200/mese","data":[34616,104186,245418]}]' height="400" currency="€" /]
+
+Incredibile, vero?
 """,
     
     "content_es": """# El Poder de la Consistencia
@@ -232,6 +248,14 @@ Cuando inviertes €100 cada mes con un rendimiento promedio del 7%:
 2. Mantén la consistencia
 3. No intentes cronometrar el mercado
 4. Enfócate en el largo plazo
+
+## Visualizando el Crecimiento
+
+Así crecen €100/mes con el tiempo:
+
+[chart:line title="Crecimiento de Inversión (7% retorno anual)" labels="10 años,20 años,30 años" datasets='[{"label":"€100/mes","data":[17308,52093,122709]},{"label":"€200/mes","data":[34616,104186,245418]}]' height="400" currency="€" /]
+
+¡Increíble, verdad?
 """,
     
     "category": "Investing",
@@ -352,14 +376,54 @@ A: Login to the dashboard, then use your session cookie or generate a token from
 
 ---
 
+## 📊 **Interactive Charts (NEW!)**
+
+You can now embed interactive financial charts directly in your blog posts using shortcodes!
+
+### **Chart Types**
+
+1. **Line Chart** - For trends (compound interest, growth over time)
+2. **Bar Chart** - For comparisons (budget categories, expenses)
+3. **Pie Chart** - For distributions (portfolio allocation)
+
+### **Shortcode Format**
+
+```markdown
+[chart:line title="Investment Growth" labels="10 years,20 years,30 years" datasets='[{"label":"€100/month","data":[17308,52093,122709]}]' height="400" currency="€" /]
+```
+
+### **Quick Examples**
+
+**Compound Interest (Line Chart):**
+```markdown
+[chart:line title="Investment Growth (7% return)" labels="10 years,20 years,30 years" datasets='[{"label":"€100/month","data":[17308,52093,122709]},{"label":"€200/month","data":[34616,104186,245418]}]' height="400" currency="€" /]
+```
+
+**Monthly Budget (Bar Chart):**
+```markdown
+[chart:bar title="Monthly Budget" labels="Housing,Food,Transport,Savings" datasets='[{"label":"Budget","data":[1200,400,200,500]}]' height="350" currency="€" /]
+```
+
+**Portfolio Distribution (Pie Chart):**
+```markdown
+[chart:pie title="My Portfolio" labels="Stocks,Bonds,Real Estate,Cash" data="50000,20000,15000,5000" height="400" currency="€" /]
+```
+
+### **Full Documentation**
+
+See `CHART_SHORTCODES_GUIDE.md` for complete documentation with examples and best practices.
+
+---
+
 ## 📞 **Support**
 
 For issues or questions, contact the development team or check the codebase at:
 - API Route: `src/app/api/blog/create/route.ts`
 - Blog Functions: `src/lib/blog.ts`
+- Chart Shortcodes: `CHART_SHORTCODES_GUIDE.md`
 
 ---
 
 **Last Updated:** January 2025  
-**API Version:** 1.0
+**API Version:** 1.1 (Added Charts Support)
 

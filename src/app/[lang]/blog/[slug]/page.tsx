@@ -12,6 +12,7 @@ import { ReadingProgress } from '@/components/blog/ReadingProgress';
 import ShareButtonsClient from './ShareButtonsClient';
 import BookmarkButton from '@/components/blog/BookmarkButton';
 import BlogPostContent from '@/components/blog/BlogPostContent';
+import BlogContentWithCharts from '@/components/blog/BlogContentWithCharts';
 import type { Language } from '@/types/blog';
 import { AdBanner, AdResponsive } from '@/components/ads';
 
@@ -245,15 +246,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Ad Placement - Top of Article */}
       <AdBanner slot="2345678901" className="mb-8" />
 
-      {/* Content with copy attribution protection */}
+      {/* Content with copy attribution protection and chart support */}
       <BlogPostContent postUrl={`${siteUrl}/${validLang}/blog/${slug}`}>
-        <div className="prose prose-lg max-w-none">
-          <BlogEditor
-            content={content}
-            editable={false}
-            className="min-h-0"
-          />
-        </div>
+        <BlogContentWithCharts
+          content={content}
+          className="prose prose-lg max-w-none"
+        />
       </BlogPostContent>
 
       {/* Share Buttons & Bookmark */}
