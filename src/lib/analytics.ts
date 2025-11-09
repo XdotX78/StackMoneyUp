@@ -13,6 +13,7 @@ export interface PostAnalytics {
   title: {
     en: string;
     it: string;
+    es: string;
   };
   category: string;
   published: boolean;
