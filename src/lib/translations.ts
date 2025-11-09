@@ -508,12 +508,12 @@ export const translations: Record<Language, LanguageTranslations> = {
       closePreview: "Close Preview"
     },
     categories: {
-      'Investing': { en: 'Investing', it: 'Investimenti' },
-      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza' },
-      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese' },
-      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti' },
-      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più' },
-      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro' },
+      'Investing': { en: 'Investing', it: 'Investimenti', es: 'Inversiones' },
+      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza', es: 'Ahorro & Fondo Emergencia' },
+      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese', es: 'Presupuesto & Gastos' },
+      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti', es: 'Deudas & Préstamos' },
+      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più', es: 'Ingresos & Ganar Más' },
+      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro', es: 'Mentalidad del Dinero' },
     },
     passwordReset: {
       forgotPasswordTitle: "Reset Password",
@@ -781,12 +781,12 @@ export const translations: Record<Language, LanguageTranslations> = {
       closePreview: "Chiudi Anteprima"
     },
     categories: {
-      'Investing': { en: 'Investing', it: 'Investimenti' },
-      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza' },
-      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese' },
-      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti' },
-      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più' },
-      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro' },
+      'Investing': { en: 'Investing', it: 'Investimenti', es: 'Inversiones' },
+      'Saving & Emergency Fund': { en: 'Saving & Emergency Fund', it: 'Risparmio & Fondo Emergenza', es: 'Ahorro & Fondo Emergencia' },
+      'Budgeting & Spending': { en: 'Budgeting & Spending', it: 'Budget & Spese', es: 'Presupuesto & Gastos' },
+      'Debt & Loans': { en: 'Debt & Loans', it: 'Debiti & Prestiti', es: 'Deudas & Préstamos' },
+      'Income & Earning More': { en: 'Income & Earning More', it: 'Reddito & Guadagnare di Più', es: 'Ingresos & Ganar Más' },
+      'Money Mindset': { en: 'Money Mindset', it: 'Psicologia del Denaro', es: 'Mentalidad del Dinero' },
     },
     passwordReset: {
       forgotPasswordTitle: "Reimposta Password",
