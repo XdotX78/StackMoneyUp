@@ -55,8 +55,8 @@ export async function getAllPostsAnalytics(): Promise<PostAnalytics[]> {
     // Get all posts
     const { data: posts, error: postsError } = await supabase
       .from('blog_posts')
-      .select('id, slug, title_en, title_it, category, published, published_at, views, reads, shares')
-      .order('created_at', { ascending: false });
+      .select('id, slug, title_en, title_it, title_es, category, published, published_at, views, reads, shares')
+      .order('created_at', { ascending: false});
 
     if (postsError) {
       throw postsError;
