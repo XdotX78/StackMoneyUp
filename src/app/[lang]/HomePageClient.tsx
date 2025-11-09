@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getTranslations, isValidLanguage, getDefaultLanguage } from "@/lib/translations";
 import type { Language } from "@/types/blog";
 import Image from "next/image";
+import { AdBanner } from "@/components/ads";
 
 interface HomePageClientProps {
   params: Promise<{ lang: string }>;
@@ -214,6 +215,11 @@ export default function HomePageClient({ params }: HomePageClientProps) {
           </div>
         </div>
       </section>
+
+      {/* Ad Placement - Between Sections */}
+      <div className="bg-white dark:bg-gray-900 py-8">
+        <AdBanner slot="1234567890" />
+      </div>
 
       {/* Achieve Financial Section - BLACK BACKGROUND */}
       <section className="relative bg-black py-40 lg:py-52 text-white">

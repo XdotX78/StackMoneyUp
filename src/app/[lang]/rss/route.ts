@@ -16,7 +16,11 @@ export async function GET(request: Request) {
       .slice(0, 20) // Latest 20 posts
       .map(post => {
         const title = post.title[validLang] || post.title.en;
-        const excerpt = post.excerpt[validLang] || post.excerpt.en;
+        const fullExcerpt = post.excerpt[validLang] || post.excerpt.en;
+        // ✅ ANTI-SCRAPING: Limit excerpt to 200 characters to prevent full content scraping
+        const limitedExcerpt = fullExcerpt.length > 200 
+          ? fullExcerpt.substring(0, 200) + '...' 
+          : fullExcerpt;
         const postUrl = `${siteUrl}/${validLang}/blog/${post.slug}`;
         const pubDate = post.published_at 
           ? new Date(post.published_at).toUTCString()
@@ -37,7 +41,7 @@ export async function GET(request: Request) {
       <title>${escapeXml(title)}</title>
       <link>${postUrl}</link>
       <guid isPermaLink="true">${postUrl}</guid>
-      <description>${escapeXml(excerpt)}</description>
+      <description>${escapeXml(limitedExcerpt)}</description>
       <pubDate>${pubDate}</pubDate>
       ${post.cover_image ? `<enclosure url="${post.cover_image}" type="image/jpeg" />` : ''}
       <category>${escapeXml(post.category)}</category>

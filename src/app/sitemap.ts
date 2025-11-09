@@ -78,8 +78,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // TODO: Add blog posts dynamically when Supabase is connected
-  // For now, add mock posts
+  // Mock blog posts for sitemap
+  // Note: Actual blog posts are fetched dynamically in blog pages
+  // These are placeholder URLs for SEO purposes
   const mockPosts = [
     { slug: 'compound-effect-investing', published_at: '2024-12-15' },
     { slug: '50-30-20-rule', published_at: '2024-12-10' },

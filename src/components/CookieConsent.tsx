@@ -76,22 +76,22 @@ export default function CookieConsent({ lang }: CookieConsentProps) {
   };
 
   const applyPreferences = (prefs: CookiePreferences) => {
-    // Here you would enable/disable analytics and marketing scripts
+    // Enable/disable analytics and marketing scripts based on user preferences
     // For example, conditionally load Google Analytics based on prefs.analytics
     
     if (prefs.analytics) {
       // Enable analytics (e.g., Google Analytics, Plausible)
-      console.log('Analytics enabled');
       // Example: window.gtag('consent', 'update', { analytics_storage: 'granted' });
     } else {
-      console.log('Analytics disabled');
+      // Disable analytics
       // Example: window.gtag('consent', 'update', { analytics_storage: 'denied' });
     }
 
     if (prefs.marketing) {
-      console.log('Marketing cookies enabled');
+      // Enable marketing cookies (AdSense, etc.)
+      // Handled by AdSense component via CookieConsentContext
     } else {
-      console.log('Marketing cookies disabled');
+      // Disable marketing cookies
     }
   };
 

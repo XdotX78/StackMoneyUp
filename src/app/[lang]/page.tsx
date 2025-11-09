@@ -34,10 +34,10 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
       type: 'website',
       images: [
         {
-          url: `${siteUrl}/og-image.jpg`, // TODO: Add actual OG image
+          url: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200&h=630&fit=crop',
           width: 1200,
           height: 630,
-          alt: 'StackMoneyUp',
+          alt: 'StackMoneyUp - Personal Finance Growth',
         },
       ],
       locale: validLang === 'it' ? 'it_IT' : 'en_US',

@@ -67,7 +67,7 @@ export default function UsersPage({ params }: UsersPageProps) {
     };
 
     loadUsers();
-  }, [validLang, user, authLoading, roleLoading, isAdmin]);
+  }, [validLang, user, authLoading, roleLoading]); // Removed isAdmin - it's a function and causes infinite loop
 
   const handleRoleChange = async (userId: string, newRole: UserRole) => {
     try {

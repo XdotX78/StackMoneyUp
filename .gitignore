@@ -38,3 +38,7 @@ next-env.d.ts
 
 # vitest
 /coverage
+
+# Test environment files
+.env.test
+.env.test.local

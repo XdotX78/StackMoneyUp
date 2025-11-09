@@ -97,10 +97,23 @@ export default function Footer({ lang }: FooterProps) {
           
         </div>
 
-        {/* Bottom Copyright */}
-        <div className="border-t border-gray-800 pt-8">
-          <p className="text-center text-gray-500 text-sm">
-            {t.footer.copyright}
+        {/* Bottom Copyright & Legal */}
+        <div className="border-t border-gray-800 pt-8 space-y-3">
+          <p className="text-center text-gray-400 text-sm font-medium">
+            © {new Date().getFullYear()} StackMoneyUp. {lang === 'it' ? 'Tutti i diritti riservati.' : 'All rights reserved.'}
+          </p>
+          <p className="text-center text-gray-500 text-xs">
+            {lang === 'it' 
+              ? 'I contenuti non possono essere riprodotti senza permesso.'
+              : 'Content may not be reproduced without permission.'
+            }
+            {' '}
+            <a 
+              href={`/${lang}/terms`} 
+              className="underline hover:text-gray-300 transition-colors"
+            >
+              {lang === 'it' ? 'Termini di Servizio' : 'Terms of Service'}
+            </a>
           </p>
         </div>
       </div>

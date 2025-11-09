@@ -1,8 +1,42 @@
+# Robots.txt for StackMoneyUp
+# Last Updated: January 2025
+
+# Allow all well-behaved bots
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /maintenance
+Disallow: /*.json$
 
-# Disallow analytics dashboard
-Disallow: /dashboard.html
+# Crawl-delay for aggressive bots (prevent scraping)
+User-agent: SemrushBot
+Crawl-delay: 10
 
-# Sitemap location
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: BLEXBot
+Crawl-delay: 10
+
+# Block known scrapers
+User-agent: PetalBot
+Disallow: /
+
+User-agent: serpstatbot
+Disallow: /
+
+User-agent: SeznamBot
+Disallow: /
+
+# Sitemaps
 Sitemap: https://stackmoneyup.com/sitemap.xml
+Sitemap: https://stackmoneyup.com/en/rss?lang=en
+Sitemap: https://stackmoneyup.com/it/rss?lang=it

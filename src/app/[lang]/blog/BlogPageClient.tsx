@@ -6,6 +6,7 @@ import { BlogGrid } from '@/components/blog';
 import { getTranslations, isValidLanguage, getDefaultLanguage, getCategoryTranslation } from '@/lib/translations';
 import { getPublishedPosts, searchPosts } from '@/lib/blog';
 import type { BlogPostSummary, Language } from '@/types/blog';
+import { AdBanner } from '@/components/ads';
 
 interface BlogPageClientProps {
   params: Promise<{ lang: string }>;
@@ -232,6 +233,9 @@ export default function BlogPageClient({ params }: BlogPageClientProps) {
           }
         </div>
       </div>
+
+      {/* Ad Placement - Before Blog Grid */}
+      <AdBanner slot="4567890123" className="mb-12" />
 
       {/* Blog Grid */}
       {loading ? (

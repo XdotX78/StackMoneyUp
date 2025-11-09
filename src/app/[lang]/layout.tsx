@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { isValidLanguage, getDefaultLanguage } from "@/lib/translations";
 import type { Language } from "@/types/blog";
 import Header from "@/components/layout/Header";
@@ -7,6 +8,7 @@ import CookieConsent from "@/components/CookieConsent";
 import { Toaster } from "react-hot-toast";
 import AuthProviderWrapper from "@/components/providers/AuthProviderWrapper";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 
 interface LanguageLayoutProps {
   children: React.ReactNode;
@@ -67,50 +69,64 @@ export default async function LanguageLayout({
 }: LanguageLayoutProps) {
   const { lang } = await params;
   const validLang = isValidLanguage(lang) ? lang as Language : getDefaultLanguage();
+  const adsenseEnabled = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === 'true';
+  const adsensePublisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
   
   return (
     <ErrorBoundary>
-      <AuthProviderWrapper>
-        <Header lang={validLang} />
-        <main className="pt-20">
-          {children}
-        </main>
-        <Footer lang={validLang} />
-        <CookieConsent lang={validLang} />
-        <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          className: 'dark:bg-gray-800 dark:text-white dark:border-gray-700',
-          style: {
-            background: 'var(--background)',
-            color: 'var(--foreground)',
-            border: '2px solid var(--border)',
-            borderRadius: '0.5rem',
-            padding: '16px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-          },
-          success: {
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
-            },
+      <CookieConsentProvider>
+        <AuthProviderWrapper>
+          {/* Google AdSense Script - Only loads if enabled */}
+          {adsenseEnabled && adsensePublisherId && (
+            <Script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}`}
+              crossOrigin="anonymous"
+              strategy="afterInteractive"
+            />
+          )}
+          
+          <Header lang={validLang} />
+          <main className="pt-20">
+            {children}
+          </main>
+          <Footer lang={validLang} />
+          <CookieConsent lang={validLang} />
+          <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            className: 'dark:bg-gray-800 dark:text-white dark:border-gray-700',
             style: {
-              border: '2px solid #10b981',
+              background: 'var(--background)',
+              color: 'var(--foreground)',
+              border: '2px solid var(--border)',
+              borderRadius: '0.5rem',
+              padding: '16px',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
+            success: {
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
+              style: {
+                border: '2px solid #10b981',
+              },
             },
-            style: {
-              border: '2px solid #ef4444',
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+              style: {
+                border: '2px solid #ef4444',
+              },
             },
-          },
-        }}
-      />
-      </AuthProviderWrapper>
+          }}
+        />
+        </AuthProviderWrapper>
+      </CookieConsentProvider>
     </ErrorBoundary>
   );
 }

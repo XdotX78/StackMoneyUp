@@ -11,7 +11,9 @@ import CommentsSection from '@/components/blog/CommentsSection';
 import { ReadingProgress } from '@/components/blog/ReadingProgress';
 import ShareButtonsClient from './ShareButtonsClient';
 import BookmarkButton from '@/components/blog/BookmarkButton';
+import BlogPostContent from '@/components/blog/BlogPostContent';
 import type { Language } from '@/types/blog';
+import { AdBanner, AdResponsive } from '@/components/ads';
 
 interface BlogPostPageProps {
   params: Promise<{ lang: string; slug: string }>;
@@ -53,11 +55,15 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
           width: 1200,
           height: 630,
           alt: title,
+          type: 'image/jpeg', // ✅ ADDED: Specify image type
         },
       ],
       type: 'article',
       publishedTime: post.published_at,
+      modifiedTime: post.updated_at, // ✅ ADDED: Last modified time
       authors: ['StackMoneyUp'],
+      section: post.category, // ✅ ADDED: Article section/category
+      tags: post.tags, // ✅ ADDED: Article tags
       locale: validLang === 'it' ? 'it_IT' : 'en_US',
       alternateLocale: validLang === 'it' ? 'en_US' : 'it_IT',
     },
@@ -102,30 +108,76 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     ? formatDate(post.published_at, validLang === 'it' ? 'it-IT' : 'en-US')
     : formatDate(new Date(), validLang === 'it' ? 'it-IT' : 'en-US');
 
-  // Generate JSON-LD structured data
+  // Generate JSON-LD structured data with enhanced SEO
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com';
+  const contentText = typeof content === 'string' ? content : JSON.stringify(content);
+  const wordCount = contentText.split(/\s+/).filter(word => word.length > 0).length;
+  
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: title,
     description: excerpt,
-    image: post.cover_image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com'}/og-image.jpg`,
+    image: {
+      '@type': 'ImageObject',
+      url: post.cover_image || `${siteUrl}/og-image.jpg`,
+      width: 1200,
+      height: 630,
+    },
     datePublished: post.published_at || post.created_at,
     dateModified: post.updated_at,
     author: {
       '@type': 'Organization',
       name: 'StackMoneyUp',
-      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com',
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`,
+      },
     },
     publisher: {
       '@type': 'Organization',
       name: 'StackMoneyUp',
-      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com',
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`,
+        width: 600,
+        height: 60,
+      },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${process.env.NEXT_PUBLIC_SITE_URL || 'https://stackmoneyup.com'}/${validLang}/blog/${slug}`,
+      '@id': `${siteUrl}/${validLang}/blog/${slug}`,
     },
     keywords: post.tags?.join(', ') || post.category,
+    wordCount: wordCount, // ✅ ADDED: Word count for SEO
+    inLanguage: validLang === 'it' ? 'it-IT' : 'en-US', // ✅ ADDED: Language specification
+    articleBody: contentText.substring(0, 500), // ✅ ADDED: First 500 chars of content
+    // ✅ ADDED: Breadcrumb navigation for better SEO
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: validLang === 'it' ? 'Home' : 'Home',
+          item: `${siteUrl}/${validLang}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Blog',
+          item: `${siteUrl}/${validLang}/blog`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: title,
+          item: `${siteUrl}/${validLang}/blog/${slug}`,
+        },
+      ],
+    },
   };
 
   return (
@@ -190,14 +242,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         )}
       </header>
 
-      {/* Content */}
-      <div className="prose prose-lg max-w-none">
-        <BlogEditor
-          content={content}
-          editable={false}
-          className="min-h-0"
-        />
-      </div>
+      {/* Ad Placement - Top of Article */}
+      <AdBanner slot="2345678901" className="mb-8" />
+
+      {/* Content with copy attribution protection */}
+      <BlogPostContent postUrl={`${siteUrl}/${validLang}/blog/${slug}`}>
+        <div className="prose prose-lg max-w-none">
+          <BlogEditor
+            content={content}
+            editable={false}
+            className="min-h-0"
+          />
+        </div>
+      </BlogPostContent>
 
       {/* Share Buttons & Bookmark */}
       <div className="mt-12 pt-8 border-t border-gray-200">
@@ -214,6 +271,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           />
         </div>
       </div>
+
+      {/* Ad Placement - Before Comments */}
+      <AdResponsive slot="3456789012" className="my-12" />
 
       {/* Comments Section */}
       <CommentsSection postId={post.id} postSlug={slug} lang={validLang} />

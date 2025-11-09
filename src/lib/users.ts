@@ -5,16 +5,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { UserRole } from '@/lib/auth';
-
-export interface UserProfile {
-  id: string;
-  email: string;
-  name: string | null;
-  role: UserRole;
-  avatar_url: string | null;
-  created_at: string;
-  last_sign_in_at: string | null;
-}
+import type { UserProfile } from '@/types/user';
+import { logger } from '@/lib/logger';
 
 /**
  * Fetch all registered users with their profiles
@@ -29,11 +21,11 @@ export async function getAllUsers(): Promise<UserProfile[]> {
   // First get all user profiles
   const { data: profiles, error: profilesError } = await supabase
     .from('profiles')
-    .select('id, name, role, avatar_url, created_at')
+    .select('id, full_name, role, avatar_url, created_at')
     .order('created_at', { ascending: false });
 
   if (profilesError) {
-    console.error('Error fetching profiles:', profilesError);
+    logger.error('Error fetching profiles', profilesError, { context: 'getAllUsers' });
     throw new Error('Failed to fetch users');
   }
 
@@ -41,7 +33,7 @@ export async function getAllUsers(): Promise<UserProfile[]> {
   const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
 
   if (usersError) {
-    console.error('Error fetching auth users:', usersError);
+    logger.error('Error fetching auth users', usersError, { context: 'getAllUsers' });
     throw new Error('Failed to fetch user emails');
   }
 
@@ -51,7 +43,7 @@ export async function getAllUsers(): Promise<UserProfile[]> {
     return {
       id: profile.id,
       email: authUser?.email || 'N/A',
-      name: profile.name,
+      name: profile.full_name, // Maps full_name from database to name in UserProfile
       role: profile.role as UserRole,
       avatar_url: profile.avatar_url,
       created_at: profile.created_at,
@@ -78,7 +70,7 @@ export async function updateUserRole(userId: string, newRole: UserRole): Promise
     .eq('id', userId);
 
   if (error) {
-    console.error('Error updating user role:', error);
+    logger.error('Error updating user role', error, { context: 'updateUserRole', userId, newRole });
     throw new Error('Failed to update user role');
   }
 }
@@ -103,7 +95,7 @@ export async function getUserStats(): Promise<{
     .select('role');
 
   if (error) {
-    console.error('Error fetching user stats:', error);
+    logger.error('Error fetching user stats', error, { context: 'getUserStats' });
     throw new Error('Failed to fetch user statistics');
   }
 

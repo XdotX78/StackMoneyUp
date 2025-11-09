@@ -7,23 +7,19 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { UserRole } from '@/lib/auth';
-
-export interface UserProfile {
-  id: string;
-  email: string;
-  name: string | null;
-  role: UserRole;
-  avatar_url: string | null;
-  created_at: string;
-  last_sign_in_at: string | null;
-  email_confirmed: boolean;
-}
+import type { UserProfile } from '@/types/user';
+import { logger } from '@/lib/logger';
 
 /**
  * Fetch all registered users with their profiles
  * Admin only - uses service role
  */
 export async function getAllUsersAction(): Promise<UserProfile[]> {
+  // Check if service role key is available
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured. Please add it to your .env.local file. Get it from: https://app.supabase.com/project/qhxettplmhkwmmcgrcef/settings/api');
+  }
+
   // Create admin client with service role
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -39,19 +35,19 @@ export async function getAllUsersAction(): Promise<UserProfile[]> {
   // First get all user profiles
   const { data: profiles, error: profilesError } = await supabase
     .from('profiles')
-    .select('id, name, role, avatar_url, created_at')
+    .select('id, full_name, role, avatar_url, created_at')
     .order('created_at', { ascending: false });
 
   if (profilesError) {
-    console.error('Error fetching profiles:', profilesError);
-    throw new Error('Failed to fetch users');
+    logger.error('Error fetching profiles', profilesError, { context: 'getAllUsersAction' });
+    throw new Error(`Failed to fetch users: ${profilesError.message || profilesError.code || 'Unknown error'}`);
   }
 
   // Get auth users to retrieve emails and confirmation status
   const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
 
   if (usersError) {
-    console.error('Error fetching auth users:', usersError);
+    logger.error('Error fetching auth users', usersError, { context: 'getAllUsersAction' });
     throw new Error('Failed to fetch user details');
   }
 
@@ -61,7 +57,7 @@ export async function getAllUsersAction(): Promise<UserProfile[]> {
     return {
       id: profile.id,
       email: authUser?.email || 'N/A',
-      name: profile.name,
+      name: profile.full_name, // Maps full_name from database to name in UserProfile
       role: profile.role as UserRole,
       avatar_url: profile.avatar_url,
       created_at: profile.created_at,
@@ -78,6 +74,11 @@ export async function getAllUsersAction(): Promise<UserProfile[]> {
  * Admin only - uses service role
  */
 export async function updateUserRoleAction(userId: string, newRole: UserRole): Promise<void> {
+  // Check if service role key is available
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured. Please add it to your .env.local file.');
+  }
+
   // Create admin client with service role
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -96,7 +97,7 @@ export async function updateUserRoleAction(userId: string, newRole: UserRole): P
     .eq('id', userId);
 
   if (error) {
-    console.error('Error updating user role:', error);
+    logger.error('Error updating user role', error, { context: 'updateUserRoleAction', userId, newRole });
     throw new Error('Failed to update user role');
   }
 }
@@ -111,6 +112,11 @@ export async function getUserStatsAction(): Promise<{
   editors: number;
   users: number;
 }> {
+  // Check if service role key is available
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured. Please add it to your .env.local file.');
+  }
+
   // Create admin client with service role
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -128,7 +134,7 @@ export async function getUserStatsAction(): Promise<{
     .select('role');
 
   if (error) {
-    console.error('Error fetching user stats:', error);
+    logger.error('Error fetching user stats', error, { context: 'getUserStatsAction' });
     throw new Error('Failed to fetch user statistics');
   }
 
