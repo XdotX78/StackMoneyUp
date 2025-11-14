@@ -48,24 +48,33 @@ def create_blog_post(
     """
     Create a blog post on StackMoneyUp platform.
     
+    IMPORTANT: This tool requires ALL 12 parameters below. Do not skip any field!
     All posts are saved as DRAFTS and require manual review before publishing.
     
-    Args:
-        title_en: English title (required)
-        title_it: Italian title (required)
-        title_es: Spanish title (required)
-        excerpt_en: English excerpt, 120-160 characters (required)
-        excerpt_it: Italian excerpt, 120-160 characters (required)
-        excerpt_es: Spanish excerpt, 120-160 characters (required)
-        content_en: English content in Markdown format. Can include chart shortcodes:
-                    [chart:line ...], [chart:bar ...], [chart:pie ...] (required)
-        content_it: Italian content in Markdown format (required)
-        content_es: Spanish content in Markdown format (required)
-        category: One of: Investing, Saving & Emergency Fund, Budgeting & Spending,
-                  Debt & Loans, Income & Earning More, Money Mindset (required)
-        tags: List of tag strings, e.g. ["investing", "compound-interest"] (required)
-        cover_image: Optional cover image URL
-        
+    REQUIRED PARAMETERS (all must be provided):
+    1. title_en: English title (string, required)
+    2. title_it: Italian title (string, required)
+    3. title_es: Spanish title (string, required)
+    4. excerpt_en: English excerpt, 120-160 characters (string, required)
+    5. excerpt_it: Italian excerpt, 120-160 characters (string, required)
+    6. excerpt_es: Spanish excerpt, 120-160 characters (string, required)
+    7. content_en: English content in Markdown format (string, required)
+                   Can include chart shortcodes: [chart:line ...], [chart:bar ...], [chart:pie ...]
+    8. content_it: Italian content in Markdown format (string, required)
+    9. content_es: Spanish content in Markdown format (string, required)
+    10. category: Must be exactly one of these (string, required):
+                 - "Investing"
+                 - "Saving & Emergency Fund"
+                 - "Budgeting & Spending"
+                 - "Debt & Loans"
+                 - "Income & Earning More"
+                 - "Money Mindset"
+    11. tags: List of tag strings, e.g. ["investing", "compound-interest"] (list, required)
+    12. cover_image: Optional cover image URL (string, optional)
+    
+    When calling this tool, you MUST provide all 12 parameters above.
+    Extract them from the task description and ensure none are missing.
+    
     Returns:
         Dictionary with:
         - success: bool
@@ -74,7 +83,7 @@ def create_blog_post(
         - next_steps: list of strings
         
     Raises:
-        Exception: If API call fails or returns error
+        Exception: If any required parameter is missing or API call fails
         
     Example:
         >>> result = create_blog_post(
@@ -98,6 +107,37 @@ def create_blog_post(
             "STACKMONEYUP_API_TOKEN environment variable not set. "
             "Set it with: export STACKMONEYUP_API_TOKEN='your-token-here'"
         )
+    
+    # Validate all required fields are provided
+    required_fields = {
+        'title_en': title_en,
+        'title_it': title_it,
+        'title_es': title_es,
+        'excerpt_en': excerpt_en,
+        'excerpt_it': excerpt_it,
+        'excerpt_es': excerpt_es,
+        'content_en': content_en,
+        'content_it': content_it,
+        'content_es': content_es,
+        'category': category,
+        'tags': tags
+    }
+    
+    missing_fields = [field for field, value in required_fields.items() 
+                     if not value or (isinstance(value, str) and not value.strip())]
+    
+    if missing_fields:
+        raise ValueError(
+            f"Missing required fields: {', '.join(missing_fields)}. "
+            f"All 12 parameters must be provided."
+        )
+    
+    # Validate tags is a list
+    if not isinstance(tags, list):
+        raise ValueError(f"tags must be a list, got {type(tags).__name__}")
+    
+    if not tags:
+        raise ValueError("tags cannot be empty. Provide at least one tag.")
     
     # Validate category
     valid_categories = [
