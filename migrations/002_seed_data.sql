@@ -9,19 +9,58 @@
 -- Seed Tags
 -- ============================================
 
--- Insert sample tags (only if they don't exist)
-INSERT INTO public.tags (slug, name_en, name_it, description_en, description_it)
+-- Insert sample tags with all three languages (only if they don't exist)
+INSERT INTO public.tags (slug, name_en, name_it, name_es, description_en, description_it, description_es)
 VALUES
-  ('investing', 'Investing', 'Investimenti', 'Articles about investing strategies', 'Articoli su strategie di investimento'),
-  ('budgeting', 'Budgeting', 'Budget', 'Budgeting and money management tips', 'Consigli su budget e gestione del denaro'),
-  ('saving', 'Saving', 'Risparmio', 'Ways to save money effectively', 'Modi per risparmiare denaro efficacemente'),
-  ('debt', 'Debt', 'Debito', 'Debt management and payoff strategies', 'Gestione del debito e strategie di estinzione'),
-  ('personal-finance', 'Personal Finance', 'Finanza Personale', 'General personal finance topics', 'Argomenti generali di finanza personale'),
-  ('compound-interest', 'Compound Interest', 'Interesse Composto', 'The power of compound interest', 'Il potere dell''interesse composto'),
-  ('emergency-fund', 'Emergency Fund', 'Fondo di Emergenza', 'Building and maintaining emergency funds', 'Costruire e mantenere fondi di emergenza'),
-  ('side-hustle', 'Side Hustle', 'Lavoro Secondario', 'Earning extra income', 'Guadagnare reddito extra'),
-  ('mindset', 'Mindset', 'Mentalità', 'Financial mindset and psychology', 'Mentalità e psicologia finanziaria'),
-  ('long-term', 'Long Term', 'Lungo Termine', 'Long-term financial planning', 'Pianificazione finanziaria a lungo termine')
+  ('investing', 'Investing', 'Investimenti', 'Inversiones',
+   'Articles about investing strategies',
+   'Articoli su strategie di investimento',
+   'Artículos sobre estrategias de inversión'),
+
+  ('budgeting', 'Budgeting', 'Budget', 'Presupuesto',
+   'Budgeting and money management tips',
+   'Consigli su budget e gestione del denaro',
+   'Consejos de presupuesto y gestión del dinero'),
+
+  ('saving', 'Saving', 'Risparmio', 'Ahorro',
+   'Ways to save money effectively',
+   'Modi per risparmiare denaro efficacemente',
+   'Formas de ahorrar dinero de manera efectiva'),
+
+  ('debt', 'Debt', 'Debito', 'Deuda',
+   'Debt management and payoff strategies',
+   'Gestione del debito e strategie di estinzione',
+   'Gestión de deudas y estrategias de pago'),
+
+  ('personal-finance', 'Personal Finance', 'Finanza Personale', 'Finanzas Personales',
+   'General personal finance topics',
+   'Argomenti generali di finanza personale',
+   'Temas generales de finanzas personales'),
+
+  ('compound-interest', 'Compound Interest', 'Interesse Composto', 'Interés Compuesto',
+   'The power of compound interest',
+   'Il potere dell''interesse composto',
+   'El poder del interés compuesto'),
+
+  ('emergency-fund', 'Emergency Fund', 'Fondo di Emergenza', 'Fondo de Emergencia',
+   'Building and maintaining emergency funds',
+   'Costruire e mantenere fondi di emergenza',
+   'Construir y mantener fondos de emergencia'),
+
+  ('side-hustle', 'Side Hustle', 'Lavoro Secondario', 'Trabajo Secundario',
+   'Earning extra income',
+   'Guadagnare reddito extra',
+   'Ganar ingresos adicionales'),
+
+  ('mindset', 'Mindset', 'Mentalità', 'Mentalidad',
+   'Financial mindset and psychology',
+   'Mentalità e psicologia finanziaria',
+   'Mentalidad y psicología financiera'),
+
+  ('long-term', 'Long Term', 'Lungo Termine', 'Largo Plazo',
+   'Long-term financial planning',
+   'Pianificazione finanziaria a lungo termine',
+   'Planificación financiera a largo plazo')
 ON CONFLICT (slug) DO NOTHING;
 
 -- ============================================
