@@ -121,6 +121,9 @@ async function ensureTagsExist(tagSlugs: string[]): Promise<void> {
       name_it: slug.split('-').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1)
       ).join(' '),
+      name_es: slug.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' '),
     }))
 
     const { error } = await supabase
