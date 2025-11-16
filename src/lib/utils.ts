@@ -55,6 +55,17 @@ export function generateSlug(text: string): string {
 }
 
 /**
+ * Validate slug format (URL-friendly)
+ */
+export function isValidSlug(slug: string): boolean {
+  if (!slug || slug.trim().length === 0) return false;
+  // Slug should only contain lowercase letters, numbers, and hyphens
+  // Should not start or end with hyphen
+  const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  return slugRegex.test(slug);
+}
+
+/**
  * Truncate text to specified length
  */
 export function truncateText(text: string, maxLength: number): string {

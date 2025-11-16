@@ -5,8 +5,8 @@ import BlogEditor from './BlogEditor';
 import BlogPostPreview from './BlogPostPreview';
 import SEOPreview from './SEOPreview';
 import { Tabs, Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/ui';
-import { Input, Textarea, Button } from '@/components/ui';
-import { generateSlug, formatDate } from '@/lib/utils';
+import { Input, Select, Textarea, Button } from '@/components/ui';
+import { generateSlug, formatDate, isValidSlug } from '@/lib/utils';
 import { getTranslations } from '@/lib/translations';
 import { convertToTipTapJSON } from '@/lib/contentConverter';
 import type { BlogPost, Language } from '@/types/blog';
@@ -232,6 +232,7 @@ export default function PostForm({
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
+    // Validate titles (all 3 languages required)
     if (!formData.title_en.trim()) {
       newErrors.title_en = 'English title is required';
     }
@@ -241,9 +242,15 @@ export default function PostForm({
     if (!formData.title_es.trim()) {
       newErrors.title_es = 'Spanish title is required';
     }
+
+    // Validate slug (required and must be URL-friendly)
     if (!formData.slug.trim()) {
       newErrors.slug = 'Slug is required';
+    } else if (!isValidSlug(formData.slug)) {
+      newErrors.slug = 'Slug must be URL-friendly (lowercase letters, numbers, and hyphens only)';
     }
+
+    // Validate excerpts (all 3 languages required)
     if (!formData.excerpt_en.trim()) {
       newErrors.excerpt_en = 'English excerpt is required';
     }
@@ -253,17 +260,42 @@ export default function PostForm({
     if (!formData.excerpt_es.trim()) {
       newErrors.excerpt_es = 'Spanish excerpt is required';
     }
-    if (!formData.content_en) {
+
+    // Validate content (all 3 languages required)
+    if (!formData.content_en || formData.content_en.trim().length === 0) {
       newErrors.content_en = 'English content is required';
     }
-    if (!formData.content_it) {
+    if (!formData.content_it || formData.content_it.trim().length === 0) {
       newErrors.content_it = 'Italian content is required';
     }
-    if (!formData.content_es) {
+    if (!formData.content_es || formData.content_es.trim().length === 0) {
       newErrors.content_es = 'Spanish content is required';
     }
+
+    // Validate category (must be one of the predefined categories)
+    const validCategories = [
+      'Investing',
+      'Saving & Emergency Fund',
+      'Budgeting & Spending',
+      'Debt & Loans',
+      'Income & Earning More',
+      'Money Mindset'
+    ];
     if (!formData.category.trim()) {
       newErrors.category = 'Category is required';
+    } else if (!validCategories.includes(formData.category)) {
+      newErrors.category = `Category must be one of: ${validCategories.join(', ')}`;
+    }
+
+    // Validate tags (at least one tag required)
+    if (!formData.tags || formData.tags.length === 0) {
+      newErrors.tags = 'At least one tag is required';
+    } else {
+      // Validate each tag is a valid slug format
+      const invalidTags = formData.tags.filter(tag => !isValidSlug(tag));
+      if (invalidTags.length > 0) {
+        newErrors.tags = `Invalid tag format: ${invalidTags.join(', ')}. Tags must be URL-friendly (lowercase letters, numbers, and hyphens only)`;
+      }
     }
 
     setErrors(newErrors);
@@ -398,17 +430,43 @@ export default function PostForm({
           <Input
             label={t.postForm.slug}
             value={formData.slug}
-            onChange={(e) => handleInputChange('slug', e.target.value)}
+            onChange={(e) => {
+              // Auto-format slug as user types (lowercase, replace spaces with hyphens)
+              const formatted = generateSlug(e.target.value);
+              handleInputChange('slug', formatted);
+            }}
             error={errors.slug}
-            placeholder="URL-friendly identifier"
+            placeholder="url-friendly-slug"
             helperText={t.postForm.slugHelper}
           />
-          <Input
+          <Select
             label={t.postForm.category}
             value={formData.category}
             onChange={(e) => handleInputChange('category', e.target.value)}
             error={errors.category}
-            placeholder={t.postForm.categoryPlaceholder}
+            options={[
+              { 
+                value: '', 
+                label: lang === 'it' 
+                  ? 'Seleziona una categoria' 
+                  : lang === 'es' 
+                    ? 'Selecciona una categoría' 
+                    : 'Select a category' 
+              },
+              { value: 'Investing', label: t.categories['Investing'][lang] || 'Investing' },
+              { value: 'Saving & Emergency Fund', label: t.categories['Saving & Emergency Fund'][lang] || 'Saving & Emergency Fund' },
+              { value: 'Budgeting & Spending', label: t.categories['Budgeting & Spending'][lang] || 'Budgeting & Spending' },
+              { value: 'Debt & Loans', label: t.categories['Debt & Loans'][lang] || 'Debt & Loans' },
+              { value: 'Income & Earning More', label: t.categories['Income & Earning More'][lang] || 'Income & Earning More' },
+              { value: 'Money Mindset', label: t.categories['Money Mindset'][lang] || 'Money Mindset' },
+            ]}
+            helperText={
+              lang === 'it' 
+                ? 'Seleziona una categoria dall\'elenco' 
+                : lang === 'es'
+                  ? 'Selecciona una categoría de la lista'
+                  : 'Select a category from the list'
+            }
           />
         </div>
 
@@ -420,20 +478,41 @@ export default function PostForm({
           helperText={t.postForm.coverImageHelper}
         />
 
-        {/* Tags - Simple input for now, can be enhanced later */}
-        <Input
-          label={t.postForm.tags}
-          value={formData.tags.join(', ')}
-          onChange={(e) => {
-            const tags = e.target.value
-              .split(',')
-              .map((tag) => tag.trim())
-              .filter((tag) => tag.length > 0);
-            handleInputChange('tags', tags);
-          }}
-          placeholder={t.postForm.tagsPlaceholder}
-          helperText={t.postForm.tagsHelper}
-        />
+        {/* Tags - Improved input with validation */}
+        <div>
+          <Input
+            label={t.postForm.tags}
+            value={formData.tags.join(', ')}
+            onChange={(e) => {
+              const tags = e.target.value
+                .split(',')
+                .map((tag) => generateSlug(tag.trim())) // Auto-format tags as slugs
+                .filter((tag) => tag.length > 0);
+              handleInputChange('tags', tags);
+            }}
+            error={errors.tags}
+            placeholder={t.postForm.tagsPlaceholder}
+            helperText={
+              lang === 'it' 
+                ? 'Separare i tag con virgole. I tag verranno automaticamente formattati come slug (es: investing, budgeting)'
+                : lang === 'es'
+                  ? 'Separa las etiquetas con comas. Las etiquetas se formatearán automáticamente como slugs (ej: investing, budgeting)'
+                  : 'Separate tags with commas. Tags will be automatically formatted as slugs (e.g., investing, budgeting)'
+            }
+          />
+          {formData.tags.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {formData.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-2 py-1 rounded-md bg-emerald-900/30 text-emerald-300 text-sm border border-emerald-700/50"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Dual Editors with Tabs */}
