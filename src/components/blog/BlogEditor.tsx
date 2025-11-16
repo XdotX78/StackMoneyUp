@@ -186,15 +186,15 @@ export default function BlogEditor({
   const characterCount = editor.storage.characterCount?.characters() || 0;
 
   return (
-    <div className={`border border-gray-300 rounded-lg bg-white ${className}`}>
+    <div className={`border border-gray-300 dark:border-gray-700 rounded-lg ${className}`} style={{ backgroundColor: 'var(--secondary)', color: 'var(--secondary-foreground)' }}>
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
-      <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 bg-gray-50 rounded-b-lg text-sm text-gray-500">
+      <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 dark:border-gray-700 rounded-b-lg text-sm" style={{ backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)', borderColor: 'var(--border)' }}>
         <div className="flex gap-4">
           <span>{wordCount} words</span>
           <span>{characterCount} characters</span>
         </div>
-        <div className="text-xs text-gray-400">
+        <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
           {editable ? 'Press / for commands' : 'Preview mode'}
         </div>
       </div>

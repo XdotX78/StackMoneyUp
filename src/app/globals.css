@@ -184,6 +184,24 @@ footer h3 {
 /* TipTap Editor Styles */
 .ProseMirror {
   outline: none;
+  color: var(--foreground); /* Use theme foreground color */
+}
+
+.ProseMirror p,
+.ProseMirror li,
+.ProseMirror span {
+  color: var(--foreground); /* Use theme foreground color */
+}
+
+/* Dark mode support for editor */
+.dark .ProseMirror {
+  color: var(--foreground); /* Black text in dark mode (white background) */
+}
+
+.dark .ProseMirror p,
+.dark .ProseMirror li,
+.dark .ProseMirror span {
+  color: var(--foreground); /* Black text in dark mode */
 }
 
 .ProseMirror p {
@@ -191,7 +209,7 @@ footer h3 {
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-  color: #adb5bd;
+  color: #6b7280 !important; /* Gray placeholder text */
   content: attr(data-placeholder);
   float: left;
   height: 0;
