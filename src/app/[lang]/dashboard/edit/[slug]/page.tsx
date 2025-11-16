@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { PostForm, PostFormData } from '@/components/blog';
@@ -23,8 +23,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [postLoading, setPostLoading] = useState(true);
   const [post, setPost] = useState<BlogPost | null>(null);
   const { user, loading: authLoading } = useAuthContext();
-  const { canManagePosts, loading: roleLoading } = useRole();
+  const { user: userWithRole, loading: roleLoading } = useRole();
   const router = useRouter();
+  const hasLoadedRef = useRef(false);
   // const t = getTranslations(lang); // Reserved for future use
 
   useEffect(() => {
@@ -39,13 +40,15 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     }
 
     // Check if user has editor/admin role (only after role is loaded)
-    if (!canManagePosts()) {
+    // Use userWithRole instead of calling canManagePosts() to avoid function recreation issues
+    if (!userWithRole || (userWithRole.role !== 'editor' && userWithRole.role !== 'admin')) {
       router.push(`/${validLang}/dashboard`);
       return;
     }
 
-    // Fetch post from Supabase
-    if (user && !authLoading) {
+    // Fetch post from Supabase (only fetch once when user and role are ready)
+    if (!hasLoadedRef.current && user && userWithRole) {
+      hasLoadedRef.current = true;
       const loadData = async () => {
         try {
           setPostLoading(true);
@@ -66,7 +69,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       };
       loadData();
     }
-  }, [validLang, slug, router, user, authLoading, roleLoading, canManagePosts]);
+  }, [validLang, slug, router, user, userWithRole, authLoading, roleLoading]);
 
   const handleSubmit = async (data: PostFormData) => {
     if (!post) return;

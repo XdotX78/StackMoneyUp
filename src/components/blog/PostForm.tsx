@@ -8,6 +8,7 @@ import { Tabs, Modal, ModalHeader, ModalBody, ModalFooter } from '@/components/u
 import { Input, Textarea, Button } from '@/components/ui';
 import { generateSlug, formatDate } from '@/lib/utils';
 import { getTranslations } from '@/lib/translations';
+import { convertToTipTapJSON } from '@/lib/contentConverter';
 import type { BlogPost, Language } from '@/types/blog';
 
 interface PostFormProps {
@@ -46,6 +47,14 @@ export default function PostForm({
   lang = 'en',
 }: PostFormProps) {
   const t = getTranslations(lang);
+  
+  // Helper function to normalize content (convert markdown to TipTap JSON if needed)
+  const normalizeContent = (content: string | undefined): string => {
+    if (!content) return '';
+    // Convert markdown/HTML to TipTap JSON format
+    return convertToTipTapJSON(content);
+  };
+  
   const [formData, setFormData] = useState<PostFormData>({
     title_en: initialData?.title?.en || '',
     title_it: initialData?.title?.it || '',
@@ -54,9 +63,9 @@ export default function PostForm({
     excerpt_en: initialData?.excerpt?.en || '',
     excerpt_it: initialData?.excerpt?.it || '',
     excerpt_es: initialData?.excerpt?.es || '',
-    content_en: initialData?.content?.en || '',
-    content_it: initialData?.content?.it || '',
-    content_es: initialData?.content?.es || '',
+    content_en: normalizeContent(initialData?.content?.en),
+    content_it: normalizeContent(initialData?.content?.it),
+    content_es: normalizeContent(initialData?.content?.es),
     category: initialData?.category || '',
     tags: initialData?.tags || [],
     cover_image: initialData?.cover_image || '',
@@ -166,9 +175,9 @@ export default function PostForm({
                     excerpt_en: latestDraft.data.excerpt_en || '',
                     excerpt_it: latestDraft.data.excerpt_it || '',
                     excerpt_es: latestDraft.data.excerpt_es || '',
-                    content_en: latestDraft.data.content_en || '',
-                    content_it: latestDraft.data.content_it || '',
-                    content_es: latestDraft.data.content_es || '',
+                    content_en: normalizeContent(latestDraft.data.content_en),
+                    content_it: normalizeContent(latestDraft.data.content_it),
+                    content_es: normalizeContent(latestDraft.data.content_es),
                     category: latestDraft.data.category || '',
                     tags: latestDraft.data.tags || [],
                     cover_image: latestDraft.data.cover_image || '',

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createPost } from '@/lib/blog';
 import { getCurrentUser } from '@/lib/auth';
 import { generateSlug } from '@/lib/utils';
+import { convertToTipTapJSON } from '@/lib/contentConverter';
 
 /**
  * API Endpoint for AI Agent to Create Blog Posts
@@ -161,7 +162,13 @@ export async function POST(request: NextRequest) {
     // 7. Generate slug from English title
     const slug = generateSlug(body.title_en.trim());
 
-    // 8. Create Post (ALWAYS as DRAFT)
+    // 8. Convert content to TipTap JSON format (if not already JSON)
+    // This ensures all content is stored in consistent JSON format
+    const content_en = convertToTipTapJSON(body.content_en.trim());
+    const content_it = convertToTipTapJSON(body.content_it.trim());
+    const content_es = convertToTipTapJSON(body.content_es.trim());
+
+    // 9. Create Post (ALWAYS as DRAFT)
     const newPost = await createPost({
       slug: slug,
       title_en: body.title_en.trim(),
@@ -170,9 +177,9 @@ export async function POST(request: NextRequest) {
       excerpt_en: body.excerpt_en.trim(),
       excerpt_it: body.excerpt_it.trim(),
       excerpt_es: body.excerpt_es.trim(),
-      content_en: body.content_en.trim(),
-      content_it: body.content_it.trim(),
-      content_es: body.content_es.trim(),
+      content_en: content_en,
+      content_it: content_it,
+      content_es: content_es,
       category: body.category,
       tags: body.tags.map(tag => tag.trim()),
       cover_image: body.cover_image || '',

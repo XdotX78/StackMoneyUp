@@ -26,6 +26,30 @@ interface BlogEditorProps {
 // Initialize lowlight with common languages
 const lowlight = createLowlight();
 
+/**
+ * Check if content is valid JSON (TipTap format) or HTML/Markdown
+ */
+function isJsonContent(content: string): boolean {
+  if (!content || content.trim().length === 0) return false;
+  
+  // Check if it starts with JSON-like structure
+  const trimmed = content.trim();
+  
+  // Must start with { and end with } to be JSON
+  if (!trimmed.startsWith('{') || !trimmed.endsWith('}')) {
+    return false;
+  }
+  
+  // Try to parse as JSON
+  try {
+    const parsed = JSON.parse(content);
+    // Additional check: TipTap JSON should have a type property
+    return typeof parsed === 'object' && (parsed.type === 'doc' || parsed.type === 'paragraph' || Array.isArray(parsed.content));
+  } catch {
+    return false;
+  }
+}
+
 export default function BlogEditor({
   content,
   placeholder = 'Start writing your blog post...',
@@ -33,11 +57,32 @@ export default function BlogEditor({
   editable = true,
   className = '',
 }: BlogEditorProps) {
+  // Determine initial content format - only parse JSON, leave HTML as-is
+  const getInitialContent = () => {
+    if (!content) return '';
+    
+    // Only parse if it's valid JSON (TipTap format)
+    if (isJsonContent(content)) {
+      try {
+        return JSON.parse(content);
+      } catch {
+        // If JSON parsing fails, return empty - will be set via useEffect
+        return '';
+      }
+    }
+    
+    // For HTML/Markdown, return empty initially - will be set via useEffect
+    // This prevents TipTap from trying to parse it during initialization
+    return '';
+  };
+
   const editor = useEditor({
     immediatelyRender: false, // Prevent SSR hydration mismatches
     extensions: [
       StarterKit.configure({
         codeBlock: false, // Use CodeBlockLowlight instead
+        link: false, // Use custom Link extension instead
+        underline: false, // Use custom Underline extension instead
       }),
       Placeholder.configure({
         placeholder,
@@ -66,7 +111,7 @@ export default function BlogEditor({
         lowlight,
       }),
     ],
-    content: content ? JSON.parse(content) : '',
+    content: getInitialContent(),
     editable,
     onUpdate: ({ editor }) => {
       const json = editor.getJSON();
@@ -79,15 +124,53 @@ export default function BlogEditor({
     },
   });
 
-  // Update editor content when prop changes (for loading existing posts)
+  // Set content after editor is created (handles both JSON and HTML/Markdown)
   useEffect(() => {
-    if (content && editor) {
-      try {
-        const parsed = JSON.parse(content);
-        editor.commands.setContent(parsed);
-      } catch {
-        // Failed to parse content - return empty string
+    if (!editor) return;
+    
+    if (content) {
+      // First check if it's valid JSON before attempting to parse
+      if (isJsonContent(content)) {
+        // Content is JSON (TipTap format)
+        try {
+          const parsed = JSON.parse(content);
+          editor.commands.setContent(parsed);
+        } catch (error) {
+          console.error('Failed to parse JSON content:', error);
+          // If JSON parsing fails, try treating it as HTML/Markdown
+          try {
+            editor.commands.setContent(content);
+          } catch (fallbackError) {
+            console.error('Failed to set content as HTML/Markdown:', fallbackError);
+            editor.commands.setContent('');
+          }
+        }
+      } else {
+        // Content is HTML/Markdown - TipTap can parse it directly as HTML string
+        try {
+          // TipTap's setContent can accept HTML strings directly
+          // For markdown, we need to convert it to HTML first or let TipTap handle it
+          editor.commands.setContent(content);
+        } catch (error) {
+          console.error('Failed to set HTML/Markdown content:', error);
+          // If setting content fails, try creating a simple paragraph
+          try {
+            editor.commands.setContent({
+              type: 'doc',
+              content: [{
+                type: 'paragraph',
+                content: [{ type: 'text', text: content }]
+              }]
+            });
+          } catch (finalError) {
+            console.error('Failed to set content as text:', finalError);
+            editor.commands.setContent('');
+          }
+        }
       }
+    } else {
+      // Clear content if no content provided
+      editor.commands.setContent('');
     }
   }, [content, editor]);
 
